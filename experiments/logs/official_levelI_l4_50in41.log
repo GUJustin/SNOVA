@@ -1,0 +1,44 @@
+[*] msolve -v 2 on systems/levelI_l4_core_50in41.ms  (cap=5500MB timeout=2400s)
+[*] start 2026-07-21T19:40:59
+Initial seed for pseudo-random number generator is 1784677259
+
+--------------- INPUT DATA ---------------
+#variables                      41
+#equations                      50
+#invalid equations               0
+field characteristic            19
+homogeneous input?               0
+signature-based computation      0
+monomial order                 DRL
+basis hash table resetting     OFF
+linear algebra option            2
+initial hash table size     131072 (2^17)
+max pair selection             ALL
+reduce gb                        1
+#threads                         1
+info level                       2
+generate pbm files               0
+------------------------------------------
+
+Legend for f4 information
+--------------------------------------------------------
+deg       current degree of pairs selected in this round
+sel       number of pairs selected in this round
+pairs     total number of pairs in pair list
+mat       matrix dimensions (# rows x # columns)
+density   density of the matrix
+new data  # new elements for basis in this round
+          # zero reductions during linear algebra
+time(rd)  time of the current f4 round in seconds given
+          for real and cpu time
+--------------------------------------------------------
+
+deg     sel   pairs        mat          density            new data         time(rd) in sec (real|cpu)
+------------------------------------------------------------------------------------------------------
+  2      48      49      50 x 862        99.29%       48 new       0 zero         0.00 | 0.00         
+  3     285     285    2089 x 13192       5.85%      285 new       0 zero         0.56 | 0.54         
+  4    3750    3750   45010 x 148004      2.27%     1756 new    1994 zero       851.51 | 651.71       
+  3      41   30330    1949 x 12970      17.44%        1 new      40 zero         0.47 | 0.36         
+  4     360   30220   41098 x 145094      4.67%      180 new     180 zero       277.52 | 161.81       
+  5   33459   33459[*] stop reason: killed:timeout(2544s>2400s)  wall=2544s
+[*] max F4 round degree reached: 4

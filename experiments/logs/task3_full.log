@@ -1,0 +1,29 @@
+[*] building official 50-in-102 residual from KAT key ...
+    verifier net PASSED; residual 50/102
+[*] planted-root Jacobian rank = 50 (expect 50)
+[*] strips: 9466/10000 invertible; empirical 0.946600 vs rmt 0.9445987429
+[*] polar matrices: 10103 dirs, min rank 50, max 50 (expect all 50)
+[*] Hessian scan (weight<=2 + random) ... this is the long part
+[*] Hessian: 42100 combinations, minimum rank = 100 in 102 vars (expect 100)
+[*] 20-key arm: Jacobian rank + strips per key ...
+    key  0: Jrank=50  strips 9422/10000
+    key  1: Jrank=50  strips 9421/10000
+    key  2: Jrank=50  strips 9491/10000
+    key  3: Jrank=50  strips 9456/10000
+    key  4: Jrank=50  strips 9439/10000
+    key  5: Jrank=50  strips 9480/10000
+    key  6: Jrank=50  strips 9466/10000
+    key  7: Jrank=50  strips 9454/10000
+    key  8: Jrank=50  strips 9430/10000
+    key  9: Jrank=50  strips 9412/10000
+    key 10: Jrank=50  strips 9477/10000
+    key 11: Jrank=50  strips 9436/10000
+    key 12: Jrank=50  strips 9468/10000
+    key 13: Jrank=50  strips 9427/10000
+    key 14: Jrank=50  strips 9425/10000
+    key 15: Jrank=50  strips 9455/10000
+    key 16: Jrank=50  strips 9469/10000
+    key 17: Jrank=50  strips 9471/10000
+    key 18: Jrank=50  strips 9431/10000
+    key 19: Jrank=50  strips 9414/10000
+[*] wrote /Users/jthaler/Dropbox/NIST-break-papers/SNOVA/results/task3_lowdegree.json

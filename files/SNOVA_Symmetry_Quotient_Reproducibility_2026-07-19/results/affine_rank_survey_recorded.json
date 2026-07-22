@@ -1,0 +1,100 @@
+{
+  "description": "Random official-distribution-shaped key/offset survey. The attacker can resample the public affine offset V and directly test the rank.",
+  "results": [
+    {
+      "name": "I-square-l4",
+      "trials": 3,
+      "left_kernel_dimension": 30,
+      "affine_ranks": [
+        30,
+        30,
+        30
+      ],
+      "all_full": true
+    },
+    {
+      "name": "I-square-l2",
+      "trials": 3,
+      "left_kernel_dimension": 16,
+      "affine_ranks": [
+        16,
+        16,
+        16
+      ],
+      "all_full": true
+    },
+    {
+      "name": "I-rect-l4xr5",
+      "trials": 3,
+      "left_kernel_dimension": 30,
+      "affine_ranks": [
+        30,
+        30,
+        30
+      ],
+      "all_full": true
+    },
+    {
+      "name": "III-square-l4",
+      "trials": 3,
+      "left_kernel_dimension": 42,
+      "affine_ranks": [
+        42,
+        42,
+        42
+      ],
+      "all_full": true
+    },
+    {
+      "name": "III-square-l2",
+      "trials": 3,
+      "left_kernel_dimension": 24,
+      "affine_ranks": [
+        24,
+        24,
+        24
+      ],
+      "all_full": true
+    },
+    {
+      "name": "III-rect-l4xr5",
+      "trials": 3,
+      "left_kernel_dimension": 30,
+      "affine_ranks": [
+        30,
+        30,
+        30
+      ],
+      "all_full": true
+    },
+    {
+      "name": "V-square-l4",
+      "trials": 3,
+      "left_kernel_dimension": 54,
+      "affine_ranks": [
+        54,
+        54,
+        54
+      ],
+      "all_full": true
+    },
+    {
+      "name": "V-square-l2",
+      "trials": 1,
+      "left_kernel_dimension": 32,
+      "affine_ranks": [
+        32
+      ],
+      "all_full": true
+    },
+    {
+      "name": "V-rect-l4xr6",
+      "trials": 1,
+      "left_kernel_dimension": 54,
+      "affine_ranks": [
+        54
+      ],
+      "all_full": true
+    }
+  ]
+}

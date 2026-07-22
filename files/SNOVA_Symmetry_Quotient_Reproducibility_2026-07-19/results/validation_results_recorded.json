@@ -1,0 +1,211 @@
+{
+  "level1_official_kat": {
+    "parameter": {
+      "name": "I-square-l4",
+      "v": 28,
+      "o": 5,
+      "l": 4,
+      "r": 4,
+      "target": 143
+    },
+    "kat_public_key_match": true,
+    "public_key_bytes": 576,
+    "E_shape": [
+      80,
+      50
+    ],
+    "E_rank": 50,
+    "left_kernel_dimension": 30,
+    "homogeneous_factorization": true,
+    "affine_decomposition": true,
+    "linear_constraint_rank": 30,
+    "residual_variables": 102,
+    "residual_quadratics": 50,
+    "known_solution_preserved": true,
+    "full_equivalence_after_elimination": true,
+    "format_offset": {
+      "deterministic": true,
+      "skew_image_rank": 3,
+      "alternating_dimension": 6
+    },
+    "symmetric_blocks_for_known_solution": 0
+  },
+  "all_parameter_E_ranks": [
+    {
+      "parameter": {
+        "name": "I-square-l4",
+        "v": 28,
+        "o": 5,
+        "l": 4,
+        "r": 4,
+        "target": 143
+      },
+      "E_shape": [
+        80,
+        50
+      ],
+      "rank": 50,
+      "expected_unordered": 50,
+      "left_kernel": 30
+    },
+    {
+      "parameter": {
+        "name": "I-square-l2",
+        "v": 48,
+        "o": 16,
+        "l": 2,
+        "r": 2,
+        "target": 143
+      },
+      "E_shape": [
+        64,
+        48
+      ],
+      "rank": 48,
+      "expected_unordered": 48,
+      "left_kernel": 16
+    },
+    {
+      "parameter": {
+        "name": "I-rect-l4xr5",
+        "v": 28,
+        "o": 4,
+        "l": 4,
+        "r": 5,
+        "target": 143
+      },
+      "E_shape": [
+        80,
+        50
+      ],
+      "rank": 50,
+      "expected_unordered": 50,
+      "left_kernel": 30
+    },
+    {
+      "parameter": {
+        "name": "III-square-l4",
+        "v": 40,
+        "o": 7,
+        "l": 4,
+        "r": 4,
+        "target": 207
+      },
+      "E_shape": [
+        112,
+        70
+      ],
+      "rank": 70,
+      "expected_unordered": 70,
+      "left_kernel": 42
+    },
+    {
+      "parameter": {
+        "name": "III-square-l2",
+        "v": 72,
+        "o": 24,
+        "l": 2,
+        "r": 2,
+        "target": 207
+      },
+      "E_shape": [
+        96,
+        72
+      ],
+      "rank": 72,
+      "expected_unordered": 72,
+      "left_kernel": 24
+    },
+    {
+      "parameter": {
+        "name": "III-rect-l4xr5",
+        "v": 38,
+        "o": 5,
+        "l": 4,
+        "r": 5,
+        "target": 207
+      },
+      "E_shape": [
+        100,
+        70
+      ],
+      "rank": 70,
+      "expected_unordered": 70,
+      "left_kernel": 30
+    },
+    {
+      "parameter": {
+        "name": "V-square-l4",
+        "v": 50,
+        "o": 9,
+        "l": 4,
+        "r": 4,
+        "target": 272
+      },
+      "E_shape": [
+        144,
+        90
+      ],
+      "rank": 90,
+      "expected_unordered": 90,
+      "left_kernel": 54
+    },
+    {
+      "parameter": {
+        "name": "V-square-l2",
+        "v": 96,
+        "o": 32,
+        "l": 2,
+        "r": 2,
+        "target": 272
+      },
+      "E_shape": [
+        128,
+        96
+      ],
+      "rank": 96,
+      "expected_unordered": 96,
+      "left_kernel": 32
+    },
+    {
+      "parameter": {
+        "name": "V-rect-l4xr6",
+        "v": 52,
+        "o": 6,
+        "l": 4,
+        "r": 6,
+        "target": 272
+      },
+      "E_shape": [
+        144,
+        90
+      ],
+      "rank": 90,
+      "expected_unordered": 90,
+      "left_kernel": 54
+    }
+  ],
+  "l2_format_rejection_tails": [
+    {
+      "name": "I-square-l2",
+      "n_blocks": 64,
+      "threshold": 16,
+      "uniform_solution_tail": 2.3144711357533074e-08,
+      "log2_tail": -25.364742188504188
+    },
+    {
+      "name": "III-square-l2",
+      "n_blocks": 96,
+      "threshold": 24,
+      "uniform_solution_tail": 2.045685916540524e-11,
+      "log2_tail": -35.5086243852041
+    },
+    {
+      "name": "V-square-l2",
+      "n_blocks": 128,
+      "threshold": 32,
+      "uniform_solution_tail": 1.890204741304124e-14,
+      "log2_tail": -45.588450817116275
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+===== control 01 =====
+[*] msolve -v 2 on systems/controls/ctrl_50in41_01.ms  (cap=5500MB timeout=1500s)
+[*] start 2026-07-21T20:58:35
+[*] stop reason: killed:timeout(1502s>1500s)  wall=1502s
+[*] max F4 round degree reached: 4
+===== control 02 =====
+[*] msolve -v 2 on systems/controls/ctrl_50in41_02.ms  (cap=5500MB timeout=1500s)
+[*] start 2026-07-21T21:23:37
+[*] stop reason: killed:timeout(1501s>1500s)  wall=1501s
+[*] max F4 round degree reached: 4
+===== control 03 =====
+[*] msolve -v 2 on systems/controls/ctrl_50in41_03.ms  (cap=5500MB timeout=1500s)
+[*] start 2026-07-21T21:48:38
+[*] stop reason: killed:timeout(1501s>1500s)  wall=1501s
+[*] max F4 round degree reached: 4
+===== control 04 =====
+[*] msolve -v 2 on systems/controls/ctrl_50in41_04.ms  (cap=5500MB timeout=1500s)
+[*] start 2026-07-21T22:13:40
+[*] stop reason: killed:timeout(1612s>1500s)  wall=1612s
+[*] max F4 round degree reached: 4
+===== all controls done =====

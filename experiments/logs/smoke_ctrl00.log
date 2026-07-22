@@ -1,0 +1,42 @@
+[*] msolve -v 2 on systems/controls/ctrl_50in41_00.ms  (cap=4500MB timeout=90s)
+[*] start 2026-07-21T19:38:51
+Initial seed for pseudo-random number generator is 1784677131
+
+--------------- INPUT DATA ---------------
+#variables                      41
+#equations                      50
+#invalid equations               0
+field characteristic            19
+homogeneous input?               0
+signature-based computation      0
+monomial order                 DRL
+basis hash table resetting     OFF
+linear algebra option            2
+initial hash table size     131072 (2^17)
+max pair selection             ALL
+reduce gb                        1
+#threads                         1
+info level                       2
+generate pbm files               0
+------------------------------------------
+
+Legend for f4 information
+--------------------------------------------------------
+deg       current degree of pairs selected in this round
+sel       number of pairs selected in this round
+pairs     total number of pairs in pair list
+mat       matrix dimensions (# rows x # columns)
+density   density of the matrix
+new data  # new elements for basis in this round
+          # zero reductions during linear algebra
+time(rd)  time of the current f4 round in seconds given
+          for real and cpu time
+--------------------------------------------------------
+
+deg     sel   pairs        mat          density            new data         time(rd) in sec (real|cpu)
+------------------------------------------------------------------------------------------------------
+  2      48      49      50 x 862        98.93%       48 new       0 zero         0.00 | 0.00         
+  3     285     285    2086 x 13189       5.86%      285 new       0 zero         0.58 | 0.55         
+  4    3750    3750   45010 x 148004      2.27%[*] stop reason: killed:timeout(91s>90s)  wall=91s
+[*] max degree reached (grep):
+  (none parsed)
