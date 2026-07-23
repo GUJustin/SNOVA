@@ -1,6 +1,7 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.26)  22 JUL 2026 19:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.26)  23 JUL 2026 09:29
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
 **snova-paper.tex
 (./snova-paper.tex
@@ -1291,11 +1292,11 @@ Package logreq Info: Writing requests to 'snova-paper.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 35470 strings out of 478268
- 671628 string characters out of 5846346
+ 35468 strings out of 478268
+ 671604 string characters out of 5846346
  1379198 words of memory out of 5000000
  52590 multiletter control sequences out of 15000+600000
- 617213 words of font info for 316 fonts, out of 8000000 for 9000
+ 617130 words of font info for 315 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  100i,11n,104p,1162b,1371s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
@@ -1325,7 +1326,7 @@ e1/public/lm/lmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/
 lm/lmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pf
 b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/lo
 cal/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on snova-paper.pdf (24 pages, 567195 bytes).
+Output written on snova-paper.pdf (24 pages, 567238 bytes).
 PDF statistics:
  599 PDF objects out of 1000 (max. 8388607)
  508 compressed objects within 6 object streams
