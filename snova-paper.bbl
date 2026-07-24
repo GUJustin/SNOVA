@@ -572,66 +572,6 @@
       \verb https://github.com/PQCLAB-SNOVA/SNOVA_Analysis/commit/23b09be982ca3ef169cb07e7e84d8bd819bda5ff
       \endverb
     \endentry
-    \entry{FasterQRUOV}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=b7b1e314614cf326c6e2b6eba1540682}{%
-           family={TODO},
-           familyi={T\bibinitperiod}}}%
-      }
-      \strng{namehash}{b7b1e314614cf326c6e2b6eba1540682}
-      \strng{fullhash}{b7b1e314614cf326c6e2b6eba1540682}
-      \strng{bibnamehash}{b7b1e314614cf326c6e2b6eba1540682}
-      \strng{authorbibnamehash}{b7b1e314614cf326c6e2b6eba1540682}
-      \strng{authornamehash}{b7b1e314614cf326c6e2b6eba1540682}
-      \strng{authorfullhash}{b7b1e314614cf326c6e2b6eba1540682}
-      \field{extraname}{1}
-      \field{sortinit}{T}
-      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{howpublished}{TODO: Cryptology ePrint Archive}
-      \field{note}{PLACEHOLDER --- supply authors, e-print number, and URL}
-      \field{title}{Faster Attacks on {QR-UOV}}
-      \field{year}{2026}
-    \endentry
-    \entry{PolarHodgeMAYO}{misc}{}
-      \name{author}{4}{}{%
-        {{hash=aa1b2c3d4e5f60718293a4b5c6d7e8f9}{%
-           family={Thaler},
-           familyi={T\bibinitperiod},
-           given={Justin},
-           giveni={J\bibinitperiod}}}%
-        {{hash=bb2c3d4e5f60718293a4b5c6d7e8f9a0}{%
-           family={Zhang},
-           familyi={Z\bibinitperiod},
-           given={Kai},
-           giveni={K\bibinitperiod}}}%
-        {{hash=cc3d4e5f60718293a4b5c6d7e8f9a0b1}{%
-           family={Kominers},
-           familyi={K\bibinitperiod},
-           given={Scott},
-           giveni={S\bibinitperiod}}}%
-        {{hash=dd4e5f60718293a4b5c6d7e8f9a0b1c2}{%
-           family={Dao},
-           familyi={D\bibinitperiod},
-           given={Quang},
-           giveni={Q\bibinitperiod}}}%
-      }
-      \strng{namehash}{ee5f60718293a4b5c6d7e8f9a0b1c2d3}
-      \strng{fullhash}{ff60718293a4b5c6d7e8f9a0b1c2d3e4}
-      \strng{bibnamehash}{ff60718293a4b5c6d7e8f9a0b1c2d3e4}
-      \strng{authorbibnamehash}{ff60718293a4b5c6d7e8f9a0b1c2d3e4}
-      \strng{authornamehash}{ee5f60718293a4b5c6d7e8f9a0b1c2d3}
-      \strng{authorfullhash}{ff60718293a4b5c6d7e8f9a0b1c2d3e4}
-      \field{sortinit}{T}
-      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{howpublished}{TODO: Cryptology ePrint Archive}
-      \field{note}{PLACEHOLDER --- supply authors, e-print number, and URL}
-      \field{title}{Cryptanalysis of {MAYO} and {UOV} via Polar Flags and Hodge Contractions}
-      \field{year}{2026}
-    \endentry
     \entry{TsengEtAl2026Wedge}{misc}{}
       \name{author}{4}{}{%
         {{hash=44420582b9006697aa491f6fba594dfe}{%
@@ -746,6 +686,7 @@
       \endverb
     \endentry
   \enddatalist
+  \missing{WangEtAl2025Round2Security}
 \endrefsection
 \endinput
 

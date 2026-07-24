@@ -24,6 +24,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
 
 \definecolor{deepblue}{RGB}{23,69,124}
 \definecolor{darkred}{RGB}{145,32,32}
@@ -72,7 +73,7 @@
     Quang Dao\thanks{Carnegie Mellon University and LayerZero Labs}%
   }
 \fi
-\date{}
+\date{Draft of 24 July 2026}
 
 \begin{document}
 \setlength{\emergencystretch}{2em}
@@ -87,38 +88,38 @@
 \fi
 
 \begin{abstract}
-We give a forgery attack on the odd-characteristic form of \SNOVA{}, a third-round candidate in NIST's Additional Digital Signatures process.  \SNOVA{}'s original characteristic-two parameters have already been broken, and the team's public repair moves to odd characteristic, where the public-key matrices become symmetric; we show that this repair also falls below its targeted security.  At Levels~I, III, and V our estimates drop to about $2^{138.9}$, $2^{184.3}$, and $2^{228.0}$ Boolean gates, against targets $2^{143}$, $2^{207}$, and $2^{272}$.  All nine Version~2.3 draft parameter sets fall short, by 4.06 to 44.05 bits; the six Version~2.4 analysis-preview shapes (conditional on their retaining the symmetric construction, since no matching specification is currently public) fall short as well, albeit by as little as 1.43 bits.
+We give a forgery attack on the odd-characteristic form of \SNOVA{}, a third-round candidate in NIST's Additional Digital Signatures process.  \SNOVA{}'s original characteristic-two parameters have already been broken, and the team's public repair moves to odd characteristic, where the public-key matrices become symmetric; we show that this repair also falls below its targeted security.  In \SNOVA{}'s own cost model, our estimates fall to between $2^{130.3}$ and $2^{138.9}$ Boolean gates at Level~I, about $2^{184.3}$ at Level~III, and between $2^{228.0}$ and $2^{238.8}$ at Level~V, against targets $2^{143}$, $2^{207}$, and $2^{272}$.  All nine Version~2.3 draft parameter sets fall short, by 4.06 to 44.05 bits, as do the six Version~2.4 analysis-preview shapes, by as little as 1.43 bits if they keep the symmetric construction.
 
-The attack builds on the existing Beullens forgery framework (Eurocrypt 2025), which recasts forgery as solving a system of quadratic equations whose hardness is governed by the rank of an associated linear map.  We show that the new symmetry forces that map to depend only on the symmetric combinations of its inputs, so the antisymmetric combinations are invisible to the attack and the rank drops from $m_1\ell^2$ to $m_1\binom{\ell+1}{2}$ (here $\ell$ is the block size and $m_1$ a scheme parameter).  This leaves a much smaller system to solve: across the nine Version~2.3 sets, from 48 quadratic equations in 112 variables to 96 in 224.
+The attack builds on the existing Beullens forgery framework (Eurocrypt 2025), which recasts forgery as solving a system of quadratic equations whose hardness is governed by the rank of an associated linear map.  We show that the new symmetry forces that map to depend only on unordered power pairs.  Its universal rank ceiling is therefore $m_1\binom{\ell+1}{2}$ rather than $m_1\ell^2$ (here $\ell$ is the block size and $m_1$ a scheme parameter).  Across the nine Version~2.3 sets, the resulting residual systems range from 48 equations in 112 variables to 96 equations in 224 variables.
 
-The reduction is exact and holds for every key with symmetric public matrices.  We also confirm it directly against \SNOVA{}'s official Level-I reference implementation, reconstructing the reduced system from its own key material.
+The symmetric-square factorization and rank ceiling are exact for every key with symmetric public matrices.  The residual-system dimensions we tabulate additionally assume full quotient rank $\rho=K$ and full affine-constraint rank $\lambda_R=M-K$; we verify these end-to-end on the audited $(28,5,4,4)$ Level-I shape and state them as explicit, checkable genericity assumptions for the other shapes.  We also reconstruct the audited Level-I reduced system from the official reference implementation's own key material.
 
-All bit-security figures follow the same cost model used in the \SNOVA{} team's own analysis; we do not claim a full-size forgery.  The attack does not apply to the unsymmetrized $q=16$ public matrices.
+All bit-security figures inherit the semi-regular and sparse-linear-algebra assumptions used in the \SNOVA{} team's analysis; we do not claim a full-size forgery.  This exact quotient does not apply to the unsymmetrized $q=16$ public matrices.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
-\SNOVA{} is a structured Oil-and-Vinegar signature scheme designed to combine very small public keys with short signatures and fast verification.  NIST advanced \SNOVA{} to the third round of the Additional Digital Signatures process in May~2026, while allowing the surviving candidates to submit further specifications and implementations~\cite{NISTIR8610,NISTRound3}.  The scheme has not, however, had a single stable public parameter generation, and no definitive Round~3 parameter package was public when this manuscript was prepared.
+\SNOVA{} is a structured Oil-and-Vinegar signature scheme designed to combine very small public keys with short signatures and fast verification.  NIST advanced \SNOVA{} to the third round of the Additional Digital Signatures process in May~2026, while allowing the surviving candidates to submit further specifications and implementations~\cite{NISTIR8610,NISTRound3}.  The scheme has not, however, had a single stable public parameter generation, and no definitive Round~3 parameter package was public as of 24~July~2026.
 
 The NIST-posted Round~2 package uses $\F_{16}$ and nonsymmetrized public base matrices.  That line has already been heavily damaged: Beullens reduced the security margins by exploiting the structured whipping layer~\cite{Beullens2024SNOVA}, and the subsequent structure-aware wedge attack of Bros et al.\ reports that all Round~2 parameters are broken, while noting a remaining rank conjecture in its complexity analysis~\cite{BrosEtAl2026SNOVAWedge}.  The \SNOVA{} team's later public drafts pursue odd-characteristic variants of the scheme intended to evade these attacks.  Version~2.1 added prime-field variants with symmetric public matrices; Version~2.3 supplies $q=19$ implementations and KATs; the public analysis repository later posted a six-set ``Version~2.4'' preview; and the authors' reformulation paper presents odd characteristic as a principal route for redesigning the scheme~\cite{SNOVA23,SNOVA24Preview,DingEtAl2026Reformulating}.  An odd-characteristic attack therefore targets the public repair strategy rather than the already-vulnerable submitted parameters.
 
 The Version~2.3 attack chapter retains a forgery analysis in the style of Beullens~\cite{Beullens2024SNOVA}.  There, forgery is recast as solving a system of quadratic equations, and the size of that system is taken to be $m_1\ell^2$: the analysis lets the powers $S^0,\dots,S^{\ell-1}$ of the public matrix $S$ contribute all $\ell^2$ ordered pairs $(a,b)$, and it models the resulting equations as essentially random of that size.  The draft itself states that this chapter is inherited from Version~2.0 and still needs updating~\cite{SNOVA23}.
 
-This paper shows that the ordered model is incompatible with the new public symmetry.  Put $A=\F_q[S]$.  The irreducibility of the characteristic polynomial makes $A$ a field isomorphic to $\F_{q^\ell}$, while $S=S^\transpose$ makes every element of $A$ symmetric.  For fixed $u$ and public base form $P_i$, the Gram pairing
+This paper shows that the ordered model is incompatible with the new public symmetry.  Put $A=\F_q[S]$ and $d=\dim_{\F_q}A$; the current irreducible degree-$\ell$ construction has $d=\ell$ and $A\cong\F_{q^\ell}$.  Since $S=S^\transpose$, every element of $A$ is symmetric.  For each public base form $P_i$, exchanging the two labels in
 \[
  (\xi,\eta)\longmapsto
  u^\transpose(I_n\otimes\xi)P_i(I_n\otimes\eta)u
 \]
-is a symmetric $\F_q$-bilinear form on the $\ell$-dimensional space $A$.  It therefore factors through $\Sym^2_{\F_q}(A)$.  Over $\F_{19}$, the ordered tensor square decomposes as
+does not change the resulting quadratic polynomial in $u$.  Equivalently, the ordered label map $A\otimes_{\F_q}A$ annihilates every tensor $\xi\otimes\eta-\eta\otimes\xi$ and factors through the quotient $\Sym^2_{\F_q}(A)$.  In odd characteristic the alternating tensors form a canonical $\binom d2$-dimensional subspace of this kernel, giving
 \[
  A\otimes_{\F_q}A
- =\Sym^2_{\F_q}(A)\oplus\bigwedge\nolimits^2_{\F_q}(A),
+ \cong \Sym^2_{\F_q}(A)\oplus\bigwedge\nolimits^2_{\F_q}(A).
 \]
-and the entire alternating summand is invisible to quadratic evaluation.  In coordinates this is the equality of the $(a,b)$ and $(b,a)$ features.  The feature dimension is therefore
+The alternating subspace is a universal kernel contribution; additional key- or relation-dependent kernel may exist.  Thus the universal homogeneous-rank ceiling is
 \[
- K=m_1\binom{\ell+1}{2},
+ K_d=m_1\binom{d+1}{2},
 \]
-not $m_1\ell^2$.  This identity is universal for every key generated with symmetric public matrices; it is not a rare MinRank event and cannot be removed by adding more $A,B,Q$ terms (the ``emulsifier'' matrices of the whipping layer, which randomize the public map).
+and for the current parameters this is $K=m_1\binom{\ell+1}{2}$ rather than $m_1\ell^2$.  The cap holds for every key generated with symmetric public matrices; it is not a rare MinRank event and cannot be removed by adding more $A,B,Q$ terms (the ``emulsifier'' matrices of the whipping layer, which randomize the public map).
 
 \subsection{Results}
 
@@ -126,24 +127,28 @@ Recall the parameters: $v$ vinegar and $o$ oil matrix variables (so $n=v+o$), bl
 
 \Needspace{19\baselineskip}
 \begin{theorem}[Universal symmetry quotient, informal]\label{thm:intro}
-Consider a \SNOVA{} public key for which the power matrix $S$ and the scalar-expanded public base matrices $P_1,\ldots,P_{m_1}$ are symmetric.  After any affine-column substitution in the Beullens framework, the homogeneous quadratic part factors through
+Consider a \SNOVA{} public key for which the power matrix $S$ and the scalar-expanded public base matrices $P_1,\ldots,P_{m_1}$ are symmetric, and write $d=\dim_{\F_q}\F_q[S]$.  After any affine-column substitution in the Beullens framework, the homogeneous quadratic part factors through
 \[
- \bigoplus_{i=1}^{m_1}\Sym^2_{\F_q}(\F_q[S]).
+ \bigoplus_{i=1}^{m_1}\Sym^2_{\F_q}(\F_q[S])
 \]
-Consequently its rank is at most $K=m_1\binom{\ell+1}{2}$.  When both the quotient rank and the affine-constraint rank are generic (i.e., $\rho=K$ and $\lambda_R=M-K$, the case realized in every relation we tested), forging a selected target reduces directly to solving $K$ quadratic equations in
+and has rank at most $K_d=m_1\binom{d+1}{2}$.  For the current irreducible degree-$\ell$ construction, $d=\ell$ and $K_d=K=m_1\binom{\ell+1}{2}$.
+
+For a fixed relation and offsets, let $\rho\le K$ be the actual quotient rank and let $\lambda_R$ be the rank of the induced affine constraints.  Whenever those constraints are consistent with the target, forging is exactly reducible to $\rho$ equations of degree at most two in $\ell(v+o)-\lambda_R$ variables.  In the full-rank case $\rho=K$ and $\lambda_R=M-K$, every target is consistent and the residual dimensions are
 \[
- N_{\rm res}=\ell(v+o)-\left(or\ell-K\right)
+ K\text{ equations in }N_{\rm res}=\ell(v+o)-\left(or\ell-K\right)\text{ variables}.
 \]
-variables.
 \end{theorem}
 
-The full theorem, including nongeneric ranks, appears as \Cref{thm:rankbound,thm:residual}.  The rank cap comes from the domain of the quadratic feature map.  The $A,B,Q$ emulsifier matrices may randomize the induced map on the symmetric quotient, but they cannot recover the alternating coordinates discarded before emulsification.  The generic full-rank case is the one realized in every relation we tested (\Cref{sec:validation}).
+The full theorem, including nongeneric ranks, appears as \Cref{thm:rankbound,thm:residual}.  The rank cap comes from the domain of the quadratic feature map.  The $A,B,Q$ emulsifier matrices may randomize the induced map on the symmetric quotient, but they cannot recover the alternating coordinates discarded before emulsification.  For a simple relation, we certify full quotient rank for all nine Version~2.3 shapes.  For the rejection-bypassing relation used in the end-to-end attack, we certify both quotient and affine ranks on the audited $(28,5,4,4)$ Level-I KAT-derived key and two further generated keys of the same shape.  For every other shape, the simultaneous rank conditions for a rejection-bypassing relation are stated explicitly as assumptions in the cost tables (\Cref{sec:validation}).
 
-Applying the submission's own MQ methodology gives the Version~2.3 estimates in \Cref{tab:main}.  The submission's estimator admits two conventions for the semi-regular series, differing by whether one homogenizing variable is inserted.  The public analysis script and the values printed in Version~2.3 Table~11 use the convention without that variable ($p_1=0$); inserting the extra variable ($p_1=1$) yields a stricter, higher estimate.  We adopt the stricter $p_1=1$ convention for the headline figures, so our reported costs are conservative relative to the submission's own numbers; even so, every $q=19$ set falls below target.  Applying the identical quotient to the Version~2.4 analysis preview gives the additional estimates in \Cref{tab:snova24}.
+\paragraph{Scope of exactness.}
+The result has three layers with different status.  The symmetric-square factorization and rank ceiling are universal algebraic statements.  The displayed selected-target $K$-in-$N_{\rm res}$ systems require the instance-checkable rank equalities $\rho=K$ and $\lambda_R=M-K$.  Converting those dimensions into gate exponents additionally uses the submission's heuristic semi-regular solver model.  The tables below state the latter two conditions rather than folding them into the universal theorem.
+
+Applying the submission's own MQ methodology gives the Version~2.3 estimates in \Cref{tab:main}.  The submission's estimator admits two conventions for the semi-regular series, differing by whether one homogenizing variable is inserted.  The audited analysis snapshot and the values printed in Version~2.3 Table~11 use the convention without that variable ($p_1=0$); inserting the extra variable ($p_1=1$) yields a stricter, higher estimate.  We adopt the stricter $p_1=1$ convention for the headline figures, so our reported costs are conservative relative to the submission's own numbers; even so, every $q=19$ set falls below target.  Applying the identical quotient to the Version~2.4 analysis preview gives the additional estimates in \Cref{tab:snova24}.
 
 \begin{table}[t]
 \centering
-\caption{Symmetry-reduced residual systems and estimated attack costs.  ``Old'' is the Beullens-forgery estimate in \SNOVA{} Version~2.3 Table~11.  ``New'' uses the stricter $p_1=1$ convention we adopt for our headline figures.  Negative margins mean that the estimate is below the category target.}\label{tab:main}
+\caption{Symmetry-reduced residual systems and estimated attack costs in the full-rank case $\rho=K$, $\lambda_R=M-K$.  A simple relation has certified full quotient rank on all nine shapes.  Simultaneous quotient and affine rank for the rejection-bypassing attack relation is certified end-to-end only on the audited $(28,5,4,4)$ Level-I shape and is an explicit genericity assumption for the other rows.  ``Old'' is the Beullens-forgery estimate in \SNOVA{} Version~2.3 Table~11.  ``New'' uses the stricter $p_1=1$ convention.  Negative margins mean that the estimate is below the category target.}\label{tab:main}
 \small
 \setlength{\tabcolsep}{4.2pt}
 \begin{tabular}{@{}c l c c c r r@{}}
@@ -167,7 +172,7 @@ V   & $(52,6,4,6)$   & $90$ in $178$ & $333$ & $227.95$ & $272$ & $-44.05$\\
 
 \SNOVA{}'s verifier rejects any signature whose blocks are symmetric.  Because the attack is built from symmetric column relations, one might hope this rule blocks it.  We show it does not: in the square variants the attacker adds fixed offsets that force a nonzero antisymmetric entry into every block, so the forged signature passes the check while the system to be solved is unchanged, and in the rectangular variants the blocks are not symmetric objects in the first place.
 
-We also confirm the reduction against the reference code.  Reconstructing the official Level-I implementation reproduces the reduced system exactly from its shipped key material, and fixing one signature column in fact leaves a nearly square system of 50 quadratics in 52 variables (\Cref{sec:crossnormal,sec:validation}).  A direct search for a shortcut beyond solving that system---a shared solution locus or an exploitable low-rank structure---found none.
+We also report an implementation audit against the reference code.  Reconstructing the official Level-I implementation reproduces the reduced system exactly from its shipped key material.  Independently, after fixing one signature column whose cross-term coefficient map is surjective and choosing a target-matching coset of its kernel, the verifier restricts to a sound system of 50 equations of degree at most two in 52 variables (\Cref{sec:crossnormal,sec:validation}).  In the reported structural tests, no shared solution locus or exploitable low-rank shortcut was observed beyond this reduction; this is negative evidence rather than a completeness result.
 
 \subsection{Organization}
 
@@ -184,7 +189,7 @@ Our attack uses the same affine-column architecture but a different source of ra
 Cabarcas et al. exploit the action of the commutative group generated by $S$ to design a polynomial-system solver specialized to \SNOVA{}~\cite{Cabarcas2025SNOVA}.  Their work can be viewed as improving the residual-system solving stage.  The present result instead reduces the number of residual equations before solving begins.  The approaches are compatible, but we do not combine their cost benefits here.
 
 \paragraph{Characteristic-two wedge attacks and the odd-characteristic redesign.}
-The structure-aware wedge attack exploits \SNOVA{}'s block-ring structure and reports that the NIST Round~2 $q=16$ parameters are broken, while explicitly retaining a conjectural rank component in the analysis~\cite{BrosEtAl2026SNOVAWedge}.  The \SNOVA{} authors subsequently investigated the wedge map and proposed a reformulation emphasizing odd-characteristic and symmetric-form variants~\cite{TsengEtAl2026Wedge,DingEtAl2026Reformulating}.  Our attack is complementary: it does not apply to the unsymmetrized $q=16$ public matrices, but it attacks the public odd-characteristic repair direction through an elementary quotient that is exact and independent of the wedge-rank conjecture.
+The structure-aware wedge attack exploits \SNOVA{}'s block-ring structure and reports that the NIST Round~2 $q=16$ parameters are broken, while explicitly retaining a conjectural rank component in the analysis~\cite{BrosEtAl2026SNOVAWedge}.  The \SNOVA{} authors subsequently investigated the wedge map and proposed a reformulation emphasizing odd-characteristic and symmetric-form variants~\cite{TsengEtAl2026Wedge,DingEtAl2026Reformulating}.  Their earlier Round~2 security paper explicitly noted that symmetric public matrices over odd-prime fields reduce the number of alternating forms by roughly a factor of two, cautioned that symmetrization may create new attacks, and proposed excluding symmetric signature matrices~\cite{WangEtAl2025Round2Security}.  That observation was qualitative and made in the wedge-attack setting.  Our attack is complementary: it does not apply to the unsymmetrized $q=16$ public matrices, but it attacks the public odd-characteristic repair direction through an exact affine-column quotient that is independent of the wedge-rank conjecture.
 
 \paragraph{Key-recovery attacks.}
 Several works interpret the scalar expansion of \SNOVA{} as UOV, or lift it to smaller extension-field UOV instances, and transfer key-recovery attacks~\cite{IkematsuAkiyama2024,LiDing2024,NakamuraEtAl2025}.  Our result is a universal forgery reduction and does not recover the secret oil space.
@@ -212,38 +217,19 @@ regime $q=19$ that the odd-characteristic \SNOVA{} drafts adopt.  Their own
 concrete recommended-parameter evaluation targets \QRUOV{} and reports no
 improvement over the existing reconciliation attack at its large characteristic;
 they provide no \SNOVA{} cost tables, so no numerical head-to-head on the $q=19$
-Version~2.3 sets is available.  Association-scheme or Delsarte machinery concerns
-related objects but is not the mechanism here.
-
-\paragraph{Concurrent structural cryptanalyses of UOV-derived signatures.}
-This paper is part of a concurrent set of self-contained structural
-cryptanalyses of UOV-derived signature schemes~\cite{PolarHodgeMAYO,FasterQRUOV}.
-The other works study polar-flag quotients and Hodge contractions for \MAYO{}
-and \MAYO{}-style constructions, and extension-field slicing and pseudo-oil
-attacks on \QRUOV{}.  The attacks are technically independent, but share the
-broader lesson that the algebra used to compress a UOV construction must be
-incorporated explicitly into its security analysis.  The closest of these to the
-present work concerns \MAYO{}: it identifies preimage-preserving polar quotients
-of the characteristic-two \MAYO{} verification map~\cite{PolarHodgeMAYO}.  Both
-results expose a deterministic loss of attack-relevant dimension before generic
-solving, so that added downstream randomization cannot restore the discarded
-directions.  The constructions are nonetheless different: the \MAYO{} quotient
-acts on the input and output of the quadratic map and comes with a lifting
-theorem, whereas the present quotient acts on \SNOVA{}'s ordered power-pair
-feature space through a symmetric-square factorization, with no analogous
-lifting step.
+Version~2.3 sets is available.
 
 \paragraph{Our contribution.}
-The contribution is recognizing that the public odd-characteristic redesign makes this elementary quotient load-bearing in the existing \SNOVA{}
-affine-column attack; deriving the exact rank and residual-system consequences
-for square and rectangular variants; giving the structural
-$\Sym^2(A)$ proof and its multibase Gram extension; proving that the advertised
-signature rejection does not block the attack; and validating the reduction
-against the current implementation and cost methodology.  We found no
-corresponding symmetry quotient in the Version~2.3 attack chapter or the Version~2.4 analysis preview.  The former continues to use ordered $\ell^2$ coordinates and explicitly states that it still requires updating.
-
-\paragraph{Negative transfer to generic outer tensors.}
-The \SNOVA{} reduction depends on a deterministic symmetry of the public feature map.  In tests of tensor-UOV constructions with independent random outer tensors, two-column restrictions already saturated the complete output space and yielded no complementary affine equations.  Thus the cross-column quotient is not a generic consequence of UOV compression; it is tied to the concrete symmetry introduced by the odd-characteristic \SNOVA{} design.
+The contribution is to turn the prior qualitative symmetry warning into the exact
+$\Sym^2(A)$ factorization of the Beullens affine-column feature map; derive the
+rank and selected-target residual-system consequences for square and rectangular
+variants; extend the factorization to the multibase Gram setting; prove
+constructively that the proposed signature rejection does not block the attack;
+and validate the reduction against the audited Version~2.3 implementation
+snapshot and cost methodology.  We found no exact affine-column quotient,
+selected-target reduction, or revised cost table in the Version~2.3 attack
+chapter or the Version~2.4 analysis preview.  The former continues to use
+ordered $\ell^2$ coordinates and explicitly states that it still requires updating.
 
 \section{Preliminaries and the Existing Forgery Framework}\label{sec:prelim}
 
@@ -320,56 +306,68 @@ We used that every power of the symmetric matrix $S$ is symmetric.
 \end{proof}
 
 \begin{theorem}[Structural symmetric-square factorization]\label{thm:structural-sym2}
-Let
+Let $A=\F_q[S]\subseteq\Mat_\ell(\F_q)$, put $d=\dim_{\F_q}A$, and assume $S^\transpose=S$ and $P_i^\transpose=P_i$.  Let $V=\F_q^{n\ell}$ and let $\mathcal Q_2(V)$ denote the space of formal homogeneous quadratic polynomials on $V$.  Define the linear label map
 \[
- A=\F_q[S]\cong \F_{q^\ell}
+ \Psi_i:A\otimes_{\F_q}A\longrightarrow\mathcal Q_2(V),
+ \qquad
+ \Psi_i(\xi\otimes\eta)(u)
+ =u^\transpose(I_n\otimes\xi)P_i(I_n\otimes\eta)u.
 \]
-be viewed as an $\ell$-dimensional vector space over $\F_q$.  For a fixed
-$u\in\F_q^{n\ell}$ and public base matrix $P_i$, define
+Then
 \[
- \Phi_{u,i}(\xi,\eta)
- =u^\transpose(I_n\otimes\xi)P_i(I_n\otimes\eta)u,
- \qquad \xi,\eta\in A.
+ \Psi_i(\xi\otimes\eta)=\Psi_i(\eta\otimes\xi)
+ \qquad(\xi,\eta\in A).
 \]
-Then $\Phi_{u,i}$ is a symmetric $\F_q$-bilinear form on $A$.  Consequently
-it factors uniquely through $\Sym^2_{\F_q}(A)$, and the combined homogeneous
-feature map for $P_1,\ldots,P_{m_1}$ factors through
+Consequently $\Psi_i$ annihilates every alternating relation
+$\xi\otimes\eta-\eta\otimes\xi$ and factors uniquely through the quotient
+$\Sym^2_{\F_q}(A)$.  The combined label map for
+$P_1,\ldots,P_{m_1}$ therefore factors through
 \[
- \bigoplus_{i=1}^{m_1}\Sym^2_{\F_q}(A).
+ \bigoplus_{i=1}^{m_1}\Sym^2_{\F_q}(A),
 \]
-When the characteristic is odd, the killed subspace in the ordered tensor
-model is canonically
+a space of dimension $m_1\binom{d+1}{2}$.
+
+If the characteristic is odd, antisymmetrization canonically embeds
+$\bigwedge^2_{\F_q}(A)$ into $A\otimes_{\F_q}A$, and
 \[
- \bigoplus_{i=1}^{m_1}\bigwedge\nolimits^2_{\F_q}(A),
+ \bigoplus_{i=1}^{m_1}\bigwedge\nolimits^2_{\F_q}(A)
+ \subseteq \ker\!\left(\bigoplus_i\Psi_i\right).
 \]
-of dimension $m_1\binom{\ell}{2}$.
+This is a universal kernel contribution of dimension
+$m_1\binom d2$; equality with the full kernel is not asserted.  If the
+minimal polynomial of $S$ has degree $\ell$---in particular, for the
+irreducible degree-$\ell$ \SNOVA{} construction---then $d=\ell$.
 \end{theorem}
 
 \begin{proof}
-The irreducibility of the characteristic polynomial makes $A$ a field, and
-$S=S^\transpose$ makes every element of $A$ symmetric.  Bilinearity over
-$\F_q$ is immediate.  For $\xi,\eta\in A$, the value is a scalar and hence
-is equal to its transpose:
+Every element of $A$ is a polynomial in the symmetric matrix $S$ and is
+therefore symmetric; irreducibility is not needed for this step.  The displayed
+map is linear on $A\otimes A$.  For $\xi,\eta\in A$ and $u\in V$, its value is
+a scalar and hence equals its transpose:
 \[
 \begin{aligned}
- \Phi_{u,i}(\eta,\xi)
+ \Psi_i(\eta\otimes\xi)(u)
  &=u^\transpose(I_n\otimes\eta)P_i(I_n\otimes\xi)u\\
  &=\left(u^\transpose(I_n\otimes\eta)P_i(I_n\otimes\xi)u\right)^\transpose\\
  &=u^\transpose(I_n\otimes\xi)P_i(I_n\otimes\eta)u
- =\Phi_{u,i}(\xi,\eta).
+ =\Psi_i(\xi\otimes\eta)(u).
 \end{aligned}
 \]
-Thus $\Phi_{u,i}$ is symmetric and factors through the universal symmetric
-square.  In odd characteristic,
-$A\otimes_{\F_q}A=\Sym^2_{\F_q}(A)\oplus\bigwedge^2_{\F_q}(A)$, so the
-alternating summand is exactly the discarded part.
+Thus the alternating relations lie in the kernel, and the universal property
+of the symmetric-square quotient gives the factorization.  Its dimension is
+$\binom{d+1}{2}$ per base form.  When $2$ is invertible, the symmetrizer and
+antisymmetrizer give the canonical direct decomposition
+$A\otimes A\cong\Sym^2(A)\oplus\bigwedge^2(A)$, proving the kernel inclusion.
+Finally, $d$ is the degree of the minimal polynomial of $S$; an irreducible
+characteristic polynomial of degree $\ell$ therefore gives $d=\ell$.
 \end{proof}
 
-Concretely, for $\ell=4$, the ordered power
-space has dimension $16$, while its symmetric square has dimension $10$;
-the six missing directions are exactly $\bigwedge^2(A)$.  With $m_1=5$,
-this gives the 30 affine-linear output directions observed in the Level-I
-end-to-end experiment.
+Concretely, for $\ell=4$ and $d=\ell$, the ordered label space has
+dimension 16, while its symmetric-square quotient has dimension 10.  The six
+alternating directions are always killed, although additional kernel may occur
+after the public output map is applied.  With $m_1=5$, the universal quotient
+removes 30 ordered coordinates; in the audited Level-I relation the induced
+quotient map has full rank 50, giving the observed 30-dimensional left kernel.
 
 Define the unordered feature vector
 \[
@@ -429,7 +427,7 @@ of columns of $\overline E_R$.
 The Version~2.3 changes use many independently generated $A_{i,\alpha},B_{i,\alpha},Q_{i,\alpha,1},Q_{i,\alpha,2}$ matrices so that the ordered-coordinate $E_R$ resembles a general matrix rather than the repeated block-diagonal matrix attacked in the first-round construction.  This may make $\overline E_R$ a generic map on its $K$-dimensional domain.  It cannot make that domain larger.  The lost antisymmetric coordinates vanish before the emulsifier is applied.
 
 \paragraph{The reduction is universal, not a weak-key event.}
-Prior analyses search over relations $R$ to find an unusually low rank.  Here the cap $K$ holds for every relation and every public key satisfying the public-matrix symmetry rule.  A further rank drop below $K$ can only improve the residual system relative to the full-rank quotient analyzed below.
+Prior analyses search over relations $R$ to find an unusually low rank.  Here the cap $K$ holds for every relation and every public key satisfying the public-matrix symmetry rule.  A further quotient-rank drop below $K$, when accompanied by full affine rank, gives no larger residual size parameters and lowers the candidate estimator used below.  Because quotient and affine ranks can interact, both should nevertheless be audited on each concrete relation.
 
 \subsection{The Gram viewpoint and several base vectors}\label{sec:gram}
 
@@ -440,9 +438,10 @@ column relation
  u_j=\sum_{s=1}^{c}(I_n\otimes R_{j,s})x_s+v_j,
  \qquad R_{j,s}\in A.
 \end{equation}
-Put $V_c=\F_q^c\otimes_{\F_q}A$, of dimension $c\ell$.  For each public
-base matrix $P_i$, the homogeneous restriction of the verifier is a symmetric
-Gram pairing on $V_c$.  We therefore obtain the following exact extension.
+Put $V_c=\F_q^c\otimes_{\F_q}A$, of dimension $cd$, where
+$d=\dim_{\F_q}A$.  For each public base matrix $P_i$, the homogeneous
+restriction of the verifier is a symmetric Gram pairing on $V_c$.  We therefore
+obtain the following exact extension.
 
 \begin{proposition}[$c$-base Gram factorization]\label{prop:cbase}
 Under \Cref{eq:cbase}, the homogeneous feature map factors through
@@ -451,9 +450,11 @@ Under \Cref{eq:cbase}, the homogeneous feature map factors through
 \]
 and hence through at most
 \[
- K_c=m_1\binom{c\ell+1}{2}
+ K_{c,d}=m_1\binom{cd+1}{2}
 \]
-quadratic coordinates.  If $c=r$ and the $r\times r$ relation matrix over
+quadratic coordinates.  For the current irreducible degree-$\ell$
+construction, $d=\ell$ and this becomes
+$K_c=m_1\binom{c\ell+1}{2}$.  If $c=r$ and the $r\times r$ relation matrix over
 $A$ is invertible, the relation is merely a public change of basis among the
 signature columns and imposes no restriction on the signature space.
 \end{proposition}
@@ -466,8 +467,8 @@ square of $V_c$.  An invertible $A$-linear column change is bijective.
 \end{proof}
 
 The Gram formulation also closes a broader search over arbitrary coefficient
-matrices.  For a general relation with $R_{j,s}\in\Mat_\ell(\F_q)$, define
-the right power-orbit space
+matrices in the current irreducible degree-$\ell$ construction.  For a general
+relation with $R_{j,s}\in\Mat_\ell(\F_q)$, define the right power-orbit space
 \[
  \mathcal W_s=\Span_{\F_q}\{S^aR_{j,s}:0\le a<\ell,\ 0\le j<r\}.
 \]
@@ -477,22 +478,28 @@ nonzero $\xi\in A$ is invertible.  Therefore
 \begin{equation}\label{eq:orbit-lower}
  \dim_{\F_q}\mathcal W_s\ge\ell.
 \end{equation}
-An $A$-valued relation attains equality.  Thus allowing arbitrary block
-coefficients cannot use fewer than $\ell$ power directions per active base;
-it normally makes the orbit space much larger.  In 500 trials per
-$c\in\{1,2,3,4\}$ on the Level-I shape, $A$-valued relations always had
-total orbit dimension $c\ell$, whereas unrestricted random
-$\ell\times\ell$ coefficients always had dimension $c\ell^2$.  Accidental
+An $A$-valued relation attains equality for each active base.  Thus allowing
+arbitrary block coefficients cannot use fewer than $\ell$ power directions per
+active base; it normally makes the orbit spaces much larger.  Here dimensions
+across different bases are counted in the labelled direct sum
+$\bigoplus_{s=1}^c\mathcal W_s$: as unlabelled subspaces of
+$\Mat_\ell(\F_q)$, distinct $A$-valued orbit spaces may coincide.  In 500 trials
+per $c\in\{1,2,3,4\}$ on the Level-I shape, the labelled sum
+$\sum_s\dim\mathcal W_s$ was always $c\ell$ for $A$-valued relations and
+$c\ell^2$ for unrestricted random $\ell\times\ell$ coefficients.  Accidental
 rank defects of the public Gram map remain possible, but a broader coefficient
-search cannot improve the universal feature count by shrinking the underlying
+search cannot improve the universal feature count by shrinking an active
 power-orbit space below the $A$-valued construction.
 
 For the official Level-I constants, the quotient ranks for $c=1,2,3,4$ are
 respectively $50,80,80,80$, equal to the generic maximum
-$\min\{K_c,80\}$ in every tested relation.  The $c\ge2$ maps are therefore
-surjective: they remove the salt-membership phase but leave a structured
-nonlinear inversion problem.  We discuss the resulting candidate multibase
-attack and its present solver uncertainty in \Cref{app:multibase}.
+$\min\{K_c,80\}$ in every tested relation.  Thus the tested $c\ge2$ linear
+feature-to-output maps are surjective.  This removes only the \emph{linear}
+question whether a target lies in the image of that map; it does not show that
+the nonlinear Gram-feature map realizes a point in every target fibre.  The
+remaining task is a structured nonlinear inversion problem.  We discuss the
+resulting candidate multibase architecture and its present solver uncertainty in
+\Cref{app:multibase}.
 
 \section{The Symmetry-Assisted Forgery Attack}\label{sec:attack}
 
@@ -511,43 +518,103 @@ Let $\lambda_R=\rank(W_RL_R)$.  Gaussian elimination expresses $\lambda_R$ coord
 coordinates.  Substitution into a row basis of \Cref{eq:affine-system} leaves at most $\rho$ quadratic equations.
 
 \begin{theorem}[Residual MQ reduction]\label{thm:residual}
-Fix a relation and offsets, and suppose the linear system \Cref{eq:linear} is consistent for the target $t$.  Then forging $t$ reduces in polynomial time to solving at most $\rho$ quadratic equations in $n\ell-\lambda_R$ variables, where
+Fix a relation and offsets.  Let $\rho=\rank(\overline E_R)$, let $W_R$ have
+rows spanning the left kernel of $\overline E_R$, and put
+$\lambda_R=\rank(W_RL_R)$.  Choose $V_R\in\F_q^{\rho\times M}$ so that
+\[
+ T_R=\begin{bmatrix}V_R\\W_R\end{bmatrix}\in\operatorname{GL}_M(\F_q).
+\]
+If the affine system
+\[
+ W_RL_Ru=W_R(t-c_R)
+\]
+is consistent, then one can compute a bijective affine parametrization
+$u=u_0+Jx$ of its solution set, with
+$x\in\F_q^{n\ell-\lambda_R}$.  Under this parametrization, solutions of the
+original $M$ verification equations are in bijection with solutions of the
+$\rho$ equations
+\[
+ V_R\overline E_R z_{\rm sym}(u_0+Jx)
+ +V_RL_R(u_0+Jx)=V_R(t-c_R),
+\]
+each of degree at most two.  Thus forging reduces in polynomial time to
+solving at most $\rho$ genuinely quadratic equations in
+$n\ell-\lambda_R$ variables, where
 \[
  \rho\le m_1\binom{\ell+1}{2},
  \qquad
  \lambda_R\le M-\rho.
 \]
-In the generic case $\rho=K$ and $\lambda_R=M-K$, the coefficient matrix $W_RL_R$ has full row rank $M-\rho$, so \Cref{eq:linear} is consistent for \emph{every} target, and the residual system consists of
+
+In the full-rank case $\rho=K$ and $\lambda_R=M-K$, the matrix $W_RL_R$ has
+full row rank and the affine system is consistent for every target.  The
+residual dimensions are therefore
 \begin{equation}\label{eq:resparams}
  \boxed{
- K=m_1\binom{\ell+1}{2}\text{ quadratics in }
+ K=m_1\binom{\ell+1}{2}\text{ equations of degree at most two in }
  N_{\rm res}=n\ell-M+K\text{ variables}.}
 \end{equation}
-A solution extends by linear algebra to a signature satisfying the original $M$ verification equations.
+Every residual solution lifts by linear algebra to a signature satisfying all
+$M$ original verification equations.
 \end{theorem}
 
 \begin{proof}
-The left-kernel step gives \Cref{eq:linear}.  When that system is consistent, solve a maximal independent subsystem and substitute into the original equations.  Modulo the affine constraints, the quadratic coefficient vectors lie in the $\rho$-dimensional column space of $\overline E_R$, so a row basis gives at most $\rho$ independent quadratics.  Reversing the substitution produces $u$, and \Cref{eq:relation} gives all signature columns.  Because the reduction used row operations and exact substitutions, the resulting signature satisfies all $M$ original equations.  When $\rho=K$ and $\lambda_R=M-K$, the matrix $W_RL_R$ is $(M-\rho)\times n\ell$ of rank $M-\rho$, hence surjective, so \Cref{eq:linear} solves for any right-hand side.
+The rows of $W_R$ span the complete left kernel of $\overline E_R$, so
+multiplication by the invertible matrix $T_R$ transforms the original system
+into two equivalent blocks:
+\[
+\begin{aligned}
+ V_R\overline E_Rz_{\rm sym}(u)+V_RL_Ru&=V_R(t-c_R),\\
+ W_RL_Ru&=W_R(t-c_R).
+\end{aligned}
+\]
+Consistency of the second block gives an affine solution space of dimension
+$n\ell-\lambda_R$ and a bijective parametrization $u=u_0+Jx$.  Substitution
+into the first block gives exactly $\rho$ equations of degree at most two;
+some may lose their quadratic part after restriction, so there are at most
+$\rho$ genuinely quadratic equations.  Since $T_R$ is invertible and the
+parametrization is bijective onto the affine solution space, this operation
+preserves and reflects solutions.  In the full-rank case $W_RL_R$ is a
+surjective map onto $\F_q^{M-K}$, which proves target consistency and the
+displayed dimensions.
 \end{proof}
 
 \begin{proposition}[Effect of a rank defect]
 \label{prop:affine-rank}
-Two departures from the generic ranks behave differently.
+Two departures from the full-rank case behave differently.
 \begin{enumerate}
-\item A \emph{quotient-rank} defect $\rho<K$ accompanied by full affine rank $\lambda_R=M-\rho$ leaves $\rho$ quadratic equations in $n\ell-M+\rho$ variables and imposes no condition on the target.  The gap $(n\ell-M+\rho)-\rho=n\ell-M$ is independent of $\rho$, so such a defect only decreases the number of quadratic equations and cannot make the attack harder.
-\item An \emph{affine-rank} defect $\lambda_R<M-\rho$ makes \Cref{eq:linear} impose $(M-\rho)-\lambda_R$ consistency conditions on the target.  For a target drawn through the hash, these hold with probability about $q^{-((M-\rho)-\lambda_R)}$, so the attacker resamples the salt---or searches over relations and offsets for a full-rank affine subsystem---at that expected cost.  A defect of this kind is therefore \emph{not} free.
+\item A \emph{quotient-rank} defect $\rho<K$ accompanied by full affine rank
+$\lambda_R=M-\rho$ leaves $\rho$ equations of degree at most two in
+$n\ell-M+\rho$ variables and imposes no condition on the target.  Both the
+equation count and the variable count are no larger than in the full-quotient
+case, and the estimator used in this paper assigns no larger cost.  We do not
+claim a solver-independent monotonicity theorem for arbitrary structured MQ
+families.
+\item An \emph{affine-rank} defect $\lambda_R<M-\rho$ imposes
+$(M-\rho)-\lambda_R$ independent consistency conditions on the target.  For a
+uniform target these hold with probability exactly
+$q^{-((M-\rho)-\lambda_R)}$.  For the scheme's hash-to-field encoding this is
+the corresponding random-oracle approximation, so salt resampling incurs that
+inverse probability in expectation unless the attacker finds a relation and
+offsets with larger affine rank.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-(1) With $\lambda_R=M-\rho$, the matrix $W_RL_R$ has full row rank, so \Cref{eq:linear} is consistent for every target; the elimination pins $M-\rho$ coordinates and leaves $n\ell-M+\rho$ variables in $\rho$ quadratics.  (2) $W_RL_R$ has $M-\rho$ rows and rank $\lambda_R$, so its image is a $\lambda_R$-dimensional subspace of $\F_q^{M-\rho}$; a right-hand side $W_R(t-c_R)$ induced by a uniform target lies in that image with probability $q^{-((M-\rho)-\lambda_R)}$.
+For (1), full row rank of $W_RL_R$ makes the affine block surjective and leaves
+the dimensions stated by \Cref{thm:residual}.  The final cost comparison is a
+statement about the explicit estimator evaluated in this paper.  For (2), the
+image of $W_RL_R$ is a $\lambda_R$-dimensional subspace of
+$\F_q^{M-\rho}$.  Since $W_R$ has full row rank, a uniform $t$ induces a
+uniform right-hand side $W_R(t-c_R)$, which lies in that image with the stated
+probability.
 \end{proof}
 
 \paragraph{The tabulated systems are the generic full-rank case.}
-The residual dimensions in our tables are stated for $\rho=K$ and $\lambda_R=M-K$, where the affine subsystem has full row rank, \Cref{eq:linear} is unconditionally solvable, and the reduction is a genuine selected-target forgery.  This is the case realized in every relation we tested (\Cref{sec:validation}), where we verify both ranks directly.  A quotient-rank defect would only lower the equation count; an affine-rank defect would add the target-consistency cost of \Cref{prop:affine-rank}(2), which we do not observe.
+The residual dimensions in our tables are stated for $\rho=K$ and $\lambda_R=M-K$, where the affine subsystem has full row rank, \Cref{eq:linear} is unconditionally solvable, and the reduction is a genuine selected-target forgery.  A simple public relation attains $\rho=K$ on all nine Version~2.3 shapes and across the larger Level-I relation search.  The relation equipped with the fixed skew offsets of \Cref{lem:skew} is audited jointly: both equalities hold end-to-end on the KAT-derived $(28,5,4,4)$ Level-I key and two further generated keys of that same shape (\Cref{sec:validation}).  The first certificate does not imply the second, because quotient and affine ranks depend on the chosen relation and offsets.  Consequently the simultaneous full-rank conditions are directly evidenced only for the audited shape and remain explicit genericity assumptions for every other tabulated shape; a defect would alter the residual dimensions or add the target-consistency cost of \Cref{prop:affine-rank}.
 
 \paragraph{Attack algorithm.}
-The reduction is a universal forgery in the key-only setting: the attacker targets any message it chooses and makes no signing queries.  For an arbitrary message $\mathcal M$:
+Full affine rank removes the linear target-membership obstruction, but it does not by itself prove that every restricted nonlinear fiber contains a root.  Under the same residual-solvability, guessing, and specialization assumptions used by the cost model in \Cref{sec:complexity}, the reduction gives a selected-message forgery attack in the key-only setting: the attacker targets a message of its choice and makes no signing queries.  If the affine block is inconsistent, or if a sampled residual fiber has no root, the procedure resamples salts or relations.  For an arbitrary message $\mathcal M$:
 \begin{enumerate}
 \item sample a salt and compute the target $t=H(\mathcal M\|\textsf{salt})$;
 \item choose a public column relation $R$ and offsets $v_j$;
@@ -559,16 +626,19 @@ The first, second, fourth, and fifth steps are the same attack architecture used
 
 \section{Bypassing the Symmetric-Block Rejection}\label{sec:rejection}
 
-Version~2.3 notes that signatures composed of powers of $S$ can be dangerous when the public matrices are symmetric.  For odd $q$, the verifier therefore rejects square signature blocks that are symmetric: it allows none when $\ell>2$ and at most $\lfloor n/4\rfloor$ when $\ell=2$.
+The \SNOVA{} team's 2025 security paper proposed excluding symmetric signature matrices as a mitigation for attacks that odd-characteristic symmetrization might introduce~\cite{WangEtAl2025Round2Security}.  Version~2.3 implements a thresholded version of this rule: for odd $q$, the verifier rejects square signatures with any symmetric block when $\ell>2$, and with more than $\lfloor n/4\rfloor$ symmetric blocks when $\ell=2$~\cite{SNOVA23}.
 
 The affine-column attack has fixed offsets in addition to its free vector $u$.  Those offsets can enforce nonsymmetry identically.
 
 \begin{lemma}[A constant-skew column relation]\label{lem:skew}
-Assume $\ell\ge2$ and that the characteristic polynomial of $S$ is irreducible.  Let $e_0,e_1$ be two distinct standard basis vectors of $\F_q^\ell$.  There exists $R_1\in\F_q[S]$ such that
+Assume $\ell\ge2$ and that the characteristic polynomial of $S$ is
+irreducible.  Let $e_0,e_1$ be two distinct standard basis vectors of
+$\F_q^\ell$.  There is a unique $R_1\in\F_q[S]$ such that
 \[
  e_0^\transpose R_1=e_1^\transpose.
 \]
-With $R_0=I$, choose offsets for the first two signature columns so that, in each matrix block,
+It is computable by one $\ell\times\ell$ linear solve.  With $R_0=I$, choose
+offsets for the first two signature columns so that, in each matrix block,
 \[
  (v_1)_0-(v_0)_1=\delta
 \]
@@ -580,10 +650,26 @@ in that block.  In particular, the block is never symmetric.
 \end{lemma}
 
 \begin{proof}
-Because the characteristic polynomial is irreducible, $\F_q^\ell$ is a simple $\F_q[S]$-module.  Hence the nonzero row vector $e_0^\transpose$ is cyclic under right multiplication by $\F_q[S]$, and some $R_1$ maps it to $e_1^\transpose$.  Under the relation $u_0=u+v_0$ and $u_1=(I_n\otimes R_1)u+v_1$, the variable-dependent parts of the two entries are $e_1^\transpose u$ and $e_0^\transpose R_1u$, which coincide.  Their difference is therefore the chosen offset constant $\delta$.
+Consider the linear map
+\[
+ \theta:\F_q[S]\longrightarrow\F_q^\ell,
+ \qquad R\longmapsto e_0^\transpose R.
+\]
+If $R\ne0$, irreducibility makes $R$ invertible, so
+$e_0^\transpose R\ne0$.  Hence $\theta$ is injective; both spaces have
+dimension $\ell$, so it is an isomorphism.  This proves existence and
+uniqueness.  Constructively, let $G$ be the $\ell\times\ell$ matrix whose
+$a$th row is $e_0^\transpose S^a$.  Solve $c^\transpose G=e_1^\transpose$ and
+set $R_1=\sum_{a=0}^{\ell-1}c_aS^a$.
+
+Under the relation $u_0=u+v_0$ and
+$u_1=(I_n\otimes R_1)u+v_1$, the variable-dependent parts of the entries
+$U[0,1]$ and $U[1,0]$ are $e_0^\transpose R_1u$ and
+$e_1^\transpose u$, respectively, and therefore coincide.  Their difference
+is the chosen offset constant $\delta$.
 \end{proof}
 
-The construction can be applied independently to every block.  It does not change the homogeneous quadratic map $\overline E_R$; offsets affect only $L_R$ and $c_R$.  For the square $\ell=2$ sets it makes every block nonsymmetric, which is stronger than the verifier's threshold.  For the square $\ell=4$ sets it satisfies the zero-symmetric-block requirement.  The rectangular variants have blocks in $\Mat_{\ell\times r}$ with $r\ne\ell$, so matrix symmetry is not defined and no such rejection is applied.
+The construction can be applied independently to every block.  It does not change the homogeneous quadratic map $\overline E_R$; offsets affect only $L_R$ and $c_R$.  For the square $\ell=2$ sets it makes every block nonsymmetric, which is stronger than the verifier's threshold.  For the square $\ell=4$ sets it satisfies the zero-symmetric-block requirement.  The rectangular variants have blocks in $\Mat_{\ell\times r}$ with $r\ne\ell$, so matrix symmetry is not defined and no such rejection is applied.  This bypass is algebraically universal.  Whether a chosen relation and these offsets simultaneously give full affine rank is a separate, instance-checkable condition; the Level-I end-to-end audit verifies that condition for the relation used there.
 
 \section{A Cross-Column Gram Normal Form}\label{sec:crossnormal}
 
@@ -595,19 +681,89 @@ The multibase Gram viewpoint yields a second exact reduction for the official Le
 \]
 and let $E_{st}:\F_{19}^{80}\to\F_{19}^{80}$ be the corresponding public output map.
 
+For the self contribution of column $x_1$, let
+\[
+ z_1^{\mathrm{self}}(x_1)\in\F_{19}^{50},
+ \qquad
+ E_{11}^{\mathrm{self}}:\F_{19}^{50}\longrightarrow\F_{19}^{80},
+ \qquad
+ Q_1(x_1)=E_{11}^{\mathrm{self}}z_1^{\mathrm{self}}(x_1).
+\]
+Here $z_1^{\mathrm{self}}$ is quadratic, whereas
+$E_{11}^{\mathrm{self}}$ is linear.
+
 \begin{proposition}[Official Level-I cross-pair certificate]\label{prop:crosspair}
-For the official Version~2.3 Level-I $q=19$, $(v,o,\ell,r)=(28,5,4,4)$ public constants, all six maps $E_{st}$ have rank 80.  The full $80\times680$ symmetry-reduced feature map, the self-feature subspace, and the cross-feature subspace also each have rank 80.
+For the official Version~2.3 Level-I $q=19$,
+$(v,o,\ell,r)=(28,5,4,4)$ public constants, all six maps $E_{st}$ have rank
+80.  The full $80\times680$ symmetry-reduced feature map, the span of all self
+features, and the span of all cross features also each have rank 80.  The
+linear self-feature output map $E_{11}^{\mathrm{self}}$ has rank 50.
 \end{proposition}
 
-The proposition is an exact finite-field rank certificate for the public constants.  Fix the first column $x_0$ and absorb the contributions of the remaining columns and offsets into the target.  Writing $Q_s$ for the self-quadratic contribution of column $s$, the two-column verifier fiber over the target $y$ is
+\begin{proof}[Author-reported exact computation]
+Each matrix is reconstructed from the official public constants and
+row-reduced by exact Gaussian elimination over $\F_{19}$; no floating-point
+rank test is used.  The authors' audit scripts report the indicated pivot counts
+for all six cross maps and for the combined, self, cross, and
+$E_{11}^{\mathrm{self}}$ matrices.
+\end{proof}
+
+Fix $x_0,x_2,x_3$.  After absorbing every verifier contribution
+independent of $x_1$ into $d\in\F_{19}^{80}$, all remaining cross terms are
+linear in $x_1$.  Let
 \[
- \underbrace{E_{01}G_{01}(x_0,x_1)}_{\text{cross; linear in }x_1}+\;Q_1(x_1)\;=\;y-Q_0(x_0),
+ C_{x_0,x_2,x_3}:\F_{19}^{132}\longrightarrow\F_{19}^{80}
 \]
-an identity we verified directly against the official verifier on random two-column assignments.  The self-quadratic term $Q_1(x_1)$ must be retained: it is not a constant that can be moved into the target.  For fixed $x_0$ the cross term is linear in $x_1$, and in the audit its $80\times132$ coefficient matrix had rank 80, so its kernel is 52-dimensional.  On any coset of that kernel the cross term is constant, and the fiber equation restricts to the self-quadratic contribution $Q_1$ alone; the retained forms span a 50-dimensional space, giving
+denote their sum.  The verifier equations restricted to these fixed columns
+have the exact form
+\begin{equation}\label{eq:cross-fiber}
+ C_{x_0,x_2,x_3}(x_1)+Q_1(x_1)=d.
+\end{equation}
+For the clean two-column restriction $x_2=x_3=0$ this specializes to
 \[
- \boxed{50\text{ self quadrics in }52\text{ variables over }\F_{19}.}
+ C_{x_0,0,0}(x_1)=E_{01}G_{01}(x_0,x_1)=:C_{x_0}(x_1).
 \]
-This is a restriction of the verifier fiber to a 52-dimensional affine slice, not a reparametrization of the whole fiber.  It is sound---any solution of the boxed system lifts to a genuine signature---but not complete, since the slice does not enumerate every fiber point.  The slice is underdetermined by two, so a solution is expected to exist for a generic reachable target; the value of the normal form is structural rather than cost-reducing.
+The self term must be retained: it is quadratic in $x_1$ and takes values in
+the fixed 50-dimensional linear subspace
+$\mathcal S_1=\operatorname{im}(E_{11}^{\mathrm{self}})$ of the
+output-coordinate space.
+
+\begin{corollary}[A sound 50-in-52 affine slice]\label{cor:cross-slice}
+Let $C=C_{x_0,x_2,x_3}$ and assume its publicly computable coefficient matrix
+has rank 80.  Choose any $a\in\F_{19}^{132}$ satisfying $C(a)=d$, and let
+$J:\F_{19}^{52}\to\ker(C)$ be a linear isomorphism.  Then the solutions of
+\Cref{eq:cross-fiber} on the affine slice $a+\ker(C)$ are in bijection with
+the solutions of
+\begin{equation}\label{eq:cross-50-52}
+ Q_1(a+Jw)=0,
+ \qquad w\in\F_{19}^{52}.
+\end{equation}
+After choosing coordinates on $\mathcal S_1$, this is a system of 50 equations
+of degree at most two in 52 variables over $\F_{19}$.
+\end{corollary}
+
+\begin{proof}
+Rank 80 makes $C$ surjective, so $a$ exists and
+$\dim\ker(C)=132-80=52$.  For $x_1=a+Jw$, $C(x_1)=d$, and
+\Cref{eq:cross-fiber} is therefore equivalent to $Q_1(a+Jw)=0$.  By
+\Cref{prop:crosspair}, all values of $Q_1$ lie in the 50-dimensional linear
+subspace $\mathcal S_1$, so any linear coordinate isomorphism
+$\mathcal S_1\cong\F_{19}^{50}$ yields 50 scalar equations.  The affine
+parametrization is bijective on the selected slice, proving soundness and the
+claimed correspondence.
+\end{proof}
+
+The rank condition on $C$ is not universal.  For the clean two-column slice,
+$x_0=0$ gives rank zero.  The rank is publicly testable; on the audited key, all
+100 sampled choices of $x_0$ gave $\rank(C_{x_0})=80$.  The attacker can retain
+any passing choice and solve the linear system $C(a)=d$.  Fixed columns may also
+be chosen to address the verifier's symmetric-block rejection, but then the rank
+of the resulting summed cross map
+must be tested anew; the clean $C_{x_0}$ certificate alone does not prove this
+joint condition.  The resulting slice is sound but not complete: it contains
+only the points in one target-matching coset of the kernel.  The 50 equations
+in \Cref{eq:cross-50-52} are generally inhomogeneous after the shift by $a$.
+Underdetermination by two variables does not prove existence.  Under the stronger independent random-function heuristic, the expected number of roots is $19^2$ and the zero-root probability is $(1-19^{-50})^{19^{52}}\approx e^{-19^2}$.  Random quadratic systems need not satisfy that independence assumption, so this remains only a solvability heuristic for the target-matching slice.
 
 The normal form is useful for both cryptanalysis and auditing because it exposes all remaining nonlinearity in a nearly square system.  It does not by itself lower the conservative headline exponent: the Hashimoto estimator for the original 50-in-102 system already specializes almost all surplus variables before its square solve.  We therefore tested whether the restricted 50-dimensional quadratic space has further public structure.  Across 100 random restricted systems, the common polar radical was always zero, the quadratic span always had dimension 50, and every individual form had rank 51 or 52.  On five independently generated keys, the adjoint/commutant algebra had dimension one.  Random sampling of $10^5$ linear combinations in the analogous Version~2.4 50-in-44 system found minimum rank 42, consistent with a generic high-rank matrix space.  These checks provide negative evidence against an immediate radical, decomposition, or low-rank shortcut, while leaving specialized multigraded solving as an open route.
 
@@ -617,13 +773,25 @@ The normal form is useful for both cryptanalysis and auditing because it exposes
 
 We evaluate the new residual systems with the methodology already used in the \SNOVA{} submission and in Beullens's paper.  For a determined or overdetermined MQ system, the model estimates sparse Wiedemann/FXL from a semi-regular operating degree.  Hashimoto's method reduces an underdetermined system of $m$ equations in $n$ variables to a collection of smaller determined systems, optimizing over its parameters $(a,k)$~\cite{Hashimoto2023,Beullens2024SNOVA}.
 
-Version~2.3 gives the Beullens cost as
+The Version~2.3 model evaluates an $R_{\rm old}$-equation residual in
+$n\ell-M+R_{\rm old}$ variables, up to its field-to-gate conversion.  Its
+ordered-pair analysis takes $R_{\rm old}$ from an $m_1\ell^2$-dimensional
+feature space.  In the full-rank symmetry case we instead evaluate
 \[
- \Hashimoto(n\ell-\ell^2m+R,R,q)
+ \Hashimoto(n\ell-M+K,K,q),
 \]
-up to its field-to-gate conversion.  We replace $(R,n\ell-\ell^2m+R)$ by the symmetry-reduced values $(K,n\ell-M+K)$ from \Cref{eq:resparams}.
+with $K=m_1\binom{\ell+1}{2}$ as in \Cref{eq:resparams}.
 
-The estimator admits two conventions for the semi-regular series.  The values in Version~2.3 Table~11, and the default of the public analysis script, are numerically reproduced by using no extra homogenizing variable ($p_1=0$).  Inserting one extra variable ($p_1=1$) increases the estimates by about 4.25 bits in most rows.  We adopt the stricter $p_1=1$ convention in the headline table---so our figures are conservative relative to the submission's own $p_1=0$ numbers---and give both conventions in \Cref{tab:both}.
+The estimator admits two conventions for the semi-regular series.  In the
+analysis snapshot audited for this manuscript, the values in Version~2.3
+Table~11 are numerically reproduced by using no extra homogenizing variable
+($p_1=0$).  Inserting one extra variable ($p_1=1$) increases the estimates by
+about 4.25 bits in most rows.  We adopt the stricter, author-selected $p_1=1$
+sensitivity convention in the headline table---so our figures are conservative
+relative to those $p_1=0$ numbers---and give both conventions in
+\Cref{tab:both}.  The exact repository commit and estimator file must be fixed
+in the public artifact; without that pin, ``current script'' is not a stable
+provenance claim.
 
 \subsection{The determined systems actually costed by the estimator}
 \label{sec:actual-cores}
@@ -637,7 +805,7 @@ $p_1=1$ convention, the load-bearing systems are summarized in
 
 \begin{table}[t]
 \centering
-\caption{Dominant determined cores selected by the current estimator under the
+\caption{Dominant determined cores selected by the audited estimator snapshot under the
 stricter $p_1=1$ convention.  The degree is the semi-regular operating degree
 used in the cost calculation.  Degrees marked $^\dagger$ are Hashimoto blocks
 that were not produced as explicit systems; they are the predicted operating
@@ -688,7 +856,7 @@ For the nine $q=19$ parameter shapes in Version~2.3, \Cref{eq:resparams} gives t
 
 \begin{table}[t]
 \centering
-\caption{Estimates under both semi-regular conventions.  The $p_1=1$ column is the stricter convention we adopt for the headline figures and the abstract.  The $p_1=0$ column numerically matches Version~2.3 Table~11 and the default of the public analysis script.}\label{tab:both}
+\caption{Estimates under both semi-regular conventions, conditional on $\rho=K$ and $\lambda_R=M-K$ for the attack relation.  A simple relation has certified full quotient rank on all nine shapes; simultaneous quotient and affine rank for the rejection-bypassing relation is directly certified only on the audited $(28,5,4,4)$ Level-I shape.  The $p_1=1$ column is the stricter convention used in the headline figures.  The $p_1=0$ column numerically matches Version~2.3 Table~11 and the audited analysis snapshot.}\label{tab:both}
 \small
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}c l c r r r@{}}
@@ -712,11 +880,11 @@ The Level-I $\ell=4$ rows have the narrowest margin: 4.06 bits under the stricte
 
 \subsection{Version 2.4 analysis preview}\label{sec:snova24}
 
-The public \SNOVA{} analysis repository was updated with six parameter shapes labeled Version~2.4, although no matching specification or implementation package was public at the time of this audit~\cite{SNOVA24Preview}.  The symmetry quotient is algebraic and does not depend on the numerical parameters.  If the preview retains the symmetric public-matrix construction, the stricter $p_1=1$ convention gives \Cref{tab:snova24}.
+The public \SNOVA{} analysis repository was updated with six parameter shapes labeled Version~2.4.  As of 24~July~2026, the official implementation repository's supporting documentation still listed Version~2.3 and no matching Version~2.4 specification or implementation package was public~\cite{SNOVA23,SNOVA24Preview}.  The symmetry quotient is algebraic and does not depend on the numerical parameters.  If the preview retains the symmetric public-matrix construction, the stricter $p_1=1$ convention gives \Cref{tab:snova24}.
 
 \begin{table}[t]
 \centering
-\caption{Symmetry-reduced estimates for the Version~2.4 analysis preview.  These are not definitive Round~3 parameters; the table evaluates the public analysis-repository shapes under the same $p_1=1$ convention used in the headline Version~2.3 table.}\label{tab:snova24}
+\caption{Symmetry-reduced estimates for the Version~2.4 analysis preview, conditional on retention of the symmetric construction and on $\rho=K$, $\lambda_R=M-K$.  These are not definitive Round~3 parameters; the table evaluates the public analysis-repository shapes under the same $p_1=1$ convention used for Version~2.3.}\label{tab:snova24}
 \small
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{@{}c l c r r r@{}}
@@ -737,13 +905,31 @@ The first Level-I margin is the same narrow 4.06-bit estimate as in Version~2.3,
 
 \subsection{Interpretation of the estimates}
 
-The estimates inherit three standard assumptions:
+All displayed residual dimensions use the simultaneous full-rank equalities
+$\rho=K$ and $\lambda_R=M-K$ for the concrete relation and offsets used by
+the attack.  A simple relation attains the first equality on every Version~2.3
+shape, but that does not certify the pair for a rejection-bypassing relation.
+The pair is certified in the audited $(28,5,4,4)$ Level-I end-to-end instances
+and is an explicit genericity assumption elsewhere, including the Version~2.4
+preview.  The parameter tables therefore require four attack-specific
+conditions: the evaluated public construction satisfies the stated symmetry
+hypothesis; the same relation and offsets attain the quoted quotient rank; the
+associated affine system has the quoted rank and is target-consistent (automatic
+when $\lambda_R=M-\rho$); and the residual fiber is nonempty, with every
+guessing or specialization step preserving a solution at the success probability
+charged by the estimator.  Conditional on
+those points, the gate estimates inherit three standard solver assumptions:
 \begin{enumerate}
 \item the residual systems behave close enough to semi-regular systems for the operating-degree calculation to be meaningful;
 \item sparse linear algebra has the costs assumed by the submission's model;
 \item field operations are converted to gates using the same coarse formula as the existing analysis.
 \end{enumerate}
-These assumptions are neither introduced nor proved by this work.  They are the methodology under which Version~2.3 claims its security levels.  Our conclusion is therefore comparative: once the homogeneous feature dimension is corrected, the candidate's own framework places the odd-characteristic sets below their categories.
+These solver assumptions are neither introduced nor proved by this work.  They
+are the methodology under which Version~2.3 claims its security levels.  Our
+conclusion is therefore comparative and conditional: once the homogeneous
+feature dimension is corrected and the stated rank case is used, the
+candidate's own framework places the odd-characteristic sets below their
+categories.
 
 The Cabarcas--Li--Verbel--Villanueva-Polanco solver exploits additional multigraded structure in \SNOVA{} systems~\cite{Cabarcas2025SNOVA}.  We do not include any further speedup from that method.
 
@@ -759,7 +945,13 @@ under such an extended graph formulation.
 
 \section{Implementation and Algebraic Validation}\label{sec:validation}
 
-We performed five layers of validation.
+The statements in this section are author-reported exact computations.  They
+become independently checkable only when the public ePrint is accompanied by an
+immutable artifact containing the identified keys, matrices or rank
+certificates, scripts, raw logs, software versions, commands, seeds, resource
+limits, and a complete hash manifest.  The present \texttt{.tex} source alone
+does not supply that evidence.  Subject to that artifact qualification, we
+performed seven complementary layers of validation.
 
 \paragraph{Universal identity.}
 A self-contained checker verifies \Cref{lem:powerpair} over randomly sampled symmetric matrices and constructs the duplication map explicitly.  For $(m_1,\ell)=(5,4)$ the ordered feature dimension is 80, the unordered feature dimension is 50, and the duplication map has rank 50.
@@ -781,20 +973,27 @@ column rank for all nine $q=19$ Version~2.3 shapes:
 (52,6,4,6)&144\times90&90.
 \end{array}
 \]
-For the Level-I $\ell=4$ constants, all $19^3=6{,}859$ scalar relations in the
-affine chart $R_0=I$ (the standard normalization; this is a chart of
-$\mathbb P^3(\F_{19})$, not all $7{,}240$ of its points) produced an
+For the Level-I $\ell=4$ constants, all $19^3=6{,}859$
+scalar-coefficient column relations $(R_0,R_1,R_2,R_3)=(I,c_1I,c_2I,c_3I)$ in
+the affine chart $R_0=I$ (the standard normalization; this is one chart of
+$\mathbb P^3(\F_{19})$, not all $7{,}240$ projective points) produced an
 $80\times50$ matrix of rank 50, and 10,000 sampled module-valued relations did
-the same.  These certificates show that the
-full quotient rank used in the tables is attained, rather than extrapolated from
-Level I.  Full quotient rank is the conservative case: any further rank defect
-reduces the number of quadratic equations.
+the same.  These certificates show that the universal quotient ceiling is attainable on
+every Version~2.3 shape, rather than extrapolated from Level~I.  They do not by
+themselves certify the quotient rank of the rejection-bypassing relation used
+for a selected-target attack.  A quotient-rank defect would reduce the equation
+count, but its complete effect still depends on the associated affine rank as
+described in \Cref{prop:affine-rank}.
 
 \paragraph{Official-key reconstruction.}
 An independent Python implementation of the relevant Version~2.3 key-generation routines reproduced the Level-I $(28,5,19,4)$ KAT public key byte-for-byte.  This checks the field arithmetic, the fixed $A,B,Q$ generation (including the documented coefficient repair), and the public-matrix expansion used in the attack harness.
 
 \paragraph{End-to-end verifier equivalence.}
-On the KAT-derived key and two further generated keys, we constructed the affine-column system for a fixed public relation.  Every trial gave
+On the KAT-derived $(28,5,4,4)$ key and two further generated keys of the same
+shape, we constructed the affine-column system for one fixed public relation
+with the skew offsets of \Cref{lem:skew}.  These are the instances in which the
+manuscript directly certifies both the quotient and affine ranks for a
+rejection-bypassing attack family.  Every trial gave
 \[
  \rank(\overline E_R)=50,
  \qquad \dim\ker(\overline E_R^\transpose)=30,
@@ -803,7 +1002,7 @@ On the KAT-derived key and two further generated keys, we constructed the affine
 After eliminating the 30 affine equations, a known solution satisfied the residual 50-equation system, and reconstructing the original 80 verification coordinates gave zero discrepancy.  The same harness verified that the offset construction of \Cref{lem:skew} made symmetric-block rejection impossible for every residual assignment.
 
 \paragraph{Cross-column normal form and restricted structure.}
-The complete Level-I symmetry-reduced feature map has size $80\times680$ and rank 80.  Every individual cross-column submap is $80\times80$ and invertible, yielding \Cref{prop:crosspair}.  After fixing one column, 100 independent coefficient maps all had rank 80 and a 52-dimensional kernel.  Restriction of the 50 self-quadrics to those kernels gave common-radical dimension zero in every trial, individual ranks 51 or 52, and a full 50-dimensional quadratic span.  A separate adjoint-algebra computation on five keys returned only the scalar algebra.  These experiments were added specifically to test whether the 50-in-52 normal form hides an easier decomposition; none was observed.
+The complete Level-I symmetry-reduced feature map has size $80\times680$ and rank 80.  Every individual cross-column submap is $80\times80$ and invertible, yielding \Cref{prop:crosspair}.  For 100 sampled choices of the fixed column $x_0$, the coefficient map $C_{x_0}$ had rank 80 and a 52-dimensional kernel.  Restriction of the 50 self-quadrics to those kernels gave common-radical dimension zero in every trial, individual ranks 51 or 52, and a full 50-dimensional quadratic span.  A separate adjoint-algebra computation on five keys returned only the scalar algebra.  These experiments were added specifically to test whether the 50-in-52 normal form hides an easier decomposition; none was observed.
 
 \paragraph{Low-degree sanity check.}
 For the exported official 50-in-102 residual, the degree-one Macaulay
@@ -837,16 +1036,18 @@ attack, no run completes; the reproducible quantity is the per-degree structure
 up to the maximum degree reached under a fixed memory/time budget.
 
 For the load-bearing Level-I $\ell=4$ core ($50/41$, modeled degree 14), the
-official system is indistinguishable from the matched random ensemble through the
-maximum degree reached (F4 degree~4 completed; degree~5 entered before the budget
-cut both official and controls): identical degree schedule, no early degree fall,
-no zero-reduction surplus beyond the F4 Koszul artifacts present identically in
-the controls, and no Macaulay-rank deficit.  The official core falls within the
-control ensemble's spread rather than matching any single control, consistent
-with semi-regular behaviour.  This is positive evidence for the estimate, not a
-solve; the row remains a narrow estimated shortfall.  The Level-III and Level-V
-$\ell=4$ cores ($70/55$ and $90/73$) are larger still and lie even further beyond
-the completion budget than the $50/41$ core, so no F4-audited degree is available
+official system showed no qualitative deviation from the five matched random
+controls through the maximum degree reached (F4 degree~4 completed; degree~5
+entered before the budget cut both official and controls): the degree schedule
+matched, no early degree fall appeared, no zero-reduction surplus beyond the F4
+Koszul artifacts common to the controls was observed, and no Macaulay-rank
+deficit appeared.  The official core lay within the control ensemble's spread
+for the recorded quantities.  This small, truncated comparison is consistent
+with semi-regular behaviour, but it is not a statistical indistinguishability
+test and does not approach the modeled degree~14 solve.  The row therefore
+remains a narrow estimated shortfall.  The Level-III and Level-V $\ell=4$ cores
+($70/55$ and $90/73$) are larger still and lie even further beyond the
+completion budget than the $50/41$ core, so no F4-audited degree is available
 for them and their rows stay modeled predictions.
 
 \paragraph{Scaling ladder.}
@@ -868,9 +1069,9 @@ feature-map rank; each core is determined ($m=n=K$).  Daggered entries sit one
 below the semi-regular first-fall index: on both, the F4 bulk table is identical
 to a matching rung that reaches the predicted degree (e.g.\ the two $12/12$
 cores share an identical degree schedule and peak Macaulay size), and the $\pm1$
-is a trailing spair-reduction label in msolve, not a degree fall.  No core
-reaches a degree \emph{above} its prediction, and each is statistically
-indistinguishable from its matched random controls.}
+is a trailing spair-reduction label in msolve, not a degree fall.  No audited
+core reaches a degree above its prediction.  The three controls per rung are a
+small qualitative comparison, not a formal statistical test.}
 \label{tab:ladder}
 \begin{tabular}{cccccc}
 \toprule
@@ -888,19 +1089,16 @@ $\ell$ & $K$ ($m/n$) & density & predicted $D_\mathrm{reg}$ & observed F4 degree
 \end{table}
 
 On five of the seven rungs the observed solving degree equals the semi-regular
-prediction exactly; on the two daggered rungs it is one lower for the bookkeeping
-reason noted in the caption.  Decisively, no core solves at a degree
-\emph{above} its prediction --- the signature of the Appendix-E-style
-degeneration that would inflate the true attack cost.  On each rung the official
-core is statistically indistinguishable from its matched controls: it lands
-within the control spread on five rungs, sits one degree above the control
-maximum on one ($\ell=3$, $K=6$: $7$ versus a maximum of $6$), and one below it
-on one ($\ell=4$, $K=10$: $10$ versus a maximum of $11$), differences that are
-within run-to-run noise.  In no case is the official core \emph{easier} than a
-generic semi-regular system in a way that would cheapen the attack.  This corroborates the operating-degree model by
-direct F4 measurement on genuinely reduced SNOVA cores up to $K=12$; the
-extrapolation to the headline dimensions continues to rest on that (here
-corroborated) predictor.
+prediction exactly; on the two daggered rungs it is one lower for the
+bookkeeping reason noted in the caption.  In this ladder no audited core reaches
+a degree above its prediction.  Relative to the three matched controls per
+rung, the official core lies within the observed control range on six rungs and
+one degree above it on one ($\ell=3$, $K=6$: $7$ versus a maximum of $6$).
+This small sample is qualitatively consistent with the operating-degree model,
+but it is too small for a claim of statistical indistinguishability or a
+reliable estimate of run-to-run variation.  It gives direct F4 corroboration on
+genuinely reduced \SNOVA{} cores only up to $K=12$; extrapolation to the
+headline dimensions continues to rest on the semi-regular predictor.
 
 The three $\ell=2$ rows of \Cref{tab:actual-cores} are the dominant determined
 \emph{blocks} of a Hashimoto change-of-basis reduction; producing those exact
@@ -910,24 +1108,27 @@ tooling, so their operating degrees remain the modeled semi-regular predictions
 structural cross-check on the same official $\ell=2$ keys we instead audited the
 valid but not gate-optimal square-specialization cores ($48/36$, $72/60$,
 $96/79$), which are coordinate-emittable and verified byte-for-byte against the
-reference public key and are included in the reproducibility package.  These
-cores are themselves above the completion budget ($n\ge36$), so they are not
-F4-audited; the direct degree corroboration comes from the smaller faithful cores
-of \Cref{tab:ladder}.
+reference public key.  They should be included in the immutable reproducibility
+artifact described in \Cref{app:repro}.  These cores are themselves above the
+completion budget ($n\ge36$), so they are not F4-audited; the direct degree
+corroboration comes from the smaller faithful cores of \Cref{tab:ladder}.
 
 \section{Countermeasures and Standardization Implications}\label{sec:countermeasures}
 
 The immediate requirement is to evaluate every symmetric-matrix parameter set using
 \[
- K=m_1\binom{\ell+1}{2}
+ K_d=m_1\binom{d+1}{2},
+ \qquad d=\dim_{\F_q}\F_q[S],
 \]
-as the maximum homogeneous rank in the affine-column attack.  Merely choosing $A,B,Q$ matrices for which the ordered-coordinate $E_R$ has high rank cannot overcome the quotient.
+as the maximum homogeneous rank in the affine-column attack; the current
+irreducible construction has $d=\ell$.  Merely choosing $A,B,Q$ matrices for which the ordered-coordinate $E_R$ has high rank cannot overcome the quotient.
 
 Possible design responses include:
 \begin{enumerate}
-\item \textbf{Reparameterization.} Increase the dimensions until the symmetry-reduced residual MQ system meets the desired category under the team's accepted cost methodology.  This is required at every level: all three NIST categories fall short, and the Level-III and Level-V shortfalls of up to 44 bits demand larger parameters than the narrow Level-I margin alone would suggest, working against the compact keys that motivated the odd-characteristic design.
+\item \textbf{Reparameterization.} Increase the dimensions until the symmetry-reduced residual MQ system meets the desired category under the team's accepted cost methodology.  Under the rank and solver assumptions used in the tables, all three NIST categories fall short, and the Level-III and Level-V shortfalls of up to 44 bits demand larger parameters than the narrow Level-I margin alone would suggest, working against the compact keys that motivated the odd-characteristic design.
 \item \textbf{Remove public-matrix symmetry.} This sacrifices the key-size reduction that motivated the odd-characteristic change, but removes \Cref{lem:powerpair} in its present form.
-\item \textbf{Redesign the whipping layer.} A construction with a provably full-rank emulsifier on the actual quadratic feature space, closer to the MAYO design principle, may prevent this style of dimensional collapse.  Such a redesign requires a fresh analysis; simply randomizing more $A,B,Q$ terms is insufficient.
+\item \textbf{Redesign the feature layer.} Preserving ordered power-pair coordinates requires changing the public forms or the left/right power actions so that swapping the two labels no longer gives the same quadratic polynomial.  Any such construction should then prove rank on its actual feature space.  Merely adding or randomizing more $A,B,Q$ emulsifier terms inside the present symmetric construction cannot restore the discarded alternating directions.
+\item \textbf{Publish joint rank certificates.} For every proposed parameter set, evaluate both the quotient rank $\rho$ and the affine rank $\lambda_R$ on the concrete public construction and on the relations used by the attack.  A quotient-rank certificate alone does not establish selected-target solvability; an affine-rank defect must be charged through the corresponding target-consistency or resampling factor.
 \end{enumerate}
 
 The symmetric-block rejection should not be counted as a countermeasure against the affine-column attack, because fixed offsets can satisfy it identically.  A rejection rule capable of blocking the attack would need to constrain the affine family itself without destroying correct signing, rather than test a property that the attacker can set with constants.
@@ -942,35 +1143,46 @@ The public odd-characteristic \SNOVA{} redesign makes its scalar-expanded base m
 \]
 and has rank at most $m_1\binom{\ell+1}{2}$, not $m_1\ell^2$.  This is a universal algebraic identity, not a weak-key phenomenon.
 
-Under the candidate's own semi-regular Hashimoto/Wiedemann framework, every
-$q=19$ Version~2.3 set and every Version~2.4 preview set is estimated below its
-intended category.  The Level-III and Level-V shortfalls are robust within a
-substantially wider range of solving-degree error.  The Level-I $\ell=2$ row
-retains a 12.70-bit margin.  The two Level-I $\ell=4$ rows are narrower: the
-strict estimator costs actual $50/41$ cores at modeled degree 14, and a rise to
-degree 16 could erase their 4.06-bit shortfall.  We therefore describe those rows
-specifically as narrow estimated shortfalls rather than placing all nine rows on
-an equal empirical footing.
+Under the candidate's own semi-regular Hashimoto/Wiedemann framework, and in
+the full-rank case $\rho=K$, $\lambda_R=M-K$, every $q=19$ Version~2.3 set and
+every Version~2.4 preview set is estimated below its intended category.  For a simple relation, full quotient rank is certified for all nine
+Version~2.3 shapes.  Simultaneous full quotient and affine rank for the
+rejection-bypassing relation is certified end-to-end on the audited
+$(28,5,4,4)$ Level-I shape and remains an explicit genericity assumption for
+the other shapes.  The Level-III and Level-V
+shortfalls are robust within a substantially wider range of solving-degree
+error.  The Level-I $\ell=2$ row retains a 12.70-bit estimated margin.  The two
+Level-I $\ell=4$ rows are narrower: the strict estimator costs actual $50/41$
+cores at modeled degree 14, and a rise to degree 16 could erase their 4.06-bit
+shortfall.  We therefore describe those rows specifically as narrow conditional
+estimates rather than placing all nine rows on an equal empirical footing.
 
-The verifier's symmetric-block rejection is bypassed by fixed skew offsets.  An
-independent cross-column Gram normal form restricts the official Level-I verifier
-fiber to a sound 50-quadratic system on a 52-dimensional affine slice.  Full quotient-rank
-certificates hold for every Version~2.3 shape, and the official Level-I residual
-exhibits full planted-root Jacobian rank, full sampled polar rank, and very high
-sampled Hessian rank.  These facts rule out several obvious structural
-degeneracies without proving the semi-regular operating degree.
+The verifier's symmetric-block rejection is bypassed constructively by fixed
+skew offsets.  Independently, when a sampled fixed column gives a surjective
+cross map, choosing a target-matching kernel coset restricts the official
+Level-I verifier fiber to a sound 50-equation system on a 52-dimensional affine
+slice.  The official Level-I residual exhibits full planted-root Jacobian rank,
+full sampled polar rank, and very high sampled Hessian rank.  These facts rule
+out several obvious structural degeneracies without proving the semi-regular
+operating degree.
 
 The submitted $q=16$ package is outside this exact quotient because its public
 matrices are not symmetrized, but it is already heavily affected by wedge attacks.
 The present result therefore targets the public odd-characteristic repair
-direction rather than offering a safe fallback.  The remaining uncertainty is
-concentrated in solver cost and in the genericity assumptions the cost model rests
-on.  The symmetry quotient and the rank certificates are exact, and the reduction of
-a selected forgery to $K$ quadratic equations is exact when the quotient and
-affine-constraint ranks are generic---the case realized in every relation we
-tested---while the cross-column normal form is a sound restriction of the verifier
-fiber.  The displayed gate exponents additionally inherit the heuristic
-semi-regular methodology used by the \SNOVA{} submission.
+direction rather than offering a safe fallback.  What remains uncertain is
+not only solver cost: outside the audited Level-I instances the simultaneous
+affine-rank and target-consistency conditions are unproved; the clean
+cross-column surjectivity certificate has not been shown to coexist with the
+fixed offsets used for the rejection bypass; the load-bearing $\ell=2$
+Hashimoto blocks were not emitted and F4-audited as explicit systems; and the
+computational certificates are not independently reproducible until an
+immutable artifact is archived.  The symmetry quotient and rank ceiling are
+universal.  The selected-target reduction to the displayed dimensions is exact
+whenever the measured equalities $\rho=K$ and $\lambda_R=M-K$ hold.  The
+cross-column normal form is an exact, sound restriction conditional on its public
+surjectivity test, but not a complete parametrization of the verifier fiber.  The
+displayed gate exponents additionally inherit the heuristic semi-regular
+methodology used by the \SNOVA{} submission.
 
 \appendix
 \setcounter{section}{0}
@@ -990,7 +1202,7 @@ For convenience, \Cref{tab:params} records the intermediate dimensions.  Recall
 
 \begin{table}[ht]
 \centering
-\caption{Dimension calculation for all $q=19$ Version~2.3 draft sets.}\label{tab:params}
+\caption{Full-rank residual dimension calculation for all $q=19$ Version~2.3 draft sets ($\rho=K$, $\lambda_R=M-K$).}\label{tab:params}
 \small
 \begin{tabular}{@{}c l r r r r@{}}
 \toprule
@@ -1017,16 +1229,16 @@ For one base form, order the coordinates of $\F_q^{\ell^2}$ by pairs $(a,b)$.  O
 \]
 The attack matrix used in the odd-characteristic homogeneous system is $E_RD$.  In particular, even an ordered-coordinate matrix $E_R$ of full row and column rank cannot produce rank above $\rank(D)=K$.
 
-For $\ell=4$ the single-form duplication matrix maps ten coordinates to sixteen positions.  The six missing dimensions are precisely the antisymmetric differences $e_{a,b}-e_{b,a}$ for $a<b$.  Across $m_1=o$ square instances, this removes $6o$ homogeneous dimensions.  For the Level-I $o=5$ set, it removes 30 dimensions, exactly the number of affine-linear equations observed in the end-to-end experiment.
+For $\ell=4$ the single-form duplication matrix maps ten coordinates to sixteen positions.  Its six-dimensional complementary alternating subspace is spanned by the differences $e_{a,b}-e_{b,a}$ for $a<b$ (using the odd-characteristic direct-sum identification).  These six directions are always killed; additional kernel may occur after composition with the public output map.  Across $m_1=o$ square instances, the universal quotient removes $6o$ ordered coordinates.  For the Level-I $o=5$ set, the audited relation has full quotient rank and hence a 30-dimensional left kernel, exactly matching the affine-linear block observed end-to-end.
 
 \section{Why the Extension Field Does Not Give an Immediate MinRank Break}\label{app:noAshortcut}
 
 The field notation $A=\F_q[S]\cong\F_{q^\ell}$ makes a tempting but false
 inference: one might try to regard the public matrices as an $A$-linear matrix
 code of size $n\times n$ and search for an $A$-rank-one dual element.  The
-structural proof above does not justify that step.  The pairing
-$\Phi_{u,i}$ is symmetric and bilinear over $\F_q$, but it is generally not
-$A$-balanced:
+structural proof above does not justify that step.  For fixed $u$, write
+$\Phi_{u,i}(\xi,\eta)=\Psi_i(\xi\otimes\eta)(u)$.  This pairing is
+symmetric and bilinear over $\F_q$, but it is generally not $A$-balanced:
 \[
  \Phi_{u,i}(\alpha\xi,\eta)
  \ne
@@ -1062,7 +1274,8 @@ attacks and the $A$-valued Gram relations analyzed above.
 \section{The Multibase Stable-Ideal Extension}\label{app:multibase}
 
 \Cref{prop:cbase} gives an exact attack architecture beyond the one-base
-reduction.  For a $c$-base relation, let
+reduction.  Specializing to the current irreducible degree-$\ell$ construction,
+for a $c$-base relation let
 \[
  F_c=m_1\binom{c\ell+1}{2},\qquad M=or\ell,
  \qquad p_c=F_c-M.
@@ -1073,7 +1286,9 @@ $w$ of the target and a basis $K$ of its kernel.  Forgery becomes
  B_{\rm sym}(x_1,\ldots,x_c)=w+Ky,
 \end{equation}
 with $p_c$ linear kernel variables.  For $c=r$, this is a symmetry-aware
-stable encoding of direct forgery and requires no salt-membership search.
+stable encoding of direct forgery.  Surjectivity makes every target lie in a
+linear output fibre, so no separate \emph{linear} membership search is needed;
+it does not imply that the nonlinear Gram map has a preimage in that fibre.
 
 After diagonalizing the public $A$-action, there remain $\ell$ grading blocks,
 not $c\ell$ blocks.  If each block contains $s=M/\ell=or$ specialized
@@ -1130,28 +1345,32 @@ the one-base estimator cores in \Cref{tab:actual-cores}.
 A public claim based on this work should distinguish the following statements.
 
 \begin{description}[leftmargin=0pt]
-\item[Proved algebraically.] The homogeneous affine-column system factors through unordered power pairs, so its rank is at most $K$.  The verifier's symmetric-block rejection can be bypassed by fixed skew offsets.
-\item[Checked computationally.] The Level-I official-key reconstruction matches a KAT public key; three end-to-end trials yield an exact 50-in-102 system; all six official Level-I cross-column blocks are invertible and yield the 50-in-52 normal form; all nine Version~2.3 shapes have full quotient-rank certificates; and the official Level-I residual has full sampled polar rank, full planted-root Jacobian rank, and high-rank sampled Hessian combinations.
-\item[Estimated heuristically.] The gate complexities in \Cref{tab:main,tab:both}, like the submission's estimates, assume semi-regular behavior and a particular sparse-linear-algebra model.  The two Level-I $\ell=4$ rows are sensitive to a one- or two-degree error; the Level-III and Level-V margins tolerate several additional degrees in the same model.
+\item[Proved algebraically.] The homogeneous affine-column system factors through unordered power pairs and has rank at most $m_1\binom{d+1}{2}$, with $d=\dim\F_q[S]$; the verifier's symmetric-block rejection can be bypassed by explicitly computable fixed skew offsets; and \Cref{thm:residual} is an exact solution-preserving reduction conditional on target consistency.
+\item[Author-reported computations.] The manuscript reports that the Level-I official-key reconstruction matches a KAT public key; one rejection-bypassing relation on the KAT-derived $(28,5,4,4)$ key and two generated keys of that shape has $\rho=50$ and $\lambda_R=30$ and yields an exact 50-in-102 system; all six official Level-I cross-feature output maps are invertible, and 100 sampled fixed columns pass the surjectivity test needed for the sound 50-in-52 slice; a separate simple relation has full quotient-rank certificates on all nine Version~2.3 shapes; and the official Level-I residual has full sampled polar rank, full planted-root Jacobian rank, and high-rank sampled Hessian combinations.  These become independently certified only through the immutable artifact specified below.
+\item[Assumed for untested shapes.] The all-shape selected-target dimensions require the same attack relation and offsets to satisfy $\rho=K$ and $\lambda_R=M-K$.  These simultaneous equalities are directly certified only on the audited $(28,5,4,4)$ Level-I shape; a defect elsewhere would alter the residual dimensions or require the target-consistency factor in \Cref{prop:affine-rank}.
+\item[Estimated heuristically.] The gate complexities in \Cref{tab:main,tab:both}, like the submission's estimates, assume that the sampled residual fiber is solvable with the modeled probability, semi-regular behavior, the modeled success of guessing and specialization, and a particular sparse-linear-algebra model.  The two Level-I $\ell=4$ rows are sensitive to a one- or two-degree error; the Level-III and Level-V margins tolerate several additional degrees in the same model.  The load-bearing $\ell=2$ Hashimoto blocks are prediction-only and were not explicitly generated or F4-audited.
 \item[Audited negative result.] The public forms are not $A$-linear and there is no immediate $n\times n$ MinRank shortcut over $\F_{q^\ell}$.
 \item[Preliminary extension.] The exact multibase Gram attack is included as a solver-research direction, but its stronger formal exponents are not claimed as validated production work factors.
-\item[Not claimed.] We do not claim a practical production-size forgery, a key-recovery attack, a break of the $q=16$ parameter sets, or a proven running-time upper bound matching the estimates.
+\item[Not claimed.] We do not claim a practical production-size forgery, a key-recovery attack, a break of the $q=16$ parameter sets, a universal full-affine-rank theorem, a proof that every restricted target fiber is nonempty, or a proven running-time upper bound matching the estimates.
 \end{description}
 
-The accompanying reproducibility package contains:
+The public ePrint should archive an immutable reproducibility artifact at the
+same time as the manuscript.  At minimum, that archive must contain:
 \begin{itemize}
-\item a self-contained proof-of-concept checker for the symmetry identity, quotient map, parameter formulas, and rejection bypass;
-\item a clean implementation of both semi-regular conventions and the Hashimoto optimization;
-\item exact cost tables;
-\item rank-search logs;
-\item the low-degree sanity-check script (Jacobian, coordinate-strip, polar, and Hessian statistics, plus the degree-one Macaulay column-rank check) and its logs;
-\item the solving-degree experiment: official $\ell=4$ cores specialized from the KAT keys, matched random-control ensembles, and the per-degree F4 round tables with the maximum degree reached under budget;
-\item end-to-end KAT and verifier-equivalence transcripts;
-\item SHA-256 hashes identifying the Version~2.3 draft and evidence files used in the audit.
+\item exact repository commits, local patches, parameter files, KAT identifiers, and generated public-key digests;
+\item a self-contained checker for the symmetry identity, quotient map, parameter formulas, and rejection bypass;
+\item the concrete matrices or machine-verifiable rank certificates for every quotient-rank, affine-rank, and cross-map claim, together with a verifier;
+\item a pinned implementation of both semi-regular conventions, the Hashimoto optimization, the multibase Hilbert-series calculation, and all exact cost tables;
+\item rank-search, Jacobian, coordinate-strip, polar, Hessian, and degree-one Macaulay scripts and raw logs;
+\item the solving-degree experiments, including emitted polynomial systems, matched controls, solver versions, commands, seeds, resource limits, and complete per-degree F4 logs;
+\item end-to-end KAT and verifier-equivalence transcripts; and
+\item a manifest giving the SHA-256 digest of every source, input, output, and evidence file, plus a documented one-command reproduction path.
 \end{itemize}
-The clean official-source reimplementation will be released with the public version after coordinated disclosure.
-
-The SHA-256 digest of the Version~2.3 PDF used in the implementation audit is
+Until such an archive is linked, the computational statements above should be
+read as author-reported rather than independently reproduced.  A hash of the
+specification PDF alone is useful but insufficient to identify the code, keys,
+certificates, logs, and local modifications.  The SHA-256 digest of the
+Version~2.3 PDF used in the implementation audit is
 \begin{center}
 \ttfamily\small 963fa43d7e6ed8ecf1e77556e7cf47f62d4c34177efece2cd9a9517d0fbaf783.
 \end{center}
