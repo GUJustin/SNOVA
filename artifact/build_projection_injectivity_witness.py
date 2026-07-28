@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""Exact witnesses and biased-product bounds for stable-kernel projection injectivity.
+
+Take the official symmetric 4x4 multiplication matrix S over F_19, reserve one
+A-coordinate W, and let J=W+O_pub.  With one nonzero structured offset and one
+zero offset in another column, the raw offset-linear feature rows contain every
+row w^T Sigma_xi P_i Sigma_eta; hence the complete orbit row space equals U_w.
+If U_w restricted to J has full column rank, H=ker(U_w) intersects J trivially
+and projection H -> V' is injective.
+
+For each official ell=4 shape this script deterministically searches an
+allowable symmetric public-form assignment, records a nonzero full-column-rank
+minor, and computes the blockwise nonuniform Schwartz-Zippel lower bound under
+the modulo-19 random-XOF distribution.
+"""
+from __future__ import annotations
+import json, random
+from fractions import Fraction
+from decimal import Decimal, getcontext
+from pathlib import Path
+getcontext().prec=100
+ROOT=Path(__file__).resolve().parent
+Q=19; D=4; RHO=Fraction(14,256)
+S=[[1,2,3,0],[2,3,0,1],[3,0,1,2],[0,1,2,15]]
+SHAPES=[
+ ("I-a", "I",5,5),("I-b","I",4,5),
+ ("III-a","III",7,7),("III-b","III",5,7),
+ ("V-a","V",9,9),("V-b","V",6,9),
+]
+
+def mm(A,B):
+ return [[sum(A[i][k]*B[k][j] for k in range(len(B)))%Q for j in range(len(B[0]))] for i in range(len(A))]
+def eye(n):return [[1 if i==j else 0 for j in range(n)] for i in range(n)]
+POW=[eye(D)]
+for _ in range(3):POW.append(mm(POW[-1],S))
+
+def blockdiag_power(P,a,nA):
+ # not materialize; helper for row computation below
+ return POW[a]
+
+def rand_symmetric(rng,n):
+ A=[[0]*n for _ in range(n)]
+ for i in range(n):
+  for j in range(i,n):
+   x=rng.randrange(Q);A[i][j]=A[j][i]=x
+ return A
+
+def row_u(P,a,b,nA):
+ # w = first scalar basis vector in A-block 0.
+ # Compute w^T diag(S^a) P diag(S^b).
+ n=D*nA
+ left=[0]*n
+ # e0^T S^a is first row of S^a in W block.
+ for k in range(D):left[k]=POW[a][0][k]
+ mid=[sum(left[k]*P[k][j] for k in range(n))%Q for j in range(n)]
+ out=[0]*n
+ for blk in range(nA):
+  base=D*blk
+  for j in range(D):
+   out[base+j]=sum(mid[base+k]*POW[b][k][j] for k in range(D))%Q
+ return out
+
+def independent_rows(M,ncols):
+ A=[row[:] for row in M]
+ labels=list(range(len(A))); r=0; pivcols=[]; selected=[]; det=1
+ for c in range(ncols):
+  p=next((i for i in range(r,len(A)) if A[i][c]%Q),None)
+  if p is None:continue
+  A[r],A[p]=A[p],A[r];labels[r],labels[p]=labels[p],labels[r]
+  pv=A[r][c]%Q;det=det*pv%Q;inv=pow(pv,-1,Q)
+  A[r]=[(x*inv)%Q for x in A[r]]
+  for i in range(len(A)):
+   if i!=r and A[i][c]%Q:
+    f=A[i][c]%Q;A[i]=[(x-f*y)%Q for x,y in zip(A[i],A[r])]
+  pivcols.append(c);selected.append(labels[r]);r+=1
+  if r==ncols:break
+ return r,selected,det,pivcols
+
+def log2f(x):
+ return float((Decimal(x.numerator).ln()-Decimal(x.denominator).ln())/Decimal(2).ln())
+
+def certify(key,level,o,m1):
+ nA=1+o;n=D*nA
+ for seed in range(10000):
+  rng=random.Random(sum((i+1)*ord(c) for i,c in enumerate(key)) ^ seed ^ 0x534e4f56)
+  Ps=[rand_symmetric(rng,n) for _ in range(m1)]
+  rows=[]; meta=[]
+  # Round-robin the forms for each (a,b), so Gaussian elimination finds a
+  # balanced partition basis whenever one is available.  This strengthens the
+  # exact blockwise anti-concentration bound without changing the row space.
+  for a in range(D):
+   for b in range(D):
+    for i,P in enumerate(Ps):
+     rows.append(row_u(P,a,b,nA));meta.append((i,a,b))
+  rank,sel,det,piv=independent_rows(rows,n)
+  if rank==n:
+   chosen=[meta[j] for j in sel]
+   deg=[sum(1 for i,a,b in chosen if i==t) for t in range(m1)]
+   factors=[1-d*RHO for d in deg]
+   if min(factors)<=0:continue
+   beta=Fraction(1,1)
+   for x in factors:beta*=x
+   return {"key":key,"level":level,"o":o,"m1":m1,"J_A_dimension":nA,"J_base_dimension":n,
+     "seed":seed,"rank":rank,"minor_determinant_mod_19":det,"selected_rows":[list(x) for x in chosen],
+     "pivot_columns":piv,"per_form_degree_vector":deg,
+     "nonzero_probability_lower_numerator":beta.numerator,"nonzero_probability_lower_denominator":beta.denominator,
+     "nonzero_probability_lower_decimal":float(beta),"log2_lower":log2f(beta),"retry_log2":-log2f(beta),
+     "matrix_assignment":Ps}
+ raise RuntimeError(key)
+
+def main():
+ rec=[certify(*x) for x in SHAPES]
+ data={"field":"F_19","official_S":S,"rho":{"numerator":14,"denominator":256},
+  "structural_identity":"Choose Gamma_0=1 and Gamma_1=0. Raw rows with column pair (1,0), as power labels vary, contain all w^T Sigma_xi P_i Sigma_eta. Therefore row(F)=U_w and the complete orbit has the same row space.",
+  "consequence":"Full rank of U_w on J=W+O_pub implies H intersect J=0, so projection H->V' is injective on the entire stable kernel.","shapes":rec}
+ (ROOT/'projection_injectivity_witness.json').write_text(json.dumps(data,indent=2)+'\n')
+ md=["# Exact stable-kernel projection-injectivity witnesses","", "Generated by `build_projection_injectivity_witness.py`; all ranks and determinants are exact modulo 19.","",
+ "With structured offsets `Gamma_0=1` and `Gamma_1=0`, the raw offset-linear rows contain the complete family `w^T Sigma_xi P_i Sigma_eta`. Hence the orbit row space is `U_w`. A full-rank restriction to `J=W+O_pub` proves `H intersect J=0`, so the entire stable kernel projects injectively into the fresh vinegar coordinates.","",
+ "| shape | dim_A J | minor determinant | per-form degree vector | random-XOF lower bound | log2 lower bound |",
+ "|:--:|--:|--:|:--|--:|--:|"]
+ for r in rec:
+  md.append(f"| {r['key']} | {r['J_A_dimension']} | {r['minor_determinant_mod_19']} | `{r['per_form_degree_vector']}` | {r['nonzero_probability_lower_decimal']:.9f} | {r['log2_lower']:.6f} |")
+ md += ["", "The nonzero minors prove that projection injectivity is a nonvacuous Zariski-open condition for every official shape. Recursive nonuniform Schwartz-Zippel over independent per-form byte blocks gives the displayed conditional probabilities in the random-XOF idealization. The exact public rank is always checked directly for a fixed key."]
+ (ROOT/'PROJECTION_INJECTIVITY_WITNESS.md').write_text('\n'.join(md)+'\n')
+ for r in rec:print(r['key'],r['rank'],r['minor_determinant_mod_19'],r['per_form_degree_vector'],f"beta={r['nonzero_probability_lower_decimal']:.6f}")
+if __name__=='__main__':main()
