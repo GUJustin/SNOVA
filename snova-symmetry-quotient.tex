@@ -168,8 +168,7 @@ follows from public linear algebra.  Feeding the reduced systems to standard MQ
 solvers puts the forgery cost below NIST's Level~I/III/V references
 ($143/207/272$) at all three levels, with the six $\ell=4$ sets remaining below
 reference even under a generic-MQ estimator and under solver branches that
-assume no selected Macaulay degree.  The cost exponents are conditional on the
-cited solver models; the reduction itself is not.
+assume no selected Macaulay degree.
 
 Patching the flaw is expensive.  Restoring the quadratic-image dimension that
 the ordered-label security analysis assumed, while keeping symmetry and
@@ -186,8 +185,8 @@ at most two,
 \]
 For a message with hash-derived target $t\in\F_q^M$, the algebraic core of a
 forgery is to find $x$ satisfying $\mathcal P(x)=t$; any additional format or
-rejection checks must also pass.  This is an MQ problem: $M$ equations of
-degree at most two in the coordinates of $x$.  Linear and constant terms are
+rejection checks must also pass.  This is a multivariate-quadratic (MQ)
+problem: $M$ equations of degree at most two in the coordinates of $x$.  Linear and constant terms are
 allowed; throughout the paper, ``quadratic'' refers to the maximum degree.
 The apparent equation and variable counts are only a first approximation to
 security.  Public algebraic structure can make different-looking quadratic

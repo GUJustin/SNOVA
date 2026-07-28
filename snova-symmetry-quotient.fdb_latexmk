@@ -1,11 +1,11 @@
 # Fdb version 3
-["biber snova-symmetry-quotient"] 1785262002 "snova-symmetry-quotient.bcf" "snova-symmetry-quotient.bbl" "snova-symmetry-quotient" 1785263567
+["biber snova-symmetry-quotient"] 1785262002 "snova-symmetry-quotient.bcf" "snova-symmetry-quotient.bbl" "snova-symmetry-quotient" 1785263887
   "references.bib" 1785260758 11401 7c752c67fa19aa9bc3b59e1a72312e15 ""
-  "snova-symmetry-quotient.bcf" 1785263566 111483 85246e42a6a46efed59cd2758e327239 "pdflatex"
+  "snova-symmetry-quotient.bcf" 1785263886 111483 85246e42a6a46efed59cd2758e327239 "pdflatex"
   (generated)
   "snova-symmetry-quotient.bbl"
   "snova-symmetry-quotient.blg"
-["pdflatex"] 1785263556 "snova-symmetry-quotient.tex" "snova-symmetry-quotient.pdf" "snova-symmetry-quotient" 1785263567
+["pdflatex"] 1785263877 "snova-symmetry-quotient.tex" "snova-symmetry-quotient.pdf" "snova-symmetry-quotient" 1785263887
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1202520719 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1202520719 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
@@ -213,11 +213,11 @@
   "/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1647878959 4410336 7d30a02e9fa9a16d7d1f8d037ba69641 ""
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1666837762 2826447 f08a55e2b387bf3ccd95230f5ccb8bd6 ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
-  "snova-symmetry-quotient.aux" 1785263566 75431 dc7846e248cefff76585f35ff9f23c01 "pdflatex"
+  "snova-symmetry-quotient.aux" 1785263886 75431 dc7846e248cefff76585f35ff9f23c01 "pdflatex"
   "snova-symmetry-quotient.bbl" 1785262018 47174 1388c515484209d36b5496b144e4576a "biber snova-symmetry-quotient"
-  "snova-symmetry-quotient.out" 1785263566 10635 25d3412f78da686e7b12e3daeecdf93d "pdflatex"
-  "snova-symmetry-quotient.run.xml" 1785263566 2438 583efb796b0172b192f4bd4a49209b68 "pdflatex"
-  "snova-symmetry-quotient.tex" 1785263536 266360 9dd867538cfd164ed554f0870ab1be13 ""
+  "snova-symmetry-quotient.out" 1785263886 10635 25d3412f78da686e7b12e3daeecdf93d "pdflatex"
+  "snova-symmetry-quotient.run.xml" 1785263886 2438 583efb796b0172b192f4bd4a49209b68 "pdflatex"
+  "snova-symmetry-quotient.tex" 1785263869 266291 bcc4fd596efa06dfa161fe8f0c1c462a ""
   (generated)
   "snova-symmetry-quotient.aux"
   "snova-symmetry-quotient.bcf"
