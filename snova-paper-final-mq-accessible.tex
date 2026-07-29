@@ -15,7 +15,6 @@
 \usepackage{array}
 \usepackage{xcolor}
 \usepackage{enumitem}
-\usepackage{needspace}
 \usepackage[hidelinks]{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \usepackage{url}
@@ -59,7 +58,7 @@
   linkcolor=deepblue,
   citecolor=deepblue,
   urlcolor=deepblue,
-  pdftitle={Public-Matrix Symmetry Yields Faster Forgery Attacks on Odd-Characteristic SNOVA},
+  pdftitle={A Symmetric-Square Quotient in Odd-Characteristic SNOVA and Conditional Forgery Cost Estimates},
   pdfauthor={\pdfpaperauthor},
   pdfsubject={Cryptanalysis of SNOVA Version 2.3},
   pdfkeywords={SNOVA, multivariate signatures, forgery attack, NIST PQC}
@@ -81,40 +80,33 @@
 
 \newcommand{\SNOVA}{\textsf{SNOVA}}
 
-\newcommand{\bits}{\text{ bits}}
-
 \newcommand{\LoneModelRange}{$2^{128.82}$--$2^{129.44}$}
 
 \newcommand{\LthreeModelRange}{$2^{171.69}$--$2^{183.44}$}
 
-\newcommand{\LfiveModelRange}{$2^{214.12}$--$2^{235.19}$}
+\newcommand{\LfiveModelRange}{$2^{214.12}$--$2^{237.84}$}
 
 \newcommand{\LoneAXNRange}{$2^{132.17}$--$2^{133.75}$}
 
 \newcommand{\LthreeAXNRange}{$2^{175.04}$--$2^{187.74}$}
 
-\newcommand{\LfiveAXNRange}{$2^{217.48}$--$2^{239.50}$}
+\newcommand{\LfiveAXNRange}{$2^{217.48}$--$2^{242.15}$}
 
 \newcommand{\LoneNANDRange}{$2^{133.04}$--$2^{134.67}$}
 
 \newcommand{\LthreeNANDRange}{$2^{175.91}$--$2^{188.67}$}
 
-\newcommand{\LfiveNANDRange}{$2^{218.35}$--$2^{240.42}$}
+\newcommand{\LfiveNANDRange}{$2^{218.35}$--$2^{243.07}$}
 
-\newcommand{\AXNNominalHeadroomRange}{9.25--54.52}
+\newcommand{\AXNNominalGapRange}{9.25--54.52}
 
 \newcommand{\AXNExpectedAESGapRange}{8.13--52.86}
 
 \newcommand{\AXNFullAESGapRange}{9.13--53.86}
 
-\newcommand{\NANDNominalHeadroomRange}{8.33--53.65}
-
-\newcommand{\NANDExpectedAESGapRange}{9.03--53.83}
-
-\newcommand{\NANDFullAESGapRange}{10.03--54.83}
-
-\newcommand{\attacktitle}{Public-Matrix Symmetry Yields Faster Forgery
-  Attacks on Odd-Characteristic \texorpdfstring{\SNOVA}{SNOVA}}
+\newcommand{\attacktitle}{A Symmetric-Square Quotient in
+  Odd-Characteristic \texorpdfstring{\SNOVA}{SNOVA} and Conditional
+  Forgery Cost Estimates}
 
 \title{\attacktitle}
 \ifdefined\ANONYMOUS
@@ -123,11 +115,11 @@
   \author{%
     Justin Thaler\thanks{a16z crypto research and Georgetown University} \and
     Kai Zhang\thanks{MIT} \and
-    Scott Kominers\thanks{Harvard University and a16z crypto research} \and
+    Scott Duke Kominers\thanks{Harvard University and a16z crypto research} \and
     Quang Dao\thanks{Carnegie Mellon University and LayerZero Labs}%
   }
 \fi
-\date{Draft of 27 July 2026}
+\date{28 July 2026}
 
 \begin{document}
 \setlength{\emergencystretch}{2em}
@@ -148,8 +140,8 @@ At its algebraic core, a \SNOVA{} forgery requires solving a public system of
 multivariate quadratic (MQ) equations; the resulting assignment must also pass
 the verifier's rejection checks.  We show that the public $q=19$ design
 represents many of its quadratic features twice.  A feature is labeled by an \emph{ordered} pair of
-powers from the public algebra $A=\F_q[S]$, but symmetry of the public base
-matrices makes the polynomial unchanged when the two labels are reversed.
+powers from the public algebra $A=\F_q[S]$, but symmetry of $S$ and of the
+public base matrices makes the polynomial unchanged when the two labels are reversed.
 Thus, if $d=\dim_{\F_q}A$, the $d^2$ labeled power-pair features of each
 underlying public form factor through at most $\binom{d+1}{2}$ unordered
 features.  In the public parameter sets this
@@ -158,23 +150,26 @@ at block size $\ell=2$.  The identification occurs before the public outer map a
 every symmetric public key; it is not a weak-key event.
 
 For each of the nine public $q=19$ parameter sets in \SNOVA{}
-Version~2.3, we combine this symmetry quotient with exact affine elimination to
-construct a publicly checkable reduction to a smaller forgery system, without
-dropping verifier equations.  For $\ell=4$, the chosen
-column relation preserves the four-block structure used by special XL.\@  For
-$\ell=2$, fixed-skew and target-filtered relations ensure that recovered roots
-also pass the verifier's block-symmetry check.  The quotient, affine reduction,
-rejection identities, target-sampling argument, probability bounds, and final
-verification wrapper are exact.  Under the stated global-rank conditions and
-the cited production-scale MQ models, the modeled expected operation counts at
-NIST Levels~I, III, and V are, respectively, \LoneModelRange,
-\LthreeModelRange, and \LfiveModelRange.  Replacing the field
-arithmetic charged by those models with validated two-input AND/XOR/XNOR
-circuits gives dominant-arithmetic gate counts \LoneAXNRange,
-\LthreeAXNRange, and \LfiveAXNRange.  These are not complete attack
-circuits: the global rank
-spectra, production solver behavior, control logic, memory, and data movement
-remain the principal qualifications.
+Version~2.3, we give an attack construction that, when its explicit public
+preflights pass, restricts the verifier to an attacker-chosen column relation
+and reduces the resulting system to a smaller root system while retaining all
+$M$ public output equations.  For $\ell=4$, the chosen column relation
+preserves the four-block structure used by special XL.\@  For $\ell=2$, a
+fixed-skew relation ensures that every root recovered from the residual system
+reconstructs to a verifier root that passes the block-symmetry rejection test.
+The quotient, affine reduction, rejection
+identities, probability bounds, and final verification wrapper are exact;
+uniform-target and independent-retry statements are exact within the
+explicitly stated random-oracle experiment.  Under unproved global-rank and
+production-solver hypotheses, the modeled expected operation counts at NIST
+Levels~I, III, and V are, respectively, \LoneModelRange,
+\LthreeModelRange, and \LfiveModelRange.  Replacing the field arithmetic
+charged by those models with author-reported two-input AND/XOR/XNOR circuits,
+validated as described in \Cref{app:field-circuits}, gives
+AXN arithmetic-schedule counts \LoneAXNRange, \LthreeAXNRange, and
+\LfiveAXNRange.  These are neither wall-clock forgeries nor complete attack
+circuits: production solving behavior, control logic, matrix construction,
+memory, communication, and data movement are not priced.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -199,14 +194,18 @@ variables into blocks that a specialized solver can exploit.
 the third round of its additional post-quantum signature process in
 May~2026~\cite{NISTThirdRound2026}.  It stores the signature variables in small
 matrices and builds its public quadratics from pairs of powers of a public
-matrix $S$.  Beullens showed
-that an attacker can impose an affine relation among the signature columns and
-thereby reduce forgery to a smaller underdetermined MQ system
-\cite{Beullens2024SNOVA}.  We find an additional, deterministic reduction
-inside the quadratic features themselves.
+matrix $S$.  Beullens showed that an attacker can impose an affine relation
+among the signature columns and thereby reduce forgery to a smaller
+underdetermined MQ system \cite{Beullens2024SNOVA}.  In that analysis he also
+observed that reversed bilinear terms can be combined for a symmetric MAYO
+base map, while the then-analyzed nonsymmetric \SNOVA{} matrices required
+ordered terms.  The symmetrized public matrices of Version~2.3 change that
+premise.  We formalize the resulting deterministic quotient inside the
+current public quadratic features and integrate it with an exact affine
+reduction of all $M$ equations after the attacker imposes a column relation.
 
 \paragraph{The hidden duplication.}
-Let $P_i$ be a public symmetric base matrix, let
+Assume $S^\transpose=S$, let $P_i$ be a public symmetric base matrix, put
 $A=\F_q[S]$, and write $\Sigma_\xi=I_n\otimes\xi$ for $\xi\in A$.  The feature
 with left label $\xi$ and right label $\eta$ is
 \[
@@ -226,11 +225,12 @@ For a two-dimensional toy algebra with basis $\{1,S\}$, the four labels
  (1,1),\qquad(1,S),\qquad(S,1),\qquad(S,S)
 \]
 produce only three polynomials because the middle two are equal.  More
-generally, if $\dim_{\F_q}A=d$, then at most
+generally, if $\dim_{\F_q}A=d$ and $m_1$ is the number of public base-form
+groups, then at most
 \begin{equation}\label{eq:intro-K}
   K=m_1\binom{d+1}{2}
 \end{equation}
-independent power-pair features remain across the $m_1$ base forms, rather
+power-pair quotient coordinates remain across the $m_1$ base forms, rather
 than $m_1d^2$.  Thus each $\ell=4$ base form drops from $16$ ordered labels to
 $10$ unordered labels; each $\ell=2$ base form drops from $4$ to $3$.  The
 loss occurs before the public outer linear map---the final public mixing of
@@ -247,42 +247,25 @@ algebra to retain all remaining verifier equations, and finally solves only
 the smaller quadratic core.}}
 \end{center}
 
-\paragraph{The attack as a data-flow.}
-The proof is easiest to follow as a sequence of exact transformations.  The
+\paragraph{The attack plan.}
+The proof is easiest to follow as a sequence of transformations.  The
 word \emph{lift} below means the attacker-chosen affine rule that turns one
-column vector into a full signature candidate.
+column vector into a full signature candidate.  Concretely, if
+$u_j\in\F_q^{N_0}$ is the stacked $j$th column of the signature, the attacker
+imposes
+\[
+  u_j=\Sigma_{R_j}u+v_j\qquad(0\le j<r),
+\]
+where $u\in\F_q^{N_0}$ is one common column variable and the public
+multipliers $R_j\in A$ and offsets $v_j\in\F_q^{N_0}$ are chosen before the
+MQ solve.  Thus the search moves from $rN_0$ column coordinates to one
+$N_0$-coordinate variable plus fixed offsets; \Cref{sec:affine-columns}
+defines the relation and its feature maps formally.
 
-\begin{center}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{0.96\textwidth}{@{}>{\bfseries\raggedright\arraybackslash}p{0.22\textwidth}>{\centering\arraybackslash}p{0.04\textwidth}X@{}}
-Full public verifier & $\longrightarrow$ & impose one affine common-column
-relation; quadratic, linear, and constant terms become explicit\\
-& $\downarrow$ & \\
-Symmetry quotient & $\longrightarrow$ & identify $(\xi,\eta)$ with
-$(\eta,\xi)$ and keep only the distinct quadratic features\\
-& $\downarrow$ & \\
-Exact affine elimination & $\longrightarrow$ & use a left-kernel projection
-to expose every output direction unreachable by the quadratics as an ordinary
-linear constraint\\
-& $\downarrow$ & \\
-Structured residual MQ & $\longrightarrow$ & choose a stable four-block slice
-for $\ell=4$, or a rejection-compatible relation for $\ell=2$\\
-& $\downarrow$ & \\
-Candidate signature & $\longrightarrow$ & map back to the original
-coordinates and run the unmodified public verifier
-\end{tabularx}
-\end{center}
-
-Every transformation through the residual MQ system is exact and uses only
-public algebra and linear algebra.  The solver model enters only when we
-estimate the cost of solving that residual system.  The final public-verifier
-check makes the attack Las Vegas: a trial may be discarded, but an invalid
-signature is never returned.
-
-\paragraph{Four jobs that a complete attack must perform.}
 The equality \eqref{eq:intro-swap} is only the first job.  The construction
 also has to preserve all public outputs, ensure that targets have roots, and
-make the residual equations compatible with a practical solver:
+make the residual equations compatible with a practical solver.  It has four
+steps:
 \begin{enumerate}[label=\textbf{\arabic*.},itemsep=3pt]
 \item \textbf{Constrain the signature columns.}  Every signature column is
       written as an affine function of one common vector.  Substitution
@@ -296,13 +279,24 @@ make the residual equations compatible with a practical solver:
 \item \textbf{Choose a solver-friendly search space.}  For $\ell=4$, a
       structured choice of offsets leaves a large $A$-linear kernel.  Over a
       splitting field this kernel becomes four variable blocks, preserving the
-      multidegrees used by special XL.\@  For $\ell=2$, fixed-skew and filtered
-      relations handle the verifier's rejection rule directly.
+      multidegrees used by special XL.\@  For $\ell=2$, a fixed-skew relation
+      handles the verifier's block-symmetry rejection test directly.  A
+      zero-offset alternative is analyzed separately, but is not used in the
+      headline table because a dense accepted-root population does not by
+      itself determine which root an MQ solver returns.
 \item \textbf{Retry and verify.}  Exact moment bounds control the
       probabilities of root existence and uniqueness for random target--slice
       pairs.  A candidate recovered by the MQ solver is transformed back and
       checked by the original verifier.
 \end{enumerate}
+
+After the attacker-chosen column relation is imposed, every transformation
+through the residual MQ system is exact and uses only public algebra and
+linear algebra.  The solver model enters only when we estimate the cost of
+solving that residual system.  The final public-verifier check makes the
+wrapper zero-error: a trial may be discarded, but an invalid signature is
+never returned.  It is a finite-expected-time Las Vegas attack only under the
+stated independent-trial, global-rank, and solver-success hypotheses.
 
 \paragraph{A complete dimension walk-through.}
 The Level-I parameter set $(v,o,\ell,r)=(28,5,4,4)$ illustrates where the
@@ -313,8 +307,9 @@ and there are $m_1=5$ public base-form groups.
 
 \begin{table}[H]
 \centering
-\caption{The dimensions in the $(28,5,4,4)$ attack.  This table is only a
-worked example; the general formulas appear in later sections.}
+\caption{The dimensions in the $(28,5,4,4)$ attack, conditional on the stated
+public rank preflights.  This table is only a worked example; the general
+formulas appear in later sections.}
 \label{tab:running-example}
 \small
 \renewcommand{\arraystretch}{1.12}
@@ -326,8 +321,9 @@ Raw public feature vector & $N_{\rm raw}=1{,}280$ & $m_1\ell^2r^2$ labeled slots
 the column relation\\
 After the common-column relation & $80$ ordered quadratics & one feature for
 each of $m_1\ell^2=5\cdot16$ ordered power pairs\\
-After the symmetry quotient & $K=50$ distinct quadratics &
-$m_1\binom{\ell+1}{2}=5\cdot10$ unordered power pairs\\
+After the symmetry quotient & $K=50$ quotient coordinates &
+$m_1\binom{\ell+1}{2}=5\cdot10$ unordered power pairs; the public preflight
+checks $\rank Q_R=50$\\
 Affine output directions & $M-K=30$ & linear equations that determine an
 affine search space\\
 Full residual domain & $102$ coordinates & $N_0-(M-K)=132-30$ after affine
@@ -335,7 +331,8 @@ elimination\\
 Stable kernel & $52$ base-field dimensions & an $A$-linear space of
 $A$-dimension $13$ on which offset-linear motion vanishes\\
 Selected special-XL slice & $h=40$ & four blocks of $s=10$ variables; hence
-$\tau=K-h=10$\\
+$\tau=K-h=10$, with restricted polynomial rank
+$\rho_{\rm poly}(L)=50$ checked on the selected slice\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -352,16 +349,18 @@ probability, rather than quoting an MQ dimension alone.
 \Cref{tab:main} reports modeled costs and the differences between them.
 ``Model'' is the base-2 expected-cost exponent in the \emph{pinned} attack
 model, meaning that we fix the cited estimator, its version, and its conventions
-exactly as specified in the artifact.  It starts from the cited per-solve MQ
+exactly as specified in
+\Cref{app:cost-certificates,app:generic-mq-certificate}.  It starts from the cited per-solve MQ
 operation formula and, when the solve is repeated, includes
 the explicit target--slice retry factor.  Target generation performed before a
-single solve is accounted for separately.  ``AXN arith.'' changes only the unit
-for the arithmetic charged by that model, replacing its coarse field-operation
-factor with validated signed two-input AND/XOR/XNOR (AXN) circuits.  ``Gain over generic'' is the reduction in the Model exponent relative to a pinned generic-MQ
-baseline on the same symmetry quotient.  It is not always a solver improvement: for the structured rows it
-comes from the stable four-block slice and special XL, whereas for the filtered
-Level-V row it comes from the zero-offset filtered lift.  ``Arithmetic budget''
-is the nominal NIST reference minus the AXN arithmetic exponent.  It
+single solve is accounted for separately.  ``AXN arith.\ schedule'' changes
+only the unit for the arithmetic charged by that model, replacing its coarse
+field-operation factor with signed two-input AND/XOR/XNOR (AXN) circuits.  ``Internal estimator gain'' is the
+reduction in the Model exponent
+relative to a pinned generic-MQ baseline on the same symmetry quotient.  It is
+a solver improvement only in the structured rows, where it comes from the
+stable four-block slice and special XL.\@  ``Nominal arithmetic gap'' is the
+nominal NIST reference minus the AXN arithmetic-schedule exponent.  It
 is room for unpriced overhead in that one metric, not an unconditional
 security margin.
 
@@ -369,17 +368,28 @@ security margin.
 \centering
 \caption{Headline conditional estimates for the public Version~2.3 parameter
 sets.  The tuple is $(v,o,\ell,r)$; its meaning is given in
-\Cref{sec:parameters}.  Model and AXN are base-2 cost exponents; gain over generic
-and arithmetic budget are differences of exponents, measured in bits.  V2.3
-reproduces the official ``log \#gates'' table.}
+\Cref{sec:parameters}.  Model and AXN are base-2 cost exponents; internal
+estimator gain and nominal arithmetic gap are differences of exponents,
+measured in bits.
+V2.3 reproduces the historical ``log \#gates'' values reported with the
+Version~2.3 materials~\cite{SNOVA23}; it is contextual rather than a
+same-dimension recosting.  The superscript
+$\mathsf M$ marks quantities conditional on the global-rank and
+production-solver hypotheses stated in the text; both derived-difference
+columns inherit the same conditions.  Every row is additionally conditional
+on the attacked public key admitting the required quotient-rank, affine-rank,
+slice (where applicable), and rejection preflights for that mode; the
+manuscript does not prove that a passing choice exists for every valid public
+key.}
 \label{tab:main}
 \footnotesize
 \setlength{\tabcolsep}{2.3pt}
 \renewcommand{\arraystretch}{1.08}
 \begin{tabular}{@{}c l l r r r r r@{}}
 \toprule
-Level & Parameters & Mode & V2.3 & Model & \shortstack{AXN\\arith.} &
-\shortstack{gain over\\generic} & \shortstack{Arith.\\budget}\\
+Level & Parameters & Mode & V2.3 & Model$^{\mathsf M}$ &
+\shortstack{AXN arith.\\schedule$^{\mathsf M}$} &
+\shortstack{internal estimator\\gain} & \shortstack{Nominal arith.\\gap}\\
 \midrule
 I   & $(28,5,4,4)$  & structured XL & 194 & 128.82 & 132.17 &  7.22 & 10.83\\
 I   & $(48,16,2,2)$ & fixed-skew MQ & 164 & 129.44 & 133.75 &  0.00 &  9.25\\
@@ -390,7 +400,7 @@ III & $(72,24,2,2)$ & fixed-skew MQ & 234 & 183.44 & 187.74 &  0.00 & 19.26\\
 III & $(38,5,4,5)$  & structured XL & 239 & 171.69 & 175.04 &  8.91 & 31.96\\
 \midrule
 V   & $(50,9,4,4)$  & structured XL & 333 & 214.12 & 217.48 & 10.56 & 54.52\\
-V   & $(96,32,2,2)$ & filtered MQ   & 303 & 235.19 & 239.50 &  2.65 & 32.50\\
+V   & $(96,32,2,2)$ & fixed-skew MQ & 303 & 237.84 & 242.15 &  0.00 & 29.85\\
 V   & $(52,6,4,6)$  & structured XL & 333 & 214.12 & 217.48 & 10.56 & 54.52\\
 \bottomrule
 \end{tabular}
@@ -405,28 +415,34 @@ movement.
 \paragraph{Conditions behind the table.}
 The structured-XL rows require two separate production assumptions: every
 nonzero output direction must have full cross-polar rank on the chosen slice,
-and a planted-solvable special-XL Macaulay matrix (one generated together
-with a known root) must have the predicted one-dimensional right kernel.  The fixed-skew Level-I and Level-III rows use
-the sufficient all-target root conditions $r_*\ge96$ and $r_*\ge144$.  The
-filtered Level-V row uses the accepted-root condition of
-\Cref{prop:l2-rejection}, implied there by $r_*\ge240$.  Each $r_*$ condition
-is global: it concerns every nonzero output combination, not only the sampled
-directions in the artifact.  Lower ranks are handled by explicit retry bounds
-in \Cref{sec:slices}.
+and a planted trial conditioned on having a unique $\F_q$-root must produce
+the predicted one-dimensional special-XL Macaulay right kernel.  The
+three fixed-skew rows use the sufficient all-target root conditions
+$r_*\ge96$, $r_*\ge144$, and $r_*\ge192$.  Each $r_*$ condition is global: it
+concerns every nonzero output combination, not only the sampled directions in
+the reported finite campaigns.  Lower ranks are handled by explicit retry bounds in
+\Cref{sec:slices}.  The zero-offset Level-V alternative is summarized in
+\Cref{sec:l2-costs} and analyzed in \Cref{app:zero-offset}; it is not a
+headline estimate because \Cref{prop:l2-rejection} counts accepted roots but
+does not specify the output distribution of the priced MQ solver.
 
 \begin{center}
 \fcolorbox{deepblue}{lightblue}{\parbox{0.94\textwidth}{\small
-\textbf{Four levels of claim.}\par\smallskip
+\textbf{Five levels of claim.}\par\smallskip
 \begin{tabularx}{\linewidth}{@{}>{\bfseries}p{0.24\linewidth}X@{}}
 Exact mathematics & Symmetry quotient, affine elimination, stable-kernel
-construction, fixed-skew identity, rejection tests, uniform-target sampling,
-probability inequalities, and final-verifier wrapper.\\[2pt]
+construction, fixed-skew identity, rejection identities, probability
+inequalities, and final-verifier wrapper.\\[2pt]
+Random-oracle exactness & Rejection conversion gives uniform residual targets
+and fresh trials are independent, conditional on the explicit random-oracle
+experiment and duplicate-query check in \Cref{sec:target-sampling}.\\[2pt]
 Public preflight & Deterministic rank and rejection checks for the chosen key,
 relation, offsets, and slice.  A failing choice is discarded before an
 expensive MQ solve.\\[2pt]
-Finite evidence & Large but nonexhaustive rank campaigns and smaller Macaulay
-experiments.  They support, but do not certify, the global production
-assumptions.\\[2pt]
+Finite evidence & Author-reported, nonexhaustive rank campaigns and smaller
+Macaulay experiments.  They support, but do not certify, the global production
+assumptions and require the release contract in \Cref{app:artifact} for
+independent reproduction.\\[2pt]
 Cost model & Published generic-MQ or special-XL arithmetic schedules with an
 explicit retry factor and a validated circuit cost for the charged field
 primitive.  A complete solver implementation is not priced.
@@ -437,14 +453,25 @@ The official Version~2.3 values are numerically $30.25$--$115.52$ bits above
 the AXN arithmetic column, but the two sets of figures do not come from a
 shared complete-circuit methodology.  A cleaner internal comparison recosts a
 historical ordered-label affine-column estimator in the same AXN basis; the
-resulting per-row reductions are $38.02$--$129.66$ bits
+resulting per-row differences are $38.02$--$129.66$ bits
 (\Cref{tab:ordered-baseline}).  The unreduced affine-column equations are an
 executable system, but \Cref{thm:symmetric-square} proves that their reversed
 power labels do not represent independent quadratic features on a symmetric
 key.  What is counterfactual is feeding the ordered-label count into a generic
 estimator as though those labels described a generic quadratic space.  The
 comparison is included only to isolate the numerical effect of recognizing
-the quotient and then choosing the selected post-quotient attack mode.
+the quotient and then choosing the selected post-quotient attack mode.  It is
+not a row-by-row speedup over the best prior Version~2.3 attack after all
+public duplicate-column preprocessing.
+
+The rectangular $(38,5,4,5)$ row needs an additional convention warning.  The
+pinned reference implementation uses
+$m_1=\lceil or/\ell\rceil=7$.  The authors report that the accompanying
+historical analysis script instead uses the floor value $6$; an archival
+release should identify that script's exact path and revision.  Our dimensions
+use the implementation ceiling, so the historical V2.3 number in the table is
+especially unsuitable as a same-instance difference.  The immutable
+implementation revision used here is the one cited in \cite{SNOVA23}.
 
 NIST describes its category references across the security metrics it regards
 as relevant, rather than as a gate-count-only test~\cite{NISTPQCCriteria}.  We
@@ -455,20 +482,16 @@ implementation-level cost account.
 
 \paragraph{How to read the paper.}
 A reader new to MQ can read \Cref{sec:mq-background} first, then focus on the
-plain-language paragraphs before and after each theorem.  The exact attack is
-in \Cref{sec:prelim,sec:symmetry,sec:structured-lift}.  Root existence and
+plain-language paragraphs before and after each theorem.  The exact algebraic
+reduction is in \Cref{sec:prelim,sec:symmetry,sec:structured-lift}.  Root existence and
 retry probabilities are separated in \Cref{sec:slices}; the solver and gate
 models are isolated in \Cref{sec:complexity}; and
 \Cref{sec:evidence} states exactly which assumptions are tested rather than
-proved.  All long proofs and exhaustive cost-search certificates are deferred
-to the appendices.
+proved.  The appendices contain the deferred proofs, the unselected
+zero-offset analysis, implementation and circuit details, dimension formulas,
+cost-search certificates, and the reproducibility contract.
 
-The submitted $q=16$ matrices are not symmetrized and therefore do not satisfy
-the hypothesis of our quotient theorem.  Returning unchanged to that design,
-however, would restore the known characteristic-two attack surface discussed
-in \Cref{sec:related}.
-
-\section{An MQ Primer and Relation to Prior Work}\label{sec:mq-background}
+\section{MQ Background}\label{sec:mq-background}
 
 This section supplies the minimum background needed for the attack.  Readers
 already comfortable with underdetermined MQ, polar forms, Macaulay matrices,
@@ -490,9 +513,9 @@ The set
 \]
 is the \emph{fiber} above $z$: it is the set of all candidate assignments
 that produce the target.  After the affine reconstruction described later,
-those assignments become full signature candidates.  All arithmetic is over
-the stated finite field; every concrete \SNOVA{} calculation in this paper uses
-$q=19$, so additions and multiplications are performed modulo $19$.
+those assignments become full signature candidates.  Every
+production-parameter \SNOVA{} calculation uses $q=19$; the fully enumerated
+theorem checks in \Cref{sec:evidence} also use $\F_3$ and $\F_5$.
 
 As a toy example, two equations such as
 \[
@@ -523,16 +546,17 @@ The first two are properties of the quadratic map.  The third is a statement
 about a specific solver representation.  A proof of root existence is not, by
 itself, a proof that one solver invocation recovers the root.
 
-\subsection{Rank, polar forms, and collisions}
+\subsection{Rank, polar forms, and collisions}\label{sec:rank-primer}
 
 For a scalar quadratic polynomial $f$, define its polar form by
 \[
   \beta_f(x,y)=f(x+y)-f(x)-f(y)+f(0).
 \]
-In odd characteristic, $\beta_f$ is bilinear.  It is the finite-field analogue
-of the part of a directional derivative that comes from the quadratic terms.
-Its matrix rank measures how many independent directions the quadratic part
-couples.
+The polar form is bilinear in every characteristic.  In characteristic two it
+annihilates square terms; the Gauss-sum fiber bounds used later are stated only
+for odd $q$.  It is the finite-field analogue of the part of a directional
+derivative that comes from the quadratic terms.  Its matrix rank measures how
+many independent directions the quadratic part couples.
 
 For a vector-valued map $g=(g_1,\ldots,g_K)$, every nonzero coefficient vector
 $b\in\F_q^K$ selects a scalar combination $b\cdot g$.  The minimum polar rank
@@ -609,38 +633,106 @@ not automatically imply a one-dimensional Macaulay kernel: extension-field
 roots or algebraic relations among rows can create extra kernel vectors.  This
 is the separate production solver assumption in the structured attacks.
 
-\subsection{Relation to prior attacks}\label{sec:related}
+\section{Relation to Prior Attacks}\label{sec:related}
 
 Beullens rewrote the \SNOVA{} verifier in ordered bilinear power-pair
 coordinates and derived affine-column forgery attacks from rank defects in the
 resulting outer matrix~\cite{Beullens2024SNOVA}.  Our quotient acts one layer
 earlier: public-matrix symmetry identifies the power-pair polynomials
-\emph{before} the outer map sees them.
+\emph{before} the outer map sees them.  The underlying reversed-term
+observation is not unprecedented: Beullens explicitly notes that the
+symmetric MAYO base map permits combining the two orders, and contrasts that
+case with the nonsymmetric \SNOVA{} matrices then under analysis.  Our narrow
+novelty claim is the application to the symmetrized Version~2.3 public
+matrices and its integration with exact affine elimination, stable slices,
+rejection handling, and retry bounds.
 
 Cabarcas et al.\ exploit stability under the public matrix algebra with a
 multigraded XL algorithm~\cite{Cabarcas2025SNOVA}.  Furue et al.\ expose related
-multihomogeneous systems through matrix transformations~\cite{FurueEtAl2025}.  Our attack starts from the complete affine forgery
-system, uses a public column lift to retain every output equation, and then
+multihomogeneous systems through matrix transformations~\cite{FurueEtAl2026}.
+Our attack starts from all $M$ equations of the verifier after imposing a
+public column relation, uses exact affine elimination, and then
 restricts to an invariant kernel on which the affine offsets preserve the
 block grading needed by special XL.\@
+
+Two more recent formulation papers are especially relevant to the boundary of
+this contribution.  Li, Guo, and Ding place the unbalanced-oil-and-vinegar
+(UOV)-like schemes QR-UOV, MAYO, and \SNOVA{} in a common tensor-product
+framework and use it primarily for scheme comparison and
+design~\cite{LiGuoDing2025Unified}.  Ding et al.\ give ring-equation,
+whipping, and tensor formulations of \SNOVA{} and propose a more flexible
+reformulated design, including odd-characteristic parameters
+\cite{DingEtAl2026Reformulating}.  The point claimed here is not priority for
+tensor language or for symmetry in UOV-like schemes.  It is the explicit
+kernel of the ordered label map for the symmetric Version~2.3 verifier and the
+consequent public direct-forgery reduction.  In particular, the large
+ordered-label comparison in \Cref{tab:ordered-baseline} is not a
+state-of-the-art comparison with these works.
+
+\begin{table}[tbp]
+\centering
+\caption{Scope of the closest formulation and attack lines.  ``Ordered'' and
+``symmetric-square'' describe the public power-pair feature representation,
+not the full internal tensor language of each work.}
+\label{tab:related-scope}
+\scriptsize
+\setlength{\tabcolsep}{3.8pt}
+\begin{tabularx}{0.97\textwidth}{@{}
+>{\raggedright\arraybackslash}p{0.18\textwidth}
+>{\raggedright\arraybackslash}p{0.19\textwidth}
+>{\raggedright\arraybackslash}p{0.18\textwidth}
+>{\raggedright\arraybackslash}X@{}}
+\toprule
+Work & Public-matrix premise & Primary goal & Relation to this paper\\
+\midrule
+Beullens~\cite{Beullens2024SNOVA} & Nonsymmetric \SNOVA{} base matrices in the
+analyzed design & Direct forgery by affine columns & Uses ordered terms for
+\SNOVA{} and already identifies their collapse for symmetric MAYO.\\
+Cabarcas et al.~\cite{Cabarcas2025SNOVA} & Algebra-stable \SNOVA{} structure &
+Multigraded forgery solving & Supplies the special-XL model used after our
+quotient and stable-slice construction.\\
+Li--Guo--Ding~\cite{LiGuoDing2025Unified} & Tensor-product UOV-like schemes &
+Unified formulation and scheme design & Establishes nearby tensor language;
+our claim is the concrete public quotient and direct-forgery reduction.\\
+Ding et al.~\cite{DingEtAl2026Reformulating} & Ring, whipping, and tensor
+forms of \SNOVA{} & Reformulation and parameter design & Motivates a
+comparison with redesigned odd-characteristic systems; it is not used as a
+prior attack baseline here.\\
+This paper & Symmetric Version~2.3 base matrices & Exact quotient and
+conditional direct-forgery costs & Factors ordered labels through
+$\Sym^2(A)$ before the outer map and retains all $M$ equations of the
+substituted verifier.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The last two formulation papers are not assigned residual dimensions or
+solver exponents in our tables because we do not import an attack instance
+from them.  Conversely, we do not claim that their tensor descriptions omit
+every equivalent symmetry identity.  The concrete comparison made here is
+only this: the present attack fixes the symmetric, odd-characteristic
+Version~2.3 verifier, proves the quotient before the outer map, retains all
+outputs, records its residual dimensions, and then applies the specified
+generic-MQ or special-XL estimator.
 
 The wedge attack breaks the submitted characteristic-two parameters through
 the block-ring structure~\cite{BrosEtAl2026SNOVAWedge}; later work studies the
 wedge map further~\cite{TsengEtAl2026Wedge}.  Other analyses reinterpret
-scalar-expanded \SNOVA{} as Unbalanced Oil and Vinegar (UOV), or lift it to
-extension-field UOV, for key recovery~%
+scalar-expanded \SNOVA{} as UOV, or lift it to extension-field UOV, for key
+recovery~%
 \cite{IkematsuAkiyama2024,LiDing2024,NakamuraEtAl2025}.  Symmetric and
 exterior algebras also appear in recent UOV key-recovery attacks~%
 \cite{JinEtAl2026,Ran2026}.  Our attack is a direct forgery attack: it does not
 recover the hidden oil subspace that constitutes the UOV-style secret key.
 
 For the generic $\ell=2$ cores, we reproduce Hashimoto's optimization,
-including its published boundary value $a=1$~%
+including the published boundary value $a=1$, where $a$ is the optimizer's
+square-subsystem parameter~%
 \cite{Hashimoto2023,Beullens2024SNOVA}.  When this leaves the elementary system
-$\operatorname{MQ}(q,1,1)$, the artifact solves it by exhaustive evaluation and
-charges that work conservatively.  May, Ostuzzi, and Ressler's \emph{Just
+$\operatorname{MQ}(q,1,1)$, the pinned convention solves it by exhaustive evaluation and
+assigns one primitive-unit charge per field element tested.  May, Ostuzzi, and Ressler's \emph{Just
 Guess} algorithm and the generalized variable partitioning of Asanuma et al.\ are more recent approaches to underdetermined MQ~%
-\cite{MayOstuzziRessler2026,AsanumaEtAl2026}.  Evaluating the released
+\cite{MayOstuzziRessler2026,AsanumaEtAl2026}.  Evaluating the published
 classical Just-Guess formulas on our residual dimensions gives larger estimates
 than the selected Beullens--Hashimoto modes.  We have not implemented the newer
 generalized partition search.  The ``generic MQ'' numbers below are therefore
@@ -657,7 +749,20 @@ underdetermined residual systems here, so we do not substitute it into
 reductions, solver-operation models, and complete implementations.
 
 
-\subsection{Notation at a glance}\label{sec:notation}
+\section{The Affine-Column Framework}\label{sec:prelim}
+
+This section rewrites the public verifier after an attacker-imposed affine
+relation among signature columns.  The result has three visibly separate
+parts: quotient quadratic features, linear terms created by the offsets, and a
+constant term.  \Cref{prop:affine-reduction} then eliminates the affine part
+exactly.
+
+Three vector spaces appear and should not be confused.  The raw public feature
+vector has length $N_{\rm raw}$; the verifier outputs $M$ scalar equations; and the
+common column variable $u$ has length $N_0$.  The matrices below simply move
+between these three spaces.
+
+\subsection{Notation and dimensions}\label{sec:notation}
 
 \begin{table}[H]
 \centering
@@ -683,36 +788,30 @@ the relation.\\
 $A=\F_q[S]$ & Public commutative matrix algebra generated by $S$; in the
 Version~2.3 rows, $\dim_{\F_q}A=\ell$.\\
 $m_1$ & Number of public base-form groups in the pinned implementation.\\
-$K=m_1\binom{\ell+1}{2}$ & Maximum number of distinct quadratic power-pair
-features after the symmetry quotient.\\
-$Q_R$ & Matrix mapping the $K$ quotient features to public output directions.\\
+$K=m_1\binom{\ell+1}{2}$ & Number of quotient-feature coordinates supplied by
+the symmetric-square representation; their polynomial span may have smaller
+dimension until a rank preflight is performed.\\
+$Q_R$, $\rho=\rank_{\F_q}Q_R$ & Linear outer map from the $K$ quotient
+coordinates to public output directions, and the dimension of its image.
+This is not the matrix rank of a scalar quadratic form.\\
+$\rho_{\rm poly}(L)$ & Dimension of the span of the homogeneous quotient
+coordinate polynomials after restriction to a slice $L$; this is the
+``restricted feature rank.''\\
 $C_{R,\mathbf v}$ & Linear constraint matrix obtained by projecting away the quadratic
 image.\\
 $H_{R,\mathbf v}$ & Stable $A$-linear kernel used to choose structured solver slices.\\
 $L$, $h$ & Slice direction space and its base-field dimension.\\
 $\tau=K-h$ & Slice deficit.  It enters the exact full-rank retry formula;
 for the selected $\tau=10,14$ slices, the retry count is essentially $q^\tau$.\\
-$r_*$ & Minimum full-space polar rank over all nonzero scalar output
-combinations.\\
-$e_L(b)$ & Cross-polar rank of output direction $b$ relative to slice $L$.\\
+$r(b)$, $r_*$ & Matrix rank of the polar bilinear form of the scalar
+combination $b\cdot g$, and its minimum over $b\ne0$.\\
+$e_L(b)$ & Rank of the cross-polar linear map in output direction $b$
+relative to the slice $L$.\\
 $\mu$, $\bar\eta$ & Expected roots on a random target--slice pair and an upper
 bound on its collision mass.\\
 \bottomrule
 \end{tabularx}
 \end{table}
-
-\section{The Affine-Column Framework}\label{sec:prelim}
-
-This section rewrites the public verifier after an attacker-imposed affine
-relation among signature columns.  The result has three visibly separate
-parts: quotient quadratic features, linear terms created by the offsets, and a
-constant term.  \Cref{prop:affine-reduction} then eliminates the affine part
-exactly.
-
-Three vector spaces appear and should not be confused.  The raw public feature
-vector has length $N_{\rm raw}$; the verifier outputs $M$ scalar equations; and the
-common column variable $u$ has length $N_0$.  The matrices below simply move
-between these three spaces.
 
 \subsection{Parameters and public forms}\label{sec:parameters}
 
@@ -764,6 +863,11 @@ Write the stacked signature columns as
 \[
   U=[u_0|\cdots|u_{r-1}],\qquad u_j\in\F_q^{N_0}.
 \]
+For a matrix block $b\in\{0,\ldots,n-1\}$, our entry convention is
+\[
+  U_b[a,j]=(u_j)_{b\ell+a},
+  \qquad 0\le a<\ell,\quad 0\le j<r.
+\]
 The attacker chooses multipliers $R_j\in A$ and offsets
 $v_j\in\F_q^{N_0}$, with $R_0=1$.  Write
 $R=(R_0,\ldots,R_{r-1})$ and
@@ -781,17 +885,22 @@ Before the relation is imposed, the feature vector has
   N_{\rm raw}=m_1\ell^2r^2
 \]
 coordinates: $m_1$ base forms, $\ell^2$ ordered power pairs, and $r^2$ ordered
-column pairs.  The official verifier flattens each $r\times\ell$ block in
-$(i,j)$ order, whereas our feature formulas use the block-transposed $(j,i)$
-order.  Let $t_{\rm off}\in\F_q^M$ and
-$\mathcal E_{\rm off}\in\F_q^{M\times N_{\rm raw}}$ denote the target and public outer
-map in the official order.  If $\Pi_{\rm out}$ is the corresponding public
-permutation, define
+column pairs.  The output order is public and fixed by the reference
+implementation; it is neither secret nor sampled per key.  The implementation
+and our equations flatten each $r\times\ell$ output block in opposite orders.
+Let $\Pi_{\rm out}$ be the resulting fixed transpose--vectorization
+permutation, recorded entry by entry in
+\Cref{app:output-permutation}, and put
 \[
   t=\Pi_{\rm out}t_{\rm off},\qquad
   \mathcal E=\Pi_{\rm out}\mathcal E_{\rm off}.
 \]
-This is only a coordinate reordering; it changes neither ranks nor solutions.
+This coordinate reordering is valid for square and rectangular parameter sets
+and changes neither ranks nor solutions.  In the same convention, the
+reference public expansion forms
+$\Sigma_{S^a}U$ and then evaluates
+$U^\transpose\Sigma_{S^a}P_i\Sigma_{S^b}U$; hence the left--right power
+orientation in \eqref{eq:bilinear-form} is the verifier's orientation.
 
 After substituting \eqref{eq:relation}, products of two variable parts give
 quadratic terms in $u$, products of one variable part and one offset give
@@ -832,19 +941,8 @@ Now choose $W_R$ whose rows form a basis of the left kernel of $Q_R$ and put
 \end{equation}
 Multiplying by $W_R$ kills every quadratic feature.  What remains is therefore
 an ordinary affine system in $u$.  This elementary projection is the key to
-retaining the \emph{complete} verifier rather than dropping output equations
-that do not lie in the quadratic image.
-
-\begin{center}
-\begin{tabularx}{0.92\textwidth}{@{}>{\bfseries}p{0.18\textwidth}X@{}}
-$Q_R$ & sends the $K$ distinct quadratic features to the $M$ public output
-coordinates; its column space is the quadratic image.\\
-$W_R$ & keeps precisely the output directions orthogonal to that image, so
-$W_R Q_R=0$.\\
-$C_{R,\mathbf v}=W_R\Lambda_{R,\mathbf v}$ & records the ordinary linear equations that remain in
-those output directions after the offsets are introduced.
-\end{tabularx}
-\end{center}
+retaining all equations of the constrained verifier rather than dropping
+output directions that do not lie in the quadratic image.
 
 \begin{center}
 \fcolorbox{deepblue}{lightblue}{\parbox{0.92\textwidth}{\small
@@ -857,7 +955,7 @@ where $q$ is quadratic and $\ell_1,\ell_2$ are affine.  The combination
 $2y_1-y_2=2\ell_1(u)-\ell_2(u)$ cancels the quadratic term.  Solving this
 affine equation and substituting it back leaves one quadratic equation; neither
 original output was dropped.  The rows of $W_R$ perform the same cancellation
-simultaneously for the complete verifier.}}
+simultaneously for all equations of the constrained verifier.}}
 \end{center}
 
 \begin{proposition}[Exact affine reduction]\label{prop:affine-reduction}
@@ -870,7 +968,8 @@ where $[Q_R\ \Lambda_{R,\mathbf v}]$ denotes horizontal matrix concatenation.  A
 reduction, exactly $\delta$ independent affine consistency conditions remain
 on the target.  For every target satisfying those conditions, Gaussian
 elimination leaves $\rho$ equations of degree at most two in
-$N_0-\lambda$ variables, with exactly the same solution set as
+$N_0-\lambda$ variables.  Through the affine parametrization, the residual
+solution set maps bijectively to the solution set of
 \eqref{eq:ordered-system}.
 
 In particular, if $\rho=K$ and $\lambda=M-K$, every target passes the
@@ -899,20 +998,39 @@ The codomain of $C_{R,\mathbf v}$ has dimension $M-\rho$, while its image has
 dimension $\lambda$.  Solvability therefore imposes exactly
 $(M-\rho)-\lambda=\delta$ independent affine conditions on the target.
 For a target satisfying the affine consistency conditions, parameterize the
-solution space of these affine equations by $N_0-\lambda$ free variables and
-substitute into a complementary set of $\rho$ rows.  This leaves $\rho$
-equations of degree at most two and uses only invertible row operations and
-exact affine elimination, so the solution set is unchanged.  If $\rho=K$ and
-$\lambda=M-K$, then $\delta=0$ and $C_{R,\mathbf v}$ is surjective onto its
-$M-K$-dimensional codomain; hence every target passes the affine consistency
-test.
+solution space of these affine equations by $N_0-\lambda$ free variables.
+Choose a linear map $V_R:\F_q^M\to\F_q^\rho$ whose restriction to
+$\operatorname{im}Q_R$ is an isomorphism.  Together, $W_R$ and $V_R$ separate
+the quotient by $\operatorname{im}Q_R$ from the image itself.  Indeed, if
+$T_Rx=(W_Rx,V_Rx)=0$, then $x\in\ker W_R=\operatorname{im}Q_R$, and the
+injectivity of $V_R$ on that image gives $x=0$.  The domain and codomain have
+the same dimension, so $T_R=(W_R,V_R)$ is an isomorphism.  Substitution
+into
+\[
+ V_R\!\left(Q_Rz_{\rm sym}(u)+\Lambda_{R,\mathbf v}u-b\right)=0
+\]
+therefore leaves exactly $\rho$ equations of degree at most two, and these
+equations together with $C_{R,\mathbf v}u=W_Rb$ are equivalent to all $M$
+equations of the substituted verifier.  Thus no row is dropped and the solution set is
+preserved bijectively under the affine parametrization.  If $\rho=K$ and $\lambda=M-K$, then $\delta=0$ and
+$C_{R,\mathbf v}$ is surjective onto its $M-K$-dimensional codomain; hence
+every target passes the affine consistency test.
 \end{proof}
 
 \paragraph{Operational meaning.}
 The attacker computes $Q_R$, $W_R$, and $C_{R,\mathbf v}$ from the public key before
 running an MQ solver.  If the ranks are unfavorable, the relation or offsets
 are changed.  When $\rank Q_R=K$ and $\rank C_{R,\mathbf v}=M-K$, every hash target first
-determines a nonempty affine space $a(t)+\ker C_{R,\mathbf v}$ on which
+determines a nonempty affine space $a(t)+\ker C_{R,\mathbf v}$.  Fix a public
+linear right inverse
+\[
+ J_{R,\mathbf v}:\F_q^{M-K}\longrightarrow\F_q^{N_0},
+ \qquad C_{R,\mathbf v}J_{R,\mathbf v}=I,
+\]
+and take
+$a(t)=J_{R,\mathbf v}W_R(t-c_{R,\mathbf v})$.  This base point depends only
+on the affine output coordinates, not on the independent residual target.
+On that affine space,
 $K$ equations of
 degree at most two remain.  This is an exact reformulation, not a root-existence
 theorem: the residual equations may still have no solution.  Root availability
@@ -996,13 +1114,13 @@ symmetric public key.
 The theorem is an upper bound: additional public dependencies could make the
 quadratic image even smaller.  The concrete attacks separately check
 $\rank Q_R=K$ before solving.  Thus the value $K$ used in the cost tables is
-not inferred from symmetry alone; it is the exact rank observed in the public
+not inferred from symmetry alone; it is the exact rank computed by the public
 preflight for the chosen relation.
 
 The factorization itself uses only transposition symmetry and is valid in every
 characteristic.  Odd characteristic is needed only for the familiar direct-sum
 interpretation
-$A\otimes A=\Sym^2(A)\oplus\bigwedge^2(A)$.  The submitted $q=16$ system is
+$A\otimes A\cong\Sym^2(A)\oplus\bigwedge^2(A)$.  The submitted $q=16$ system is
 outside this theorem because its public base matrices are not symmetrized.
 
 \section{Structured Stable Lifts}\label{sec:structured-lift}
@@ -1013,8 +1131,8 @@ terms that mix all coordinates.  That mixing destroys the block grading used
 by the selected published $\ell=4$ special-XL model.  We therefore need offsets
 that do two jobs at once:
 \begin{enumerate}[label=(\roman*),itemsep=2pt]
-\item span the missing affine output directions, so that the full verifier is
-      retained; and
+\item span the missing affine output directions, so that all $M$ equations of
+      the substituted verifier are retained; and
 \item confine all offset-linear terms to a small public row space, so that a
       large invariant kernel remains available for special XL.\@
 \end{enumerate}
@@ -1083,17 +1201,6 @@ quadratic features but changes none of the offset-linear features.  The
 offsets can therefore solve the missing affine equations, while the nonlinear
 solver sees a clean $A$-linear slice.
 
-\begin{center}
-\fcolorbox{deepblue}{lightblue}{\parbox{0.94\textwidth}{\small
-\textbf{The stable-lift logic in four arrows.}
-Structured offsets force every offset-linear row into $\mathcal U_w$;
-full orbit rank makes $\operatorname{row}(\mathcal O_{R,\mathbf v})=\mathcal U_w$;
-therefore $H_{R,\mathbf v}=\ker\mathcal O_{R,\mathbf v}$ is annihilated by
-$\mathcal F_{R,\mathbf v}$; and the complete $A$-orbit in $\mathcal O_{R,\mathbf v}$ makes
-$H_{R,\mathbf v}$ $A$-linear.  The offsets can thus cover the missing affine output
-directions without destroying the block structure used by special XL.\@}}
-\end{center}
-
 \subsection{From an \texorpdfstring{$A$}{A}-linear kernel to four variable blocks}
 
 Special XL needs variables divided into blocks with controlled
@@ -1111,8 +1218,10 @@ using blocks $a$ and $b$ has multidegree
 $\mathbf e_a+\mathbf e_b$.
 
 \begin{lemma}[Eigenblock coordinates of the quotient]\label{lem:spectral-quotient}
-Let $\Omega/\F_q$ be a splitting field of the minimal polynomial of $S$, and
-let $e_1,\ldots,e_\ell$ be the primitive idempotents of
+Assume that the minimal polynomial of $S$ is irreducible of degree $\ell$.
+Thus $A=\F_q[S]$ is a separable field extension of $\F_q$ of degree $\ell$.
+Let $\Omega/\F_q$ be a splitting field of that polynomial, and let
+$e_1,\ldots,e_\ell$ be the primitive idempotents of
 $A\otimes_{\F_q}\Omega$.  If $L$ is an $A$-linear space of $A$-dimension
 $s$, then
 \[
@@ -1141,15 +1250,34 @@ feature uses only variables in $L_a$, while an off-diagonal feature is bilinear
 in the variables from $L_a$ and $L_b$, giving the stated multidegrees.
 \end{proof}
 
+\paragraph{Restricted polynomial rank.}
+Write $z_{{\rm sym},1},\ldots,z_{{\rm sym},K}$ for the homogeneous quotient
+coordinate polynomials.  For an $\F_q$-linear slice direction $L$, define
+\[
+ \mathcal Z_L:\F_q^K\longrightarrow\F_q[L]^{\rm hom}_2,
+ \qquad
+ c\longmapsto\left.(c\cdot z_{\rm sym})\right|_L,
+ \qquad
+ \rho_{\rm poly}(L)=\rank_{\F_q}\mathcal Z_L.
+\]
+Thus $\rho_{\rm poly}(L)$ is the dimension of the restricted polynomial
+span.  It is distinct from the outer-map rank $\rank_{\F_q}Q_R$, from the
+polar rank of an individual scalar quadratic, and from the cross-polar ranks
+in \Cref{sec:slices}.  Scalar extension to $\Omega$ preserves
+$\rho_{\rm poly}(L)$.
+
 \begin{corollary}[Stable affine slices]\label{cor:stable-slices}
-Assume the public checks
+Assume that $q$ is odd, that the minimal polynomial of $S$ is irreducible of
+degree $\ell$, and that the public base-field rank checks
 \begin{equation}\label{eq:stable-preflight}
- \rank Q_R=K,\qquad
- \rank C_{R,\mathbf v}=M-K,\qquad
- \rank\mathcal O_{R,\mathbf v}=m_1\ell^2
+ \rank_{\F_q} Q_R=K,\qquad
+ \rank_{\F_q} C_{R,\mathbf v}=M-K,\qquad
+ \rank_{\F_q}\mathcal O_{R,\mathbf v}=m_1\ell^2
 \end{equation}
 pass, and let $L\subseteq H_{R,\mathbf v}$ be an $A$-linear subspace of
-$A$-dimension $s$ (equivalently, base-field dimension $h=\ell s$).  For every
+$A$-dimension $s$ (equivalently, base-field dimension $h=\ell s$).  Assume
+also that the restricted polynomial-rank check
+$\rho_{\rm poly}(L)=K$ passes.  For every
 target, the affine equations in \Cref{prop:affine-reduction} have a
 solution space $a(t)+\ker C_{R,\mathbf v}$ for a publicly computed base point
 $a(t)$.  For every $y\in\ker C_{R,\mathbf v}$, the affine
@@ -1162,11 +1290,11 @@ constant terms in the same one or two blocks as the corresponding quadratic
 term.  Introducing one homogenizing variable per block---an auxiliary variable that
 is set to one after solving---therefore turns each complete affine equation
 into a homogeneous equation of multidegree
-$2\mathbf e_a$ or $\mathbf e_a+\mathbf e_b$.  If the restricted quadratic
-feature map has total rank $K$, then the disjoint monomial supports of these
-unordered multidegrees force rank $m_1$ in every component: there are
+$2\mathbf e_a$ or $\mathbf e_a+\mathbf e_b$.  The disjoint monomial supports
+of these unordered multidegrees force $\Omega$-rank $m_1$ in every component:
+there are
 $\binom{\ell+1}{2}$ components, each has rank at most $m_1$, and their ranks
-sum to $K=m_1\binom{\ell+1}{2}$.
+sum to $\rho_{\rm poly}(L)=K=m_1\binom{\ell+1}{2}$.
 \end{corollary}
 
 \begin{proof}
@@ -1178,16 +1306,19 @@ The first two ranks in \eqref{eq:stable-preflight} say that the quotient has
 its full expected rank and that the offsets supply every remaining affine
 output direction.  The orbit rank says that the kernel has the predicted
 $A$-linear dimension and kills all offset-linear motion.  The restricted
-quadratic rank then certifies that no multidegree component was lost on the
-chosen slice.  All of these tests are public and occur before the expensive
-Macaulay computation.  A failing relation, offset family, or slice is simply
-replaced.
+polynomial-rank check $\rho_{\rm poly}(L)=K$ then certifies that no
+multidegree component was lost on the chosen slice.  All of these tests are
+public and occur before the expensive Macaulay computation.  A failing
+relation, offset family, or slice is rejected and the preflight is repeated
+with another public choice; the evidence in \Cref{sec:evidence} records the
+observed number of choices, but the theorem does not guarantee that this
+search succeeds for every valid key.
 
-\subsection{Passing the verifier's block-symmetry check}\label{sec:rejection}
+\section{Verifier Rejection Compatibility}\label{sec:rejection}
 
 The public verifier does more than evaluate the quadratic map.  It also rejects
 signatures containing too many symmetric blocks.  A root of the reduced MQ
-system is useful only if it passes this final check.  We therefore build
+system is useful only if it passes this block-symmetry rejection test.  We therefore build
 rejection compatibility into the reduction rather than treating it as an
 unmodeled success probability.
 
@@ -1202,13 +1333,15 @@ $U_b[a,c]=U_b[c,a]$ gives an affine system
 \begin{equation}\label{eq:rejection-affine}
  G_bu=-h_b.
 \end{equation}
+Here $G_b$ is the public coefficient matrix of the variable part of those
+equalities, and $h_b$ is their public offset vector.
 If $\rank[G_b\mid-h_b]>\rank G_b$, this system is inconsistent, so no point in
 the entire residual search space can make block $b$ symmetric.  Requiring this
 inconsistency for every square block is an exact public certificate that every
-root produced by the structured lift passes rejection.
+root produced by the structured lift passes that check.
 
 \paragraph{A deterministic $\ell=2$ construction.}
-The first two parameter levels use offsets that force a fixed nonzero skew in
+All three parameter levels use offsets that force a fixed nonzero skew in
 every block.
 
 \begin{proposition}[Fixed-skew $\ell=2$ lift]\label{prop:fixed-skew}
@@ -1227,108 +1360,52 @@ column relation has
 \begin{equation}\label{eq:fixed-skew-identity}
  U_b[0,1]-U_b[1,0]=1.
 \end{equation}
-Consequently every solution passes the $\ell=2$ symmetric-block rejection
-check.  If the public preflight also gives
+Consequently every solution passes the $\ell=2$ block-symmetry rejection
+test.  If the public preflight also gives
 $\rank Q_R=K$ and $\rank C_{R,\mathbf v}=M-K$, every target passes the
 affine consistency test and leaves $K$ equations of degree at most two in
-$N_0-M+K$ variables.  Every root of that residual system is a valid signature.
+$N_0-M+K$ variables.  Every root of that residual system reconstructs to a
+root of the substituted verifier that passes the block-symmetry rejection
+test; after encoding, it must still pass the complete unmodified verifier.
 \end{proposition}
 
 \begin{proof}
 The first row of $R_1$ is the second row of $R_0=I$.  Hence the variable part
 of $U_b[0,1]-U_b[1,0]$ vanishes.  The remaining offset difference is one by
 \eqref{eq:fixed-skew-offset}, proving \eqref{eq:fixed-skew-identity}.  No block
-is symmetric.  The final statement is the full-lift case of
-\Cref{prop:affine-reduction}.
+is symmetric.  The final statement is the full-rank case
+$\rho=K$, $\lambda=M-K$ of \Cref{prop:affine-reduction}.
 \end{proof}
 
-Thus the fixed-skew construction has no rejection probability: every MQ root
-is acceptable.  The Level-V headline attack uses a faster alternative in which
-targets are filtered before solving.
+Thus every fixed-skew MQ root passes the block-symmetry rejection test
+deterministically.  Serialization, canonical encoding,
+message--salt freshness, and every other public check are still applied by the
+final unmodified verifier.  All three $\ell=2$ headline rows use this
+fixed-skew lift.
 
-\paragraph{The zero-offset $\ell=2$ filter.}
-Set $R_0=I$, $R_1=0$, and use zero offsets.  Each block then has the form
-\[
- \begin{pmatrix}x&0\\ y&0\end{pmatrix},
-\]
-so it is symmetric exactly when $y=0$.  These rejection events are nonzero
-hyperplanes on disjoint block coordinates.  This relation is chosen
-carefully: a relation that forced the two off-diagonal entries to agree would
-make every block symmetric and would be useless.
-
-Let $N$ be the residual-domain dimension ($N=N_0$ for this zero-offset lift)
-and let $g:\F_q^N\to\F_q^K$ be the residual map of degree at most two.
-For each nonzero
-$b\in\F_q^K$, take the polar rank of the scalar quadratic $b\cdot g$, and let
-$r_*$ be the minimum of these ranks.  Thus $r_*$ measures the worst output
-direction; a large $r_*$ forces every target fiber to have nearly its expected
-size.
-
-Put
-\[
- t_{\rm rej}=\lfloor n/4\rfloor+1,
- \qquad B=\binom n{t_{\rm rej}},
- \qquad \alpha=1-q^{-K},
-\]
-and let $\mathcal X_{\rm acc}$ be the assignments accepted by the block-symmetry filter.
-At least $t_{\rm rej}$ symmetric blocks are needed for rejection.  Because
-the $n$ hyperplanes use disjoint coordinates, the exact density of accepted
-assignments is
-\begin{equation}\label{eq:l2-accepted-density}
- a_n\coloneqq\frac{|\mathcal X_{\rm acc}|}{q^N}
- =q^{-n}\sum_{k=0}^{\lfloor n/4\rfloor}\binom nk(q-1)^{n-k}.
-\end{equation}
-
-\begin{proposition}[Accepted targets for the $\ell=2$ filter]\label{prop:l2-rejection}
-Every target has an accepted root if
-\begin{equation}\label{eq:l2-rejection}
- 1-Bq^{-t_{\rm rej}}>\alpha(1+B)q^{K-r_*/2}.
-\end{equation}
-For a uniform target $z\in\F_q^K$,
-\begin{equation}\label{eq:l2-accepted-target}
- \Pr\bigl[g^{-1}(z)\cap\mathcal X_{\rm acc}\ne\varnothing\bigr]
- \ge \frac{a_n}{1+\alpha q^{K-r_*/2}}.
-\end{equation}
-Moreover, if $1-\alpha q^{K-r_*/2}>0$, every target $z$ satisfies
-\begin{equation}\label{eq:l2-accepted-fraction}
- \frac{|g^{-1}(z)\cap\mathcal X_{\rm acc}|}{|g^{-1}(z)|}
- \ge
- 1-\frac{Bq^{-t_{\rm rej}}+\alpha Bq^{K-r_*/2}}
-          {1-\alpha q^{K-r_*/2}},
-\end{equation}
-whenever the right-hand side is positive.
-\end{proposition}
-
-\begin{proof}
-See \Cref{app:proof-l2-filter}.
-\end{proof}
-
-The three conclusions answer different questions.  Readers interested only
-in the concrete attack may retain the following takeaway: for the Level-V
-system, the global condition $r_*\ge240$ implies the first inequality and
-therefore gives an accepted root for every target.  More generally,
-\eqref{eq:l2-rejection} is a sufficient worst-case condition: every target has
-an accepted root.  Inequality \eqref{eq:l2-accepted-target} lower-bounds the
-fraction of uniformly sampled targets that have one.  Inequality
-\eqref{eq:l2-accepted-fraction} says that, target by target, almost every root
-is accepted when the rank is high enough.  The Level-V headline uses the first
-condition; the second gives an explicit retry factor if only a weaker global
-rank bound is available.
+A lower-per-solve-cost zero-offset alternative has a nontrivial acceptance
+problem: its roots may contain too many symmetric blocks.  The exact
+accepted-root bounds are collected in \Cref{app:zero-offset}.  They prove
+existence and population-fraction statements under polar-rank hypotheses, but
+do not determine which root a deterministic or nonuniform MQ solver returns.
+Accordingly, this alternative is not used in the headline table; its numerical
+sensitivity analysis also appears in \Cref{app:zero-offset}.
 
 \section{Root Existence, Uniqueness, and Retry Bounds}\label{sec:slices}
 
 After the exact affine reduction, the structured attack repeatedly chooses a
 hash target and an affine coset of the selected slice direction space.  We call
-one such pair a \emph{target--slice trial}.  The attack asks whether the
-resulting MQ system has a recoverable root.  Three events must not be conflated:
-\begin{enumerate}[label=(\roman*),itemsep=2pt]
-\item the slice contains at least one base-field root;
-\item it contains exactly one base-field root; and
-\item the chosen Macaulay matrix has a one-dimensional kernel from which that
-      root can be read.
-\end{enumerate}
-This section proves statements about the first two events.  The third is the
+one such pair a \emph{target--slice trial}, equivalently a target--coset pair.
+The primer in \Cref{sec:mq-primer} distinguishes root existence, uniqueness,
+and solver readout.  This section treats the first two; the third remains the
 separate special-XL solving assumption in \Cref{sec:special-xl}.
+
+Concretely, after the affine target coordinates determine a base point
+$a(t)$, the attack samples $y+L$ uniformly from
+$\ker C_{R,\mathbf v}/L$, independently of the retained residual target and
+of every other fresh trial.  The target-dependent translation $a(t)+y$ does
+not change any polar map.  This is the sampling rule used when the abstract
+theorems below take a uniform coset of $V/L$.
 
 Let $V$ be the full residual direction space, let $L\subseteq V$ be the chosen
 slice direction space, and write $h=\dim L$.  For a map of degree at most two
@@ -1403,7 +1480,8 @@ If $h=K-\tau$ and $e_*\ge h-\Delta$, then
 \begin{equation}\label{eq:defect-retry}
  \Theta_L(g)<q^{\tau+\Delta},
  \qquad
- \mathbb E[\textnormal{trials to a root-containing target--coset pair}]
+ \mathbb E[\textnormal{independent trials to a root-containing
+ target--coset pair}]
  <1+q^{\tau+\Delta}.
 \end{equation}
 This last bound controls the search for a root-containing target--coset pair,
@@ -1453,7 +1531,8 @@ until $Z=1$ is at most
 
 Let $\mathsf U$ be the uniform target--coset pair conditioned on $Z>0$, and
 let $\mathsf P$ be the planted distribution obtained by choosing a uniform
-coset, a uniform point in it, and the point's image as target.  If
+coset, a uniform point in it, and the point's image as target.  Conditioned on
+$Z=1$, both laws equal the uniform target--coset law conditioned on $Z=1$.  If
 $\bar\eta<1$, then
 \begin{equation}\label{eq:planted-tv}
  \Pr_{\mathsf P}[Z\ge2]\le\eta_0\le\bar\eta,
@@ -1524,14 +1603,15 @@ $2^{-43.47}$ for $\tau=10$ and below $2^{-60.47}$ for $\tau=14$; the
 corresponding total-variation bounds are below $2^{-42.47}$ and $2^{-59.47}$.
 
 \begin{corollary}[Full-space target availability]\label{cor:full-space}
-Let $g:\F_q^N\to\F_q^K$ have degree at most two.  Let $r_*$ be the
+Let $q$ be odd and let $g:\F_q^N\to\F_q^K$ have degree at most two.  Let
+$r_*$ be the
 minimum polar rank of a nonzero output combination, and put
 $\alpha=1-q^{-K}$.  For a uniform target,
 \begin{equation}\label{eq:full-space-success}
  \Pr[g^{-1}(z)\ne\varnothing]
  \ge \frac{1}{1+\alpha q^{K-r_*}}.
 \end{equation}
-Hence the expected number of target trials is at most
+Hence, for independent repetitions, the expected number of target trials is at most
 $1+\alpha q^{K-r_*}$.  If $r_*\ge2K$, every target has a root.
 \end{corollary}
 
@@ -1551,25 +1631,25 @@ pair in \eqref{eq:defect-retry}; unique recovery instead
 depends on the aggregate quantity $\bar\eta$ and the Macaulay kernel model.
 
 For the fixed-skew $\ell=2$ lift, take $L=V$ to be the complete residual space.
-By \Cref{prop:fixed-skew}, every root is accepted.  The expected target-search
+By \Cref{prop:fixed-skew}, every root passes the block-symmetry rejection test.  The
+expected target-search
 factor is at most $1+\alpha q^{K-r_*}$, and $r_*\ge2K$ makes every target
-solvable.  Under the AXN conversion, the arithmetic budgets remain below the
-nominal NIST references for global ranks at least 46, 68, and 89 at Levels I,
-III, and V.  The sufficient all-target thresholds are 96, 144, and 192.  These
-are global conditions and concern the converted operation model, not a
-complete solver circuit; the sampled evidence in \Cref{sec:evidence} is not a
-certificate.  The Level-V filter attack instead uses
-\Cref{prop:l2-rejection}.
+solvable.  The concrete rank thresholds, retry penalties, and evidence are
+collected in \Cref{sec:l2-costs,tab:fixed-skew-evidence}; all are global
+conditions on nonzero output directions, not consequences of sampled ranks.
 
-\subsection{Sampling exactly uniform targets with the official conversion}
+\subsection{Uniform targets in the random-oracle experiment}
+\label{sec:target-sampling}
 
 The probability theorems above assume a uniform target in $\F_q^K$.
-Modulo reduction of binary hash chunks can introduce a small bias, so we do
-not simply assume uniformity.  The verifier need not be changed to remove the
-bias.  The attacker repeatedly chooses a
-message--salt input, runs the official hash-to-field conversion, and keeps the
-input only when each underlying binary chunk lies in a range that makes the
-resulting base-$19$ digits exactly uniform.
+This subsection states precisely the idealization under which the official
+hash-to-field conversion supplies that distribution.  We model the
+domain-separated SHAKE calls in the nested target computation as random
+oracles.  A \emph{fresh trial} is one whose actual outer-oracle input has not
+appeared in any earlier trial.  The forger skips any duplicate.  Conditional
+on freshness, the binary chunks returned on distinct trials are independent
+and uniform.  The statements below are exact within this random-oracle
+experiment; they are not standard-model statements about deterministic SHAKE.
 
 Concretely, the official $q=19$ conversion reads at most fifteen base-19 digits
 from each 64-bit chunk.  If a uniform $b$-bit chunk $X$ is to supply $a$
@@ -1578,29 +1658,49 @@ digits, the attacker accepts that message--salt candidate only if
  X<\left\lfloor\frac{2^b}{q^a}\right\rfloor q^a.
 \end{equation}
 Conditioned on this event, $X\bmod q^a$ is uniform, so the extracted
-digits are jointly uniform.  Applying \eqref{eq:uniform-chunk} independently
-to every chunk makes the retained official target exactly uniform.  The
-invertible output-coordinate change used in \Cref{sec:affine-columns}
-preserves uniformity.  Conditioning on the values of the $M-K$ affine-output coordinates---or on
-their passing values in a filtered lift---then leaves the remaining $K$
-residual target coordinates exactly uniform, which is the distribution
-assumed in the root theorems.  This is
-ordinary rejection sampling performed by the forger over message--salt
-candidates; the verifier continues to apply the unmodified official
-conversion.  Across all Version~2.3 lengths the acceptance probability is at
-least $0.152462$, or fewer than 6.6 candidates on average.
+digits are jointly uniform.  For independent chunks, conditioning on the
+product event that \eqref{eq:uniform-chunk} holds for every chunk therefore
+makes the retained official target exactly uniform in $\F_{19}^M$.  The fixed
+invertible output-coordinate change in \Cref{sec:affine-columns} preserves
+uniformity.  Moreover, the proof of \Cref{prop:affine-reduction} shows that
+\[
+ T_R=(W_R,V_R):\F_q^M\longrightarrow\F_q^{M-K}\times\F_q^K
+\]
+is an isomorphism when $\rank Q_R=K$.  Hence
+$T_R(t-c_{R,\mathbf v})$ is uniform, and conditioning on its affine
+coordinates leaves its residual $K$ coordinates uniform and independent.
+Condition on a value of the affine block
+$W_R(t-c_{R,\mathbf v})$.  This fixes the base point $a(t)$ chosen in
+\Cref{sec:prelim} and hence fixes the translated residual map $g$.  Given that
+block, the residual target is still uniform, while the affine coset is sampled
+uniformly and independently from $\ker C_{R,\mathbf v}/L$.  The conditional
+law is therefore exactly the law in \Cref{thm:coset-success}.  Translation
+does not change the polar maps, so the stated rank hypotheses and bounds are
+uniform in the conditioned affine block; averaging over that block preserves
+them.  Successive fresh trials are independent within the random-oracle
+experiment.  This is
+target \emph{preselection}; it is distinct
+from testing whether a solver-produced root passes the block-symmetry
+rejection test.
 
-The Level-V $\ell=2$ filter needs about $19^{32}>2^{128}$ raw targets before
-the $M-K=32$ consistency conditions pass, so the 128-bit salt alone does not
-supply enough distinct inputs.  An existential forger may vary a chosen-message
-prefix as well as the salt.  Distinct prefix--salt pairs are distinct random-oracle
-inputs and therefore give independent targets in the model.  The
-artifact's deliberately loose target-generation envelope is below $2^{32}$
-gates per target retained by the unbiased hash-chunk sampler (the AXN charge
-is no larger than the NAND envelope used there).  Even after multiplication by the $19^{32}$ filtering factor,
-this term is more than 70 exponent bits below the cost-driving MQ solve.
+The forger performs this rejection sampling over message--salt candidates;
+the verifier continues to apply the unmodified official conversion.  Across
+all Version~2.3 target lengths, the hash-chunk acceptance probability is at
+least $0.152462$, or fewer than 6.6 candidates on average.  Distinct
+message--salt pairs need not produce distinct outer inputs because the message
+is first compressed to a 512-bit digest.  Freshness can nevertheless be
+enforced with a simple schedule: for a fixed chosen-message prefix, enumerate
+salts without repetition; before beginning a new prefix, compute its digest
+and discard the prefix if that digest has appeared before.  The resulting
+$(\text{digest},\text{salt})$ pairs are pairwise distinct.  This makes the
+modeled independence exact even if an inner-digest collision occurs, rather
+than merely treating such a collision as negligible.
 
-\section{Concrete Costs}\label{sec:complexity}
+The larger salt-space and prefix budget needed by the unselected zero-offset
+Level-V alternative is separated from this general sampling argument and
+accounted for in \Cref{app:zero-offset}.
+
+\section{Conditional Arithmetic Cost Estimates}\label{sec:complexity}
 
 The algebraic reduction determines the residual MQ systems exactly.  Turning
 those systems into numerical security estimates requires a separate cost
@@ -1636,7 +1736,7 @@ A cost exponent $c$ means modeled work proportional to $2^c$ in the stated
 unit.  A difference of ten exponent bits is a factor of about $2^{10}$, not ten
 percent.  Because the solver formulas count dominant arithmetic rather than a
 complete machine, we call the difference from a NIST reference an
-\emph{arithmetic overhead budget}.
+\emph{nominal arithmetic gap}.
 
 \subsection{Cost units and circuit conversion}\label{sec:units}
 
@@ -1657,92 +1757,47 @@ For generic MQ, the published factor is
 \begin{equation}\label{eq:published-f19-factor}
  b_1=(\log_2 19)^2+\log_2 19=22.29.
 \end{equation}
-Using canonical five-bit representatives and exact Barrett reduction, the
-validated circuits for one signed multiply-accumulate, $c+ab$ or $c-ab$, over
-$\F_{19}$ use 402 and 441 AXN gates, respectively; their NAND translations use 781 and 835 gates.  To avoid
-assuming a particular sign schedule in elimination, we charge
+The validated circuits described in
+\Cref{app:field-circuits} give the conservative signed
+multiply-accumulate charges
 \begin{equation}\label{eq:axn-f19-factor}
  g_1^{\mathrm{AXN}}=441,
  \qquad g_1^{\mathrm{NAND}}=835.
 \end{equation}
-Both signs are checked exhaustively on all $19^3$ valid input triples by the
-generator and by an independent scalar evaluator.
-
-For special XL, we work in the isomorphic sparse basis
-$\F_{19}[t]/(t^4-t-1)$.  In this basis, the element
-$13+13t+15t^2+2t^3$ is a root of the official defining polynomial; evaluating
-its powers supplies the explicit basis change to $\F_{19}[S]$.  Two-level
-Karatsuba uses nine base-field multiplications, and $t^4=t+1$ makes reduction
-additive.  The validated circuits for $c\mathbin{\pm}ab$ over $\F_{19^4}$ use
-6,077 and 6,081 AXN gates, or 11,086 and 11,102 NAND gates.  We therefore
-charge
+For the $\F_{19^4}$ arithmetic used by special XL, the corresponding charges
+are
 \begin{equation}\label{eq:axn-f194-factor}
  g_4^{\mathrm{AXN}}=6{,}081,
  \qquad g_4^{\mathrm{NAND}}=11{,}102.
 \end{equation}
-The artifact checks the complete scalar basis tensor, 4,096 random extension
-products, the basis isomorphism, and both translated netlists.  Charging a
-signed multiply-accumulate for every multiplication in the special-XL formula
-is conservative.
+These values replace only the local arithmetic primitive charged by the
+published estimators.  They do not upper-bound a complete solver.
 
-\paragraph{Same-basis AES calibration.}
-The release builds variable-key AES-128/192/256 one-pair key-filter circuits
-with the NIST 113-gate S-box, the complete key schedule, encryption, and a
-final ciphertext comparator.  To identify the actual key rather than merely a
-key that matches one pair, surviving candidates are checked lazily on enough
-independent plaintext--ciphertext pairs to leave at most $2^{-128}$ expected
-wrong survivors in the ideal-cipher model: a total of two pairs for AES-128 and
-a total of three for AES-192 and AES-256.  The additional average work is
-negligible because only
-survivors reach those checks.  Every first-pair circuit is validated on the
-FIPS test vector and eight additional keys against an independent AES
-implementation.
-
-\begin{table}[tbp]
-\centering
-\caption{Constructive AES calibration circuits.  Full charges the entire key
-space for the first-pair filter; expected search is one bit lower, and the
-lazy confirmation overhead is negligible under the stated ideal-cipher model.
-These circuits are not lower bounds on optimal AES implementations and do not
-replace NIST's nominal references.}
-\label{tab:aes-calibration}
-\scriptsize
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{@{}c r r r r r r@{}}
-\toprule
-Level & pairs & NIST nominal & AXN gates/filter & AXN full & NAND gates/filter & NAND full\\
-\midrule
-I   & 2 & 143 & 30,081 & 142.88 & 106,616 & 144.70\\
-III & 3 & 207 & 34,227 & 207.06 & 121,735 & 208.89\\
-V   & 3 & 272 & 41,543 & 271.34 & 147,772 & 273.17\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The NIST-listed 28,600-gate AES-128 circuit has full-key-space exponent
-$128+\log_2(28{,}600)=142.80$, numerically consistent with the nominal value
-143.  Across our nine rows, the AXN arithmetic estimates are
-\AXNFullAESGapRange{} bits below the constructive full-space AES circuits and
-\AXNNominalHeadroomRange{} bits below the nominal NIST references.  The NAND
-cross-check gives attack ranges \LoneNANDRange, \LthreeNANDRange, and
-\LfiveNANDRange.
+\paragraph{Same-basis calibration.}
+Across the nine rows, the AXN arithmetic schedules are
+\AXNExpectedAESGapRange{} bits below the reported expected AES key-search
+calibrations, \AXNFullAESGapRange{} bits below full-key-space AES enumeration,
+and \AXNNominalGapRange{} bits below the nominal NIST references.  The NAND
+sensitivity ranges are \LoneNANDRange, \LthreeNANDRange, and
+\LfiveNANDRange.  The circuit constructions, validation checks, and AES table
+are deferred to \Cref{app:field-circuits,app:aes-calibration}.  These are
+resource-asymmetric calibrations, not end-to-end attack comparisons.
 
 \paragraph{Scope of the conversion.}
-The AXN and NAND figures price the field-arithmetic schedule counted by the
-published estimators.  They do not synthesize pivot selection, solver control,
-address generation, memory traffic, data movement, or a complete
-sparse-linear-algebra implementation.  They are therefore constructive
-conversions of inherited arithmetic models, not complete attack netlists.
-Public preprocessing and exact-uniform target generation are bounded
-separately.  The dominant unresolved inputs are the global production rank
-spectra and the accuracy of the production-scale solving models.
+Target generation is treated separately in \Cref{sec:target-sampling};
+public preprocessing is not priced.  The dominant unresolved inputs are the
+global production rank spectra and the accuracy of the production-scale
+solving models; the implementation costs excluded in
+\Cref{tab:cost-layers} remain outside the conversion.
 
 \subsection{Structured special XL for \texorpdfstring{$\ell=4$}{l=4}}\label{sec:special-xl}
 
 The exact reduction supplies an $A$-linear slice of $A$-dimension $s$,
 hence base-field dimension $4s$ when $\ell=4$.  After extension to the
-splitting field, this becomes four blocks of $s$ variables.  For each unordered pair of blocks there are $m_1$ independent equations
-of degree two: diagonal equations use one block twice, and off-diagonal
+splitting field, this becomes four blocks of $s$ variables.  For each block
+pair $1\le a\le b\le4$, there are $m_1$ independent equations
+of degree two \emph{when the public restricted-polynomial-rank preflight
+$\rho_{\rm poly}(L)=K$ passes}: diagonal equations use one block twice, and off-diagonal
 equations use two blocks once each.  Special XL records a separate degree for
 each block and selects a multidegree
 at which the associated Macaulay matrix is predicted to have the needed rank.
@@ -1767,9 +1822,12 @@ special-XL model: a random Macaulay matrix is predicted to have full column
 rank, while a system with a planted solution is predicted to have a
 one-dimensional right kernel
 \cite{Cabarcas2025SNOVA}.  The modeled linear-algebra work for one target--slice trial is
-$3s^2\bigl(M_s(\mathbf d)\bigr)^2$ extension-field multiplications: the square is the
-dense linear-algebra term in the published model, and $3s^2$ is its stated
-prefactor.
+$3s^2\bigl(M_s(\mathbf d)\bigr)^2$ extension-field multiplications.  This is
+the quadratic linear-algebra schedule adopted in the cited special-XL
+estimator---specifically its $3\max_a(s_a)^2M(\mathbf d)^2$,
+matrix-multiplication-exponent-$2$ convention---not a claim that ordinary
+dense Gaussian elimination is quadratic~\cite{Cabarcas2025SNOVA}.  The factor
+$3s^2$ is the estimator's stated prefactor.
 
 Cabarcas et al.\ handle an underdetermined system by specializing $k$
 coordinates, where $4\mid k$, and multiplying the work by $q^k$.  Our attack
@@ -1781,8 +1839,9 @@ base-field root by $\mathsf{Retry}_{K,\tau}$.  The modeled work is therefore
  \mathsf{Retry}_{K,\tau}\,3s^2M_s(\mathbf d)^2,
  \qquad \tau=K-4s,
 \end{equation}
-extension-field multiplications.  Replacing the older $1+q^\tau$ factor by
-$\mathsf{Retry}_{K,\tau}$ changes each displayed logarithm by less than $10^{-25}$ bits.
+extension-field multiplications.  Replacing the approximation $1+q^\tau$ by
+the exact $\mathsf{Retry}_{K,\tau}$ bound changes each displayed logarithm by
+less than $10^{-25}$ bits.
 If every cross-polar map has rank defect at most $\Delta$, then
 \eqref{eq:defect-retry} bounds the expected target--coset trials---and hence
 the associated Macaulay linear-algebra budget under the same per-trial
@@ -1812,7 +1871,7 @@ Macaulay matrix over the splitting field $\Omega$, dehomogenized by setting
 every block homogenizer to one.  Suppose its columns include the constant and
 degree-one monomials.  If $\ker_\Omega\mathcal M$ is one-dimensional, row
 reduction recovers $x_*$, $\lambda_*$, the common column $u_*$, and hence the
-complete signature.
+complete signature candidate.
 \end{lemma}
 
 \begin{proof}
@@ -1826,7 +1885,7 @@ embedding gives $u_*=a(t)+y+\iota(\lambda_*)$; and the column relation
 \end{proof}
 
 \paragraph{Las Vegas wrapper.}
-For each target--coset trial, compute the Macaulay kernel and continue unless
+For each target--slice trial, compute the Macaulay kernel and continue unless
 it is one-dimensional with nonzero constant coordinate.  Normalize that
 coordinate, recover the degree-one eigenblock coordinates, and invert the
 eigenblock transformation.  Continue again unless the point lies in $\F_q$
@@ -1834,38 +1893,65 @@ and the public verifier accepts it.  The procedure therefore never returns an
 invalid signature; the solving model predicts only how often a trial reaches
 the recoverable case with a one-dimensional right kernel.
 
-
-The target--coset theorem counts $\F_q$-rational roots, so a unique-root
-trial contains the point required by the lemma.  \Cref{cor:singleton-coset}
-bounds multiple-root trials and the distance from the planted-root
-distribution using the full cross-polar rank spectrum.  Under full
-cross-polar rank, the conditional multiple-root probability is below
-$2^{-43.47}$ for $\tau=10$ and below $2^{-60.47}$ for $\tau=14$.
-
-The remaining assumption that the production Macaulay right kernel is
+\paragraph{Recovery probability and sensitivity.}
+The root theorem counts $\F_q$-rational roots, so a unique-root trial contains
+the point required by \Cref{lem:macaulay-recovery}.  The remaining assumption
+that the production Macaulay right kernel is
 one-dimensional concerns extra algebraic kernel vectors, including those
 caused by extension-field roots or by the Macaulay rows failing to span all
-expected relations; it is not an uncharged descent retry.  Every recovered point is checked by the original
-verifier.  The small-profile tests in \Cref{sec:evidence} support, but do not
-prove, this production solving model.
+expected relations; it is not an uncharged descent retry.  The small-profile
+tests in \Cref{sec:evidence} support, but do not prove, this production model,
+and every recovered point is checked by the original verifier.
 
-\paragraph{Precisely what the displayed special-XL costs assume.}
-The exponents in \Cref{tab:xl-optima} use (i) global full cross-polar rank on
-the selected slice, so that $\mathsf{Retry}_{K,\tau}$ bounds unique-root trials, and (ii) the
-production Macaulay behavior just described: a planted-solvable trial has a
-one-dimensional right kernel.  A global rank-defect bound alone controls only
-retries to a root-containing target--coset pair through
-\eqref{eq:defect-retry}; it does not imply
-unique recovery or a one-dimensional right kernel.  This
-separation is important because the first condition concerns an entire
-family of nonzero output directions (modulo scalar multiples), whereas the second concerns production-scale algebraic
-solving behavior.
+When $\bar\eta<1$, this remaining dependence can be parameterized without
+conflating solvability with uniqueness.  Let $\mathsf P_1$ be the planted distribution conditioned
+on $Z=1$.  By \Cref{cor:singleton-coset}, this is exactly the same law as a
+uniform target--slice trial conditioned on $Z=1$.  Let $\mathcal R$ be the
+event that the chosen Macaulay matrix has the one-dimensional,
+nonzero-constant-coordinate kernel required by
+\Cref{lem:macaulay-recovery}, and put
+\[
+ p_{\rm ker}^{(1)}=\Pr_{\mathsf P_1}[\mathcal R].
+\]
+If $p_{\rm ker}^{(1)}>0$, then by \eqref{eq:singleton-coset}, a fresh trial
+reaches the recoverable event with probability at least
+\[
+ \mu(1-\bar\eta)\,p_{\rm ker}^{(1)}.
+\]
+For independent repetitions, its expected retry count is therefore at most
+\[
+ \frac{1}{\mu(1-\bar\eta)p_{\rm ker}^{(1)}}.
+\]
+The displayed special-XL schedules use the conditional production model
+$p_{\rm ker}^{(1)}=1$; a justified lower bound below one adds
+$-\log_2p_{\rm ker}^{(1)}$ bits.  Thus lower bounds $0.9$, $0.5$, and $0.1$
+would add about $0.152$, $1$, and $3.322$ bits, respectively.  A point
+estimate from the small campaign is not such a lower bound.  If the kernel has
+dimension greater than one, the readout lemma
+does not apply: one must instead price additional root enumeration, a
+change-of-ordering algorithm, or a border-basis computation
+\cite{FaugereEtAl1993FGLM,KehreinKreuzer2005}.
+There is no justified generic ``multiply by the nullity'' correction for
+nullity greater than one because a kernel basis need not enumerate evaluation
+vectors.  Likewise, if the Hilbert-series sign change occurs earlier or later
+than modeled, one must replace $\mathbf d$ by the observed stopping
+multidegree and rescale the per-trial term by
+$\bigl(M_s(\mathbf d_{\rm obs})/M_s(\mathbf d)\bigr)^2$ before applying the
+retry factors.
+
+The displayed schedules use global full cross-polar rank and the conditional
+modeled value $p_{\rm ker}^{(1)}=1$.  A rank-defect bound alone controls
+retries to a
+root-containing target--slice trial through \eqref{eq:defect-retry}; it does
+not imply unique recovery or a one-dimensional Macaulay kernel.
 
 \begin{table}[tbp]
 \centering
-\caption{Cost-driving special-XL parameters for the six $\ell=4$ rows.
-``Model'' uses $b_4$; ``AXN arithmetic'' replaces it by the validated
-signed multiply-accumulate circuit $g_4^{\mathrm{AXN}}$.}
+\caption{Cost-driving special-XL parameters for the six $\ell=4$ rows,
+conditional on global full cross-polar rank and the modeled value
+$p_{\rm ker}^{(1)}=1$.  ``Model'' uses $b_4$; ``AXN arithmetic'' replaces it by the
+author-reported signed multiply-accumulate circuit
+$g_4^{\mathrm{AXN}}$.}
 \label{tab:xl-optima}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -1880,100 +1966,113 @@ $m_1$ & available $\dim_A H$ & $K$ & $(s,\tau)$ & $\mathbf d$ & model & AXN arit
 \end{tabular}
 \end{table}
 
-The exact search checks every admissible $s$ and all 42,356 sorted
-multidegrees whose modeled work could match or beat the incumbent, including
-highly unbalanced degrees.  It recovers the three optima in
-\Cref{tab:xl-optima}, uniquely up to block permutation.  The conservative
-target-generation charge does not change the displayed hundredths.
+Even the arithmetic model's column counts imply enormous storage.  An
+information-theoretically packed vector of $M_s(\mathbf d)$ elements of
+$\F_{19^4}$ requires
+$M_s(\mathbf d)\log_2(19^4)$ bits.  Thus one vector---not a matrix, rank
+profile, or solver state---already has the lower bounds in
+\Cref{tab:vector-storage}; one sequential pass must move at least the same
+amount of data.  These figures do not rule out streaming or structured
+algorithms, but they prevent interpreting the arithmetic schedule as a
+wall-clock or complete-circuit estimate.
 
-For the search for a root-containing target--coset pair and the associated
-Macaulay linear algebra, the AXN budget retains
-a positive nominal arithmetic budget for $\Delta\le2,7,12$ at Levels I, III,
-and V.
-These thresholds neither price a complete solver circuit nor certify unique
-recovery.  The latter additionally requires $\bar\eta<1$ in
-\eqref{eq:eta-def} and the modeled production Macaulay matrix to have a
-one-dimensional right kernel.
+\begin{table}[tbp]
+\centering
+\caption{Information-theoretic storage and one-pass traffic lower bounds for
+one extension-field vector at the selected special-XL column count.  Decimal
+GB/PB/EB units are used.}
+\label{tab:vector-storage}
+\small
+\begin{tabular}{@{}c r r@{}}
+\toprule
+Level & $M_s(\mathbf d)$ & one packed vector / one full pass\\
+\midrule
+I   & $23{,}417{,}049{,}656$          & $49.74$ GB\\
+III & $44{,}237{,}557{,}981{,}725{,}696$ & $93.96$ PB\\
+V   & $236{,}094{,}291{,}515{,}544{,}000{,}000$ & $501.46$ EB\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The exhaustive search certificate for the optima in \Cref{tab:xl-optima} is
+given in \Cref{app:cost-certificates}.  Under the $2^{32}$-gate envelope per retained target from
+\Cref{sec:target-sampling}, generating the approximately $19^\tau$ structured
+target trials costs less than $2^{74.48}$ gates for $\tau=10$ and
+$2^{91.48}$ gates for $\tau=14$.  These additive terms do not change the
+displayed hundredths.
+
+Under the same per-trial Macaulay model, the AXN schedules remain below the
+nominal references for rank defects $\Delta\le2,7,12$ at Levels I, III, and
+V.  These thresholds control root-containing target--slice retries only; they
+neither price a complete solver circuit nor certify unique recovery.  The
+latter also requires $\bar\eta<1$ and the modeled one-dimensional Macaulay
+kernel.
 
 \subsection{The \texorpdfstring{$\ell=2$}{l=2} attacks}
+\label{sec:l2-costs}
 
-For Levels I and III, use the fixed-skew lift of \Cref{prop:fixed-skew}.  The
-public preflight gives quotient rank $K$, affine rank $M-K$, and residual
-systems of dimensions $48/112$ and $72/168$.  CFXL is a hybrid strategy
-that specializes some variables and then applies XL-style linear algebra;
-Hashimoto refines this optimization for underdetermined MQ.\@  Minimizing these
-variants in Beullens's printed Appendix-A convention gives the per-solve
-estimates
-\begin{equation}\label{eq:fixed-skew-costs}
- 2^{129.44}\quad\text{and}\quad2^{183.44}
-\end{equation}
-modeled bit operations~\cite{Beullens2024SNOVA,Hashimoto2023}.  Replacing
-$b_1$ by $g_1^{\mathrm{AXN}}$ gives arithmetic exponents $133.75$ and $187.74$.
-Every recovered root is accepted.  The headline per-solve estimates incur
-no target-retry factor when the global all-target conditions $r_*\ge96$ and
-$r_*\ge144$ hold.  For a smaller
-global rank, the expected-cost exponent increases by at most
-$\log_2(1+(1-19^{-K})19^{K-r_*})$.  The same fixed-skew construction at
-Level~V gives a $96/224$ fallback with model exponent $237.84$ and AXN exponent
-$242.15$; its all-target threshold is $r_*\ge192$.
+All three headline rows use the fixed-skew lift of
+\Cref{prop:fixed-skew}.  The public preflight gives quotient rank $K$, affine
+rank $M-K$, and the three residual systems listed in
+\Cref{tab:l2-costs}.  CFXL specializes variables before XL-style linear
+algebra, and Hashimoto refines this optimization for underdetermined
+MQ~\cite{Beullens2024SNOVA,Hashimoto2023}.  In Hashimoto's objective, $a$ is
+the square-subsystem size and $k$ is a second specialization parameter.  The
+complete objective, boundary conventions, and exact minimizers are recorded
+in \Cref{app:generic-mq-certificate}.
 
-The optimizer includes Hashimoto's published boundary value $a=1$.  For
-$\operatorname{MQ}(19,1,1)$, the semi-regular Hilbert-series rule used by CFXL
-never produces the stopping degree at which its linearization would be costed.
-The artifact therefore solves that elementary system by 19 direct evaluations
-and deliberately overcharges each evaluation.  This
-lowers six generic quotient baselines and the Level-V fixed-skew fallback; it
-does not change the selected Level-I or Level-III fixed-skew costs.
-
-The Level-V headline instead uses $R_0=I,R_1=0$ and zero offsets.  The quotient
-has rank $K$, target filtering enforces the $M-K$ public consistency
-conditions, and the residual system has 96 equations in all 256 variables.
-Target search occurs before equation solving, so its cost adds to---rather than
-multiplying---the cost of a solve.  The generic-MQ solve has AXN arithmetic
-exponent $239.50$, while exact-uniform target filtering is smaller by more than
-70 exponent bits.  The displayed exponent incurs no target-retry factor under
-the accepted-root condition \eqref{eq:l2-rejection}; for this row, $r_*\ge240$
-suffices.  At lower rank, \eqref{eq:l2-accepted-target} gives the additional expected retry factor.
-The fixed-skew fallback is slower but makes every recovered root acceptable by
-construction.
+Every recovered fixed-skew root passes the block-symmetry rejection test.  For
+a global polar-rank lower bound $r_*$, target retries add at most
+\[
+ \log_2\!\left(1+(1-19^{-K})19^{K-r_*}\right)
+\]
+bits to the expected-cost exponent; $r_*\ge2K$ removes this retry by making
+every target solvable.  The first three rows of \Cref{tab:l2-costs} give the
+resulting selected per-solve schedules and the corresponding global-rank
+thresholds.
 
 \begin{table}[tbp]
 \centering
 \caption{$\ell=2$ systems and global polar-rank thresholds.  Model is the
-pinned published operation model; AXN uses $g_1^{\mathrm{AXN}}=441$.  ``For
-budget'' is the smallest rank for which expected AXN arithmetic remains below
-the nominal NIST reference.  ``All-target root'' is sufficient to guarantee
-that every target has an accepted root; it does not assert that one particular
-solver invocation succeeds.}
+pinned published per-solve operation model; AXN uses
+$g_1^{\mathrm{AXN}}=441$.  For fixed-skew, ``For gap'' is the smallest global
+rank for which the root-availability retry bound keeps expected AXN arithmetic
+below the nominal NIST reference.  For that construction,
+``all-target'' makes every target solvable and every recovered root passes the
+block-symmetry rejection test.  For zero-offset it proves only that an accepted root
+exists; the row is not selected as a headline attack.}
 \label{tab:l2-costs}
 \scriptsize
 \setlength{\tabcolsep}{3.25pt}
 \begin{tabular}{@{}l l r r r r r@{}}
 \toprule
-Parameters & mode & eqs./vars. & model & AXN & \shortstack{for\\budget} & \shortstack{all-target\\root}\\
+Parameters & mode & eqs./vars. & model & AXN & \shortstack{for\\gap} & \shortstack{all-target\\rank}\\
 \midrule
 $(48,16,2,2)$ & fixed-skew & $48/112$ & 129.44 & 133.75 & 46  & 96\\
 $(72,24,2,2)$ & fixed-skew & $72/168$ & 183.44 & 187.74 & 68  & 144\\
-$(96,32,2,2)$ & filter     & $96/256$ & 235.19 & 239.50 & 177 & 240\\
 $(96,32,2,2)$ & fixed-skew & $96/224$ & 237.84 & 242.15 & 89  & 192\\
+$(96,32,2,2)$ & zero-offset per solve & $96/256$ & 235.19 & 239.50 & -- & 240\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-For the filter row, the all-target-root threshold includes rejection through
-\eqref{eq:l2-rejection}; for fixed skew, it is the simpler condition
-$r_*\ge2K$ from \Cref{cor:full-space}.  The quotient matrix depends only on the
-fixed public outer map and the relation, not on a generated key.  Exhaustive
-enumeration of all $19^2=361$ relations $R_1=aI+bS$ proves quotient rank $K$
-for every relation on all three parameter shapes.  Exhaustive optimization of
-the natural two-block special-XL model gives bit-operation exponents $132.31$,
-$184.27$, and $236.36$, all worse than the selected generic-MQ modes.
+The zero-offset row is a per-solve sensitivity only.  Its dash records that no
+polar-rank threshold controls which root the priced solver returns, so rank
+alone does not imply an expected accepted-root cost.  Its all-target threshold
+includes block acceptance through \eqref{eq:l2-rejection}; for fixed-skew the
+condition is simply $r_*\ge2K$.  The complete zero-offset retry, target,
+and solver-output analysis is in \Cref{app:zero-offset}.
 
 \section{Implementation and Evidence}\label{sec:evidence}
 
-The artifact implements the public key generator, verifier-side feature maps,
-symmetry quotient, affine reduction, structured lift, rank tests, and cost
-searches over $\F_{19}$.  It does \emph{not} report a production-size
+We report an implementation of the public key generator, verifier-side feature
+maps, symmetry quotient, affine reduction, structured lift, rank tests, and
+cost searches over $\F_{19}$.  Machine-readable certificates and supporting
+artifacts exist for these computations, but they are not bundled with this
+manuscript.  The computations are therefore labeled
+\emph{author-reported evidence}, not evidence independently reproduced from an
+attached archive; \Cref{app:artifact} states
+the release contract needed to change that status.  The reported implementation does \emph{not} include a production-size
 end-to-end forgery, a production-size Macaulay solve, or a wall-clock attack
 timing.  Its full-size experiments concern public preprocessing and rank; its
 solver experiments use smaller tractable profiles.  The checks therefore have
@@ -1983,8 +2082,9 @@ section.
 
 \begin{table}[H]
 \centering
-\caption{Evidence hierarchy.  ``Exact'' here means exact for the concrete
-object checked, not an exhaustive theorem about all production directions.}
+\caption{Evidence hierarchy.  ``Exact'' here means exact arithmetic for the
+reported concrete object, not independent reproduction or an exhaustive
+theorem about all production directions.}
 \label{tab:evidence-hierarchy}
 \small
 \renewcommand{\arraystretch}{1.12}
@@ -2000,18 +2100,18 @@ vectors & Finite evidence about the unenumerated global minimum rank; not a
 certificate for all directions.\\
 Macaulay experiment & Exact kernels at smaller tractable dimensions & Evidence
 for the production solver model; not a production timing or rank proof.\\
-Circuit validation & Exhaustive or independent checking of the released field
-primitive & Exact cost and functionality of that primitive, but not of a
+Circuit validation & Exhaustive checking and comparison with a separately
+implemented evaluator for the reported field primitive & Exact cost and
+functionality of that primitive, but not of a
 complete solver.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-A ``projective direction'' below means a nonzero coefficient vector modulo
-multiplication by a nonzero field scalar; all scalar multiples define the same
-polar rank.  Sampling many distinct directions can expose low-rank structure,
-but only exhaustive enumeration or a proof can certify the global minimum
-required by the headline all-target-root conditions.
+Projective directions were defined in \Cref{sec:rank-primer}.  Sampling
+many distinct directions can expose low-rank structure, but only exhaustive
+enumeration or a proof can certify the global minimum required by the
+headline all-target-root conditions.
 
 \subsection{Public preflight and verifier regression}
 
@@ -2022,18 +2122,24 @@ For a structured $\ell=4$ instance, the preflight checks
 \]
 together with $\mathcal F_{R,\mathbf v}H_{R,\mathbf v}=0$, the predicted $A$-kernel
 dimension, $A$-invariance, the restricted quadratic rank, and rejection
-compatibility.  All 121 regenerated full-size instances tested in the artifact pass,
+compatibility.  In the reported campaign, all 121 regenerated full-size
+instances pass,
 including the official Level-I known-answer key.  The first deterministic
 offset candidate passes for 114 instances; the second passes for the remaining
 seven.
 
-For fixed skew, the preflight checks the relation and rejection identity and
-the quotient, affine, and augmented ranks.  All 60 full-size keys tested in the artifact pass.  The artifact also reproduces the official Level-I public key byte for byte,
-verifies its known-answer signature against the official hash target, and
-checks the fixed output-order permutation described in
+For fixed-skew, the preflight checks the relation and rejection identity and
+the quotient and affine ranks, including the ranks after adjoining the
+relevant public constant column.  All 60 full-size keys tested in the reported
+campaign pass.  The
+reported regressions also reproduce the official
+Level-I public key byte for byte,
+verifying its known-answer signature against the official hash target, and
+checking the fixed output-order permutation described in
 \Cref{sec:affine-columns}.  Eighteen additional regressions cover all nine
-Version~2.3 shapes.  An independent Gauss--Jordan implementation agrees with
-the rank kernel on 2,036 matrices, including 36 production-sized matrices.
+Version~2.3 shapes.  A separately implemented Gauss--Jordan routine agrees with
+the primary rank routine on 2,036 reported matrices, including 36
+production-sized matrices.
 
 \subsection{Rank evidence}
 
@@ -2051,7 +2157,8 @@ projectively distinct within their respective slice records.
 
 \begin{table}[tbp]
 \centering
-\caption{Exactly computed cross-polar ranks for the tested structured $\ell=4$ slice--direction pairs.}
+\caption{Author-reported exact cross-polar ranks for the tested structured
+$\ell=4$ slice--direction pairs.}
 \label{tab:cross-polar}
 \small
 \setlength{\tabcolsep}{5.2pt}
@@ -2074,8 +2181,16 @@ Total          & 13 & -- & 102,796 & maximal\\
 \paragraph{Fixed-skew systems.}
 A broad campaign tests every coefficient-basis direction together with
 combinations having two, three, or many nonzero output coefficients.  A second campaign targets
-the 21 exceptional projective directions that make the local operator on
-$\Mat_2(\F_{19})$ rank two rather than four.  It tests all 381 local
+the 21 exceptional projective directions that make the following block-local
+polar operator have rank two rather than four.  For an output direction $b$
+and a signature block $c$, let
+\[
+ \Lambda_{b,c}:\Mat_2(\F_{19})\longrightarrow\Mat_2(\F_{19})^*,
+ \qquad
+ \Lambda_{b,c}(X)(Y)=b\cdot\beta_c(X,Y),
+\]
+where $\beta_c$ is the restriction of the residual polar map to variables in
+block $c$.  The campaign tests all 381 local
 projective directions in one block, every exceptional direction in every
 remaining block, and deterministic two-block exceptional combinations.
 Together the campaigns perform 3,888 exact rank evaluations; their sampled
@@ -2084,16 +2199,17 @@ minima and the rigorous thresholds used by the cost analysis appear in
 
 \begin{table}[tbp]
 \centering
-\caption{Full-size polar-rank evidence for the fixed-skew $\ell=2$ systems.
-``For budget'' is the minimum global polar rank that preserves positive AXN
-arithmetic budget in \Cref{tab:l2-costs}; ``all-target root'' guarantees root
+\caption{Author-reported full-size polar-rank evidence for the fixed-skew
+$\ell=2$ systems.
+``For nominal gap'' is the minimum global polar rank that preserves a positive
+AXN nominal arithmetic gap in \Cref{tab:l2-costs}; ``all-target root'' guarantees root
 existence for every target, not success of a particular solver run.}
 \label{tab:fixed-skew-evidence}
 \small
 \setlength{\tabcolsep}{4.5pt}
 \begin{tabular}{@{}l r r r r r@{}}
 \toprule
-Parameters & preflights & rank tests & sampled min. & for budget & all-target root\\
+Parameters & preflights & rank tests & sampled min. & \shortstack{for nominal\\gap} & all-target root\\
 \midrule
 $(48,16,2,2)$ & 20 & 1,104 & 110 & 46 & 96\\
 $(72,24,2,2)$ & 20 & 1,296 & 167 & 68 & 144\\
@@ -2104,50 +2220,41 @@ Total & 60 & 3,888 & -- & -- & --\\
 \end{tabular}
 \end{table}
 
-\paragraph{Zero-offset filter.}
-The broad and exceptional-direction campaigns perform 29,424 exact rank
-evaluations on two keys per shape.  Their sampled minima are 127, 190, and 254
-in dimensions 128, 192, and 256.  For the Level-V filter, the sampled minimum 254 is above the sufficient
-accepted-root threshold 240.  If the global minimum is at least 254, then
-\eqref{eq:l2-accepted-fraction} gives an accepted fraction of at least
-$0.999999999$ in every target fiber.  The experiment supports that hypothesis
-but does not certify the global minimum.
+The separate zero-offset rank campaign and its solver-output sensitivity are
+reported with that unselected construction in \Cref{app:zero-offset}.
 
 \subsection{Solver and probability checks}
 
-The special-XL search examines all 42,356 admissible multidegrees at modeled
+The reported special-XL search examines all 42,356 admissible multidegrees at modeled
 work no greater than the incumbent and recovers the three optima in
-\Cref{tab:xl-optima}.  At tractable sizes, the artifact builds 128 four-block
-Macaulay matrices: 64 random instances have full column rank and 64
-planted-solvable instances have a one-dimensional right kernel, with the
-planted evaluation vector in that kernel.  A 48-matrix two-block control
+\Cref{tab:xl-optima}.  At tractable sizes, the reported campaign contains 128 four-block
+Macaulay matrices: 64 random instances have full column rank, while 64 planted
+instances, each generated with a known root, have a one-dimensional right
+kernel containing the planted evaluation vector.  Because the columns include
+the constant and degree-one monomials, that one-dimensional kernel also rules
+out a second base-field root in each tested instance.  The campaign sampled
+planted instances rather than first conditioning on $Z=1$, so it is supporting
+evidence, not a certified lower bound for $p_{\rm ker}^{(1)}$.  A 48-matrix two-block control
 contains one planted case with a two-dimensional right kernel, so the
-corresponding $\ell=2$ special-XL estimates are not used.  These are generic small-profile
-experiments, not production SNOVA timings.
+corresponding $\ell=2$ special-XL estimates are not used.  These are
+small-profile generic-system experiments, not production SNOVA timings.
 
 Exhaustive checks over $\F_3$ and $\F_5$ verify the exact first and factorial
 second moments, the compatible-collision formula, the rank-spectrum upper bound,
-and the singleton and planted-distribution inequalities on 110 complete
+and the singleton and planted-distribution inequalities on 110 fully enumerated
 quadratic maps.  Seventeen maps have nonmaximal cross-polar rank; in twelve,
-compatibility makes $\eta_0$ strictly smaller than $\bar\eta$.  Finally, on six actual cost-driving $\ell=2$ cores, the homogeneous
-quadratic outputs are linearly independent, the common polar radical---the set
-of directions annihilated by every polar form---is zero, and all 384 sampled
-homogeneous Jacobians (matrices of first derivatives of the homogeneous
-quadratic parts) attain the maximum rank permitted by their dimensions.  These
-are genericity diagnostics, not solving-degree measurements.
+compatibility makes $\eta_0$ strictly smaller than $\bar\eta$.  Finally, on
+six actual cost-driving $\ell=2$ cores, the homogeneous quadratic outputs are
+linearly independent and the common polar radical---the set of directions
+annihilated by every polar form---is zero.  These are genericity diagnostics,
+not solving-degree measurements.
 
 \subsection{Scope of the estimates}
 
-Once a public preflight passes, the quotient, affine reduction, stable kernel,
-fixed-skew identity, and rejection handling are exact.  The remaining
-production-scale inputs are the global polar spectra and the solving behavior.
-The sampled ranks are broad but finite evidence and do not enumerate the full
-families of nonzero output directions (modulo scalar multiples).  Likewise, the displayed exponents use the published special-XL and
-generic-MQ models rather than full-size Gr\"obner or XL runs; no
-production-size end-to-end solve is claimed.  The artifact
-checks every dimension, Hilbert coefficient, public rank, and cost supplied to
-those models and verifies every recovered candidate with the original public
-verifier.
+The evidence hierarchy in \Cref{tab:evidence-hierarchy} separates exact public
+preflights from finite rank campaigns and smaller solver experiments.  The
+remaining production-scale inputs are the global polar spectra and solver
+behavior; no production-size end-to-end solve is claimed.
 
 \paragraph{What would turn the estimates into end-to-end certificates.}
 The rank assumptions would require either an algebraic proof of the global
@@ -2173,18 +2280,20 @@ Equality with $K_d$ is a public rank condition, not a consequence of symmetry
 alone.  Outer randomization does not restore the alternating directions removed
 before the outer map.
 
-The direct repairs are to increase parameters after accounting for
+Candidate design responses include increasing parameters after accounting for
 \eqref{eq:countermeasure-K},
-remove public-matrix symmetry, or redesign the left and right power actions so
-that exchanging their labels changes the quadratic polynomial.  The
-symmetric-block rejection rule is not sufficient: the fixed-skew $\ell=2$
+removing public-matrix symmetry, or redesigning the left and right power actions so
+that exchanging their labels changes the quadratic polynomial.  None is a
+drop-in security proof: each changes other algebraic structure and requires
+fresh cryptanalysis, performance evaluation, and parameter selection.  The
+block-symmetry rejection test is not sufficient: the fixed-skew $\ell=2$
 lift makes every block nonsymmetric by construction, and the structured
 $\ell=4$ preflight can certify the same property block by block.  Returning
 unchanged to the submitted $q=16$ design would instead restore the known
 characteristic-two attack surface.
 
-A revised security analysis should publish the quotient rank, affine or filter
-rank, stable-kernel rank when applicable, the polar or cross-polar condition
+A revised security analysis should publish the quotient rank, affine
+target-preselection rank, stable-kernel rank when applicable, the polar or cross-polar condition
 used for target availability, and solver logs for the actual cost-driving
 system.
 
@@ -2192,18 +2301,19 @@ system.
 
 The central vulnerability is an exact duplicate-feature identity.  \SNOVA{}
 labels a quadratic power-pair feature by an ordered pair $(\xi,\eta)$, but
-symmetry of the public base matrices makes that polynomial identical to the
+symmetry of $S$ and of the public base matrices makes that polynomial identical to the
 one labeled $(\eta,\xi)$.  The public $q=19$ verifier therefore has at most
 $m_1\binom{\ell+1}{2}$ distinct power-pair features where the ordered
 representation has $m_1\ell^2$.  Because the identification occurs before the
 public outer map, no later randomization can restore the missing directions.
 
-The rest of the attack turns that identity into complete forgery systems rather
-than merely a distinguisher or a reduced subset of verifier equations.  Exact
-affine elimination retains every output.  A stable $A$-linear slice preserves
+The rest of the paper turns that identity into an exact reduction of all $M$
+equations after imposing the attacker-chosen column relation.  A stable
+$A$-linear slice preserves
 the four-block structure needed for the six $\ell=4$ special-XL systems.
-Fixed-skew and target-filtered relations handle the three $\ell=2$ systems and
-their block-symmetry rejection rule.  Exact moment formulas distinguish root
+Fixed-skew relations give the selected reductions for all three $\ell=2$
+systems while satisfying the block-symmetry rejection test; a zero-offset construction is
+retained only as a solver-output-sensitive alternative.  Exact moment formulas distinguish root
 existence, unique-root retries, and the separate question of whether the
 chosen Macaulay matrix exposes the root.  Every candidate is checked by the
 unmodified verifier.
@@ -2211,26 +2321,24 @@ unmodified verifier.
 Under the stated global-rank and production-solver assumptions, the modeled
 expected operation counts are \LoneModelRange, \LthreeModelRange, and
 \LfiveModelRange.  Replacing the field primitive charged by those models with
-validated signed AXN circuits gives \LoneAXNRange, \LthreeAXNRange, and
+author-reported signed AXN circuits, as described in
+\Cref{app:field-circuits}, gives
+\LoneAXNRange, \LthreeAXNRange, and
 \LfiveAXNRange.  These arithmetic-only figures leave
-\AXNNominalHeadroomRange{} bits below NIST's nominal gate references and
-\AXNFullAESGapRange{} bits below the released full-key-space AES calibration
-circuits in the same basis.
+\AXNNominalGapRange{} bits below NIST's nominal gate references and
+\AXNExpectedAESGapRange{} bits below expected AES key search, or
+\AXNFullAESGapRange{} bits below full-key-space AES enumeration, using the
+reported calibration circuits in the same basis.  The comparison remains
+resource-asymmetric because the MQ schedules omit substantial implementation
+costs.
 
-The exact and conditional claims should not be merged.  The quotient, affine
-reduction, stable kernel, rejection identities, exact-uniform target sampler,
-probability inequalities, and final-verifier wrapper are mathematical or
-deterministic public statements.  The headline exponents additionally depend
-on global polar spectra that were sampled rather than certified and on
-production MQ behavior extrapolated from published models and smaller
-experiments.  The circuit conversion prices dominant arithmetic, not a
-complete solver.  The strongest unconditional conclusion is therefore that public-matrix
-symmetry strictly reduces the quadratic feature space of every symmetric
-$q=19$ public key.  For each of the nine parameter shapes, every tested
-full-size instance also passes the public preflight and yields the complete
-residual system analyzed here.  Turning the reported arithmetic budgets into a
-definitive end-to-end security classification requires global rank
-certification and production-scale solver measurements.
+The exact and conditional claims remain distinct.  The quotient and reduction
+theorems apply to every key satisfying their public preflights, whereas uniform
+retry sampling additionally uses the stated random-oracle experiment and the
+headline exponents additionally use uncertified global-rank and production
+solver models.  The circuit conversion prices dominant arithmetic rather than
+a complete solver, so an end-to-end security classification still requires
+global rank certificates and production-scale measurements.
 
 For a redesign, the immediate lesson is simple: count distinct quadratic
 polynomials after every public symmetry, not the labels used to name them.
@@ -2241,17 +2349,20 @@ polynomials after every public symmetry, not the labels used to name them.
 \renewcommand{\theHsection}{app.\Alph{section}}
 
 
-\section{Proofs Deferred from the Main Text}\label{app:deferred-proofs}
+\section{Deferred Structural Proofs}\label{app:deferred-proofs}
 
-The main text states the probability and structural results at the point where
-an attacker uses them.  This appendix collects the longer proofs in the same
-order.
+This appendix supplies the longer proofs for the stable-kernel and
+stable-slice results used in the main construction.
 
 \subsection{Stable-lift kernel}\label{app:proof-stable-kernel}
 
 \begin{proof}[Proof of \Cref{thm:stable-kernel}]
-Choose an $\F_q$-basis of $A$.  The displayed spanning family in
-\eqref{eq:Uw} then has $m_1d^2$ elements, proving the dimension bound.  For
+Choose an $\F_q$-basis $\{\xi_1,\ldots,\xi_d\}$ of $A$.  By bilinearity, the
+$m_1d^2$ basis-indexed rows
+$w^\transpose\Sigma_{\xi_a}P_i\Sigma_{\xi_b}$ span the family in
+\eqref{eq:Uw}; some of these rows may coincide or vanish.  This proves the
+dimension bound without asserting that the all-$\xi,\eta$ family has that
+literal cardinality.  For
 $\zeta\in A$,
 \[
  \bigl(w^\transpose\Sigma_\xi P_i\Sigma_\eta\bigr)\Sigma_\zeta
@@ -2280,7 +2391,8 @@ so $\operatorname{row}(\mathcal O_{R,\mathbf v})=\mathcal U_w$.  Since the rows 
 $\mathcal F_{R,\mathbf v}$ belong to this row space,
 $\mathcal F_{R,\mathbf v}\ker\mathcal O_{R,\mathbf v}=0$.  To see $A$-stability of the
 kernel, let $x\in\ker\mathcal O_{R,\mathbf v}$ and $\zeta\in A$.  Every product
-$S^a\zeta$ is an $\F_q$-linear combination of the chosen basis powers, so
+$S^a\zeta$ is an $\F_q$-linear combination of
+$1,S,\ldots,S^{d-1}$, so
 $C_{R,\mathbf v}\Sigma_{S^a}\Sigma_\zeta x=0$ for all $a$; hence
 $\Sigma_\zeta x\in\ker\mathcal O_{R,\mathbf v}$.  Rank--nullity gives
 $\dim_{\F_q}H_{R,\mathbf v}=N_0-m_1d^2$.  When $A\cong\F_{q^\ell}$, $H_{R,\mathbf v}$ is an
@@ -2291,10 +2403,11 @@ $\dim_A H_{R,\mathbf v}=n-m_1\ell$.
 \subsection{Stable affine slices}\label{app:proof-stable-slices}
 
 \begin{proof}[Proof of \Cref{cor:stable-slices}]
-The first two ranks in \eqref{eq:stable-preflight} give the full-lift case of
-\Cref{prop:affine-reduction}; in particular, every target determines a
-nonempty affine space $a(t)+\ker C_{R,\mathbf v}$.  The orbit matrix contains
-$C_{R,\mathbf v}$ as its first block, so
+The first two ranks in \eqref{eq:stable-preflight} give the full-rank case
+$\rho=K$, $\lambda=M-K$ of \Cref{prop:affine-reduction}; in particular, every target determines a
+nonempty affine space $a(t)+\ker C_{R,\mathbf v}$.  By its definition in
+\eqref{eq:orbit-matrix}, the orbit matrix contains $C_{R,\mathbf v}$ as its
+first block, so
 $H_{R,\mathbf v}\subseteq\ker C_{R,\mathbf v}$.  Hence
 $a(t)+y+L\subseteq a(t)+\ker C_{R,\mathbf v}$ whenever
 $y\in\ker C_{R,\mathbf v}$.  Because
@@ -2306,7 +2419,8 @@ By \Cref{lem:spectral-quotient}, the unordered power-pair features can be
 changed invertibly to eigenblock coordinates.  Because $Q_R$ has full column
 rank, row reduction of the complete output system isolates $K$ rows whose
 homogeneous quadratic parts are an invertible linear image of
-$z_{\rm sym}$.  Applying the inverse image change to those rows expresses the
+$z_{\rm sym}$.  Applying the inverse linear change of feature coordinates to
+those rows expresses the
 quadratic parts in eigenblock coordinates.  Full rank of the quadratic feature
 map restricted to $L$ ensures that this restriction loses no eigenblock
 component.  Translating a diagonal feature introduces only
@@ -2323,7 +2437,57 @@ there are $\binom{\ell+1}{2}$ components and the total is
 $K=m_1\binom{\ell+1}{2}$, every component must have rank exactly $m_1$.
 \end{proof}
 
-\subsection{Accepted targets for the \texorpdfstring{$\ell=2$}{l=2} filter}\label{app:proof-l2-filter}
+\section{The Zero-Offset \texorpdfstring{$\ell=2$}{l=2} Alternative}
+\label{app:zero-offset}
+
+Set $R_0=I$, $R_1=0$, and use zero offsets.  Each signature block then has
+the form
+\[
+ \begin{pmatrix}x&0\\ y&0\end{pmatrix},
+\]
+so it is symmetric exactly when $y=0$.  The $n$ symmetry conditions are
+nonzero hyperplanes on disjoint block coordinates.  A relation that instead
+forced the two off-diagonal entries to agree would make every block symmetric
+and would be unusable.
+
+Let $N=N_0$ be the residual-domain dimension and let
+$g:\F_q^N\to\F_q^K$ be the residual map of degree at most two.  For each
+nonzero $b\in\F_q^K$, let $r(b)$ be the polar rank of $b\cdot g$ and put
+$r_*=\min_{b\ne0}r(b)$.  Define
+\[
+ t_{\rm rej}=\lfloor n/4\rfloor+1,
+ \qquad B=\binom n{t_{\rm rej}},
+ \qquad \alpha=1-q^{-K},
+\]
+and let $\mathcal X_{\rm acc}$ be the assignments accepted by the
+block-symmetry rejection test.  Since at least $t_{\rm rej}$ symmetric blocks
+are needed for rejection, the exact density of accepted assignments is
+\begin{equation}\label{eq:l2-accepted-density}
+ a_n\coloneqq\frac{|\mathcal X_{\rm acc}|}{q^N}
+ =q^{-n}\sum_{k=0}^{\lfloor n/4\rfloor}\binom nk(q-1)^{n-k}.
+\end{equation}
+
+\begin{proposition}[Accepted roots for the zero-offset $\ell=2$ lift]\label{prop:l2-rejection}
+Every target has an accepted root if
+\begin{equation}\label{eq:l2-rejection}
+ 1-Bq^{-t_{\rm rej}}>\alpha(1+B)q^{K-r_*/2}.
+\end{equation}
+For a uniform target $z\in\F_q^K$,
+\begin{equation}\label{eq:l2-accepted-target}
+ \Pr\bigl[g^{-1}(z)\cap\mathcal X_{\rm acc}\ne\varnothing\bigr]
+ \ge \frac{a_n}{1+\alpha q^{K-r_*/2}}.
+\end{equation}
+Moreover, if $1-\alpha q^{K-r_*/2}>0$, every target $z$ satisfies
+\begin{equation}\label{eq:l2-accepted-fraction}
+ \frac{|g^{-1}(z)\cap\mathcal X_{\rm acc}|}{|g^{-1}(z)|}
+ \ge
+ 1-\frac{Bq^{-t_{\rm rej}}+\alpha Bq^{K-r_*/2}}
+          {1-\alpha q^{K-r_*/2}},
+\end{equation}
+whenever the right-hand side is positive.
+\end{proposition}
+
+We first record the character-sum estimate used in the proof.
 
 \begin{lemma}[Quadratic fiber bound]\label{lem:quadratic-fiber-bound}
 Let $q$ be odd and let $g:\F_q^N\to\F_q^K$ be quadratic.  For each
@@ -2369,8 +2533,15 @@ $(N-c)$-dimensional affine space $W$ bounds each nonzero character sum by
 \[
  q^{(N-c)-(r_*-2c)/2}=q^{N-r_*/2}.
 \]
-If $r_*<2c$, the trivial bound $q^{N-c}$ is already at most
-$q^{N-r_*/2}$.  This proves \eqref{eq:quadratic-affine-upper} in both cases.
+If $r_*<2c$, the trivial estimate gives
+$|\{x\in W:g(x)=z\}|\le q^{N-c}$.  In this branch,
+\[
+ \frac{q^{N-c-K}+\alpha q^{N-r_*/2}}{q^{N-c}}
+ =q^{-K}+(1-q^{-K})q^{c-r_*/2}\ge1,
+\]
+because $c-r_*/2>0$.  Hence the right-hand side of
+\eqref{eq:quadratic-affine-upper} still dominates the trivial estimate.  This
+proves \eqref{eq:quadratic-affine-upper} in both cases.
 \end{proof}
 
 \begin{proof}[Proof of \Cref{prop:l2-rejection}]
@@ -2398,6 +2569,75 @@ fraction is $1-R_z/T_z$.  Applying the union-bound upper estimate to $R_z$ and
 the character-sum lower estimate to $T_z$ gives
 \eqref{eq:l2-accepted-fraction}.
 \end{proof}
+
+The three conclusions answer different questions.  For the Level-V system,
+the global condition $r_*\ge240$ implies \eqref{eq:l2-rejection} and hence an
+accepted root for every target.  Inequality \eqref{eq:l2-accepted-target}
+controls the fraction of uniform targets having an accepted root, whereas
+\eqref{eq:l2-accepted-fraction} controls the accepted population fraction
+inside each target fiber.  None controls which root a deterministic or
+nonuniform solver returns.
+
+\paragraph{Target-generation budget.}
+The Level-V alternative needs on average $19^{32}$ retained unbiased targets
+before its $M-K=32$ affine consistency coordinates take their prescribed
+values.  The worst-case chunk-acceptance bound in
+\Cref{sec:target-sampling} therefore gives at most
+$6.6\cdot19^{32}$ raw message--salt candidates on average.  If
+$p_{\rm chunk}$ is the actual chunk-acceptance probability, exhausting one
+128-bit salt space yields
+\[
+ p_{\rm chunk}\frac{2^{128}}{19^{32}}
+ \ge 0.00062357\ldots
+\]
+expected candidates passing both rejection conversion and affine
+preselection.  Under independent random-oracle samples, the probability of at
+least one such candidate in a complete salt space exceeds $0.0623\%$, so the
+expected number of chosen-message prefixes is below $1{,}605$.  The prefix
+digests are checked for uniqueness as described in
+\Cref{sec:target-sampling}, and the forged message is kept distinct from every
+signing-query message.  This is an existential chosen-message forgery, not a
+signature on an externally fixed message.
+
+Under the deliberately loose envelope of fewer than $2^{32}$ gates per
+retained target, including the unbiased chunk sampler, target preselection
+costs less than
+\[
+ 2^{32}19^{32}=2^{167.93368}.
+\]
+Even charging the same envelope to every raw candidate gives at most
+$2^{170.64716}$.  Both are additive costs more than 68 exponent bits below
+the zero-offset AXN generic-MQ schedule; neither prices the separate task of
+obtaining an accepted root from that solver.
+
+\paragraph{Solver-output sensitivity.}
+For Level V, target preselection leaves 96 equations in all 256 variables.
+The pinned generic-MQ objective gives per-solve Model and AXN exponents
+$235.19474$ and $239.50086$.  Target generation occurs before a solve and is
+therefore additive, not multiplicative.  If the global polar-rank minimum
+satisfies $r_*=240$, \eqref{eq:l2-accepted-fraction} proves only
+\[
+ p_{\rm acc}\ge0.1224162627718736
+\]
+for the accepted population fraction in each target fiber.  If one
+\emph{additionally} assumes that each solve returns an independent uniform
+root of that fiber, accepted-root recovery takes an expected
+$1/p_{\rm acc}=8.16884928=2^{3.03013286}$ solves.  Charging that factor gives
+Model and AXN exponents $238.22487$ and $242.53100$, both slightly worse than
+fixed-skew.  The pinned solver is not proved to sample roots uniformly, so
+these are sensitivity figures rather than an attack-cost theorem.
+
+The reported zero-offset rank campaign performs 29,424 exact evaluations on
+two keys per parameter shape and finds sampled minima 127, 190, and 254 in
+dimensions 128, 192, and 256.  If the Level-V global minimum were at least
+254, \eqref{eq:l2-accepted-fraction} would give an accepted fraction exceeding
+$0.999999999$ in every target fiber.  The finite campaign supports but does
+not certify that hypothesis, and the solver-output distinction remains.
+
+\section{Deferred Probability Proofs}\label{app:probability-proofs}
+
+The next three proofs establish the root-collision, planted-distribution, and
+full-space statements used in \Cref{sec:slices}.
 
 \subsection{Root collisions and the rank-spectrum bound}\label{app:proof-coset-success}
 
@@ -2485,33 +2725,156 @@ $\Theta_L(g)\le(q^K-1)q^{-r_*}=\alpha q^{K-r_*}$.  For the last statement, \eqre
 when $r_*\ge2K$.
 \end{proof}
 
+\section{Implementation Conventions and Circuit Calibration}
+\label{app:implementation}
+
+\subsection{Output-coordinate permutation}\label{app:output-permutation}
+
+The reference public-output block $T_\mu$ has $r$ rows and $\ell$ columns.
+For $0\le i<r$ and $0\le j<\ell$, the reference C verifier stores
+\[
+ (t_{\rm off})_{\mu r\ell+i\ell+j}=T_\mu[i,j].
+\]
+Our equations instead flatten the transposed $\ell\times r$ block row by row.
+Thus the required permutation is
+\[
+  t_{\mu r\ell+jr+i}
+  =(t_{\rm off})_{\mu r\ell+i\ell+j}.
+\]
+For a vector $y_{\rm off}$ in the official order, define
+\[
+ (\Pi_{\rm out}y_{\rm off})_{\mu r\ell+jr+i}
+ =(y_{\rm off})_{\mu r\ell+i\ell+j}.
+\]
+Then $t=\Pi_{\rm out}t_{\rm off}$ and
+$\mathcal E=\Pi_{\rm out}\mathcal E_{\rm off}$.  The indices above remain
+valid when $r\ne\ell$; the transformation is only a coordinate permutation
+and preserves ranks and solutions.
+
+\subsection{Fixed-skew identity}\label{app:fixed-skew}
+
+For the official $\ell=2$ matrix, direct arithmetic gives
+\[
+ 9I+10S=\begin{pmatrix}0&1\\1&7\end{pmatrix},
+ \qquad e_0^\transpose(9I+10S)=e_1^\transpose.
+\]
+Together with \eqref{eq:fixed-skew-offset}, this proves
+\eqref{eq:fixed-skew-identity} without a rank or genericity assumption.  The
+remaining public preflight checks $\rank Q_R=K$ and
+$\rank C_{R,\mathbf v}=M-K$.
+
+The quotient matrix depends only on the fixed public outer map and the
+relation, not on a generated key.  Exhaustive
+enumeration of all $19^2=361$ relations $R_1=aI+bS$ gives quotient rank $K$
+for every relation on all three $\ell=2$ parameter shapes.  The resulting
+residual dimensions, exact optimizer witnesses, converted costs, and
+polar-rank thresholds are recorded in
+\Cref{tab:l2-costs,tab:generic-mq-witnesses,tab:fixed-skew-evidence}.
+
+\subsection{Field-arithmetic circuits}\label{app:field-circuits}
+
+For $\F_{19}$, the reported circuits use canonical five-bit representatives
+and exact Barrett reduction.  One signed multiply-accumulate, $c+ab$ or
+$c-ab$, uses 402 or 441 AXN gates, respectively; the corresponding NAND
+translations use 781 or 835 gates.  To avoid assuming a sign schedule in
+elimination, \eqref{eq:axn-f19-factor} charges the larger value in each basis.
+The generator and a separately implemented scalar evaluator both check every
+one of the $19^3$ valid input triples.
+
+For $\F_{19^4}$, the implementation uses the isomorphic sparse basis
+\[
+ \F_{19}[t]/(t^4-t-1).
+\]
+The element $13+13t+15t^2+2t^3$ is a root of the official defining
+polynomial; its powers give the explicit basis change to $\F_{19}[S]$.
+Two-level Karatsuba uses nine base-field multiplications, and $t^4=t+1$ makes
+reduction additive.  The reported circuits for $c\mathbin{\pm}ab$ use 6,077
+and 6,081 AXN gates, or 11,086 and 11,102 NAND gates.  Equation
+\eqref{eq:axn-f194-factor} again charges the larger sign.  The reported
+validation checks the complete scalar basis tensor, 4,096 random extension
+products, the basis isomorphism, and both translated netlists.
+
+Charging a signed multiply-accumulate for each multiplication upper-bounds
+the local arithmetic primitive substituted into the published solver
+schedules.  It does not upper-bound a complete solver once matrix
+construction, control, memory, communication, and data movement are included.
+
+\subsection{Same-basis AES calibration}\label{app:aes-calibration}
+
+The reported implementation builds variable-key AES-128/192/256 one-pair
+key-filter circuits using the NIST 113-gate S-box, the complete key schedule,
+encryption, and a final ciphertext comparator.  To identify the actual key
+rather than merely one matching a single pair, surviving candidates are
+checked lazily on enough independent plaintext--ciphertext pairs to leave at
+most $2^{-128}$ expected wrong survivors in the ideal-cipher model: two pairs
+in total for AES-128 and three for AES-192 and AES-256.  Only survivors reach
+the additional checks, so their expected work is negligible.  Every
+first-pair circuit is validated on the FIPS test vector and eight additional
+keys against a separately implemented AES evaluator.
+
+\begin{table}[H]
+\centering
+\caption{Author-reported constructive AES calibration circuits.  Full charges
+the entire key space for the first-pair filter; expected search is one bit
+lower, and the lazy confirmation overhead is negligible under the stated
+ideal-cipher model.  These circuits are not lower bounds on optimal AES
+implementations and do not replace NIST's nominal references.}
+\label{tab:aes-calibration}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}c r r r r r r@{}}
+\toprule
+Level & pairs & NIST nominal & AXN gates/filter & AXN full & NAND gates/filter & NAND full\\
+\midrule
+I   & 2 & 143 & 30,081 & 142.88 & 106,616 & 144.70\\
+III & 3 & 207 & 34,227 & 207.06 & 121,735 & 208.89\\
+V   & 3 & 272 & 41,543 & 271.34 & 147,772 & 273.17\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The NIST-listed 28,600-gate AES-128 circuit has full-key-space exponent
+$128+\log_2(28{,}600)=142.80$, numerically consistent with the nominal value
+143.  The comparisons in the main text place arithmetic schedules beside
+complete AES circuits and are therefore intentionally resource-asymmetric.
+
 \section{Dimension Formulas}\label{app:dimensions}
 
-For a Version~2.3 row,
+For a Version~2.3 row, the following are parameter identities:
 \[
  n=v+o,
  \qquad m_1=\left\lceil\frac{or}{\ell}\right\rceil,
  \qquad M=or\ell,
  \qquad N_0=n\ell,
- \qquad N_{\rm raw}=m_1\ell^2r^2,
- \qquad K=m_1\binom{\ell+1}{2}.
+ \qquad N_{\rm raw}=m_1\ell^2r^2.
 \]
-For a full structured lift, $\rank C_{R,\mathbf v}=M-K$ and
+The number
+$K=m_1\binom{\ell+1}{2}$ is the maximum formal quotient-feature count.
+The check $\rank Q_R=K$ certifies that the public outer map is injective on
+those formal quotient coordinates; it does not by itself prove that their
+restrictions are independent polynomials.  For a structured slice, the
+separate check $\rho_{\rm poly}(L)=K$ certifies its actual restricted
+quadratic dimension.  For a fixed-skew system, any positive global polar-rank
+lower bound implies independence of the homogeneous residual outputs; the
+headline conditions are stronger still.  When
+$\rank Q_R=K$ and $\rank C_{R,\mathbf v}=M-K$,
 \[
  \dim\ker C_{R,\mathbf v}=N_0-M+K.
 \]
-If $\rank\mathcal O_{R,\mathbf v}=m_1\ell^2$, then
+If, in addition, $\rank\mathcal O_{R,\mathbf v}=m_1\ell^2$, then
 \[
  \dim_{\F_q}H_{R,\mathbf v}=N_0-m_1\ell^2,
  \qquad
  \dim_A H_{R,\mathbf v}=n-m_1\ell.
 \]
-The selected special-XL slice has $A$-dimension $s$, base-field dimension
+When the selected $A$-stable special-XL slice also passes
+$\rho_{\rm poly}(L)=K$, it has $A$-dimension $s$, base-field dimension
 $h=\ell s$, and retry exponent $\tau=K-h$.
 
 \begin{table}[tbp]
 \centering
-\caption{Structured-lift dimensions for the six Version~2.3 $\ell=4$ rows.}
+\caption{Structured-lift dimensions for the six Version~2.3 $\ell=4$ rows,
+conditional on the rank preflights stated above.}
 \label{tab:dimensions}
 \small
 \setlength{\tabcolsep}{5pt}
@@ -2531,13 +2894,14 @@ $(52,6,4,6)$ & 144 & 90 & 22 & 19 & 14\\
 
 \section{Cost-Search Certificate}\label{app:cost-certificates}
 
-For each $m_1\in\{5,7,9\}$ and every admissible integer $s$, the artifact
+For each $m_1\in\{5,7,9\}$ and every admissible integer $s$, the reported
+certificate search
 expands \eqref{eq:hilbert-series} exactly.  Here admissible means
 $1\le s\le\min\{\dim_A H,\lfloor K/4\rfloor\}$.  The $K/4$ bounds are
 $12,17,22$.  They bind or tie for both $m_1=5$ rows and both $m_1=9$ rows.
 For $m_1=7$, the bounds are $17$ for $(40,7,4,4)$ and $15$ for
-$(38,5,4,5)$, the latter coming from $\dim_A H$.  The artifact searches to
-the larger group bound and then filters the certificate separately for each
+$(38,5,4,5)$, the latter coming from $\dim_A H$.  The search reaches
+the larger group bound and then restricts the certificate separately for each
 parameter set; both $m_1=7$ rows attain the same optimum at $s=15$.
 The monomial count
 $M_s(\mathbf d)$ is coordinatewise increasing, so any multidegree that could
@@ -2563,16 +2927,104 @@ The corresponding Macaulay column counts are
 \]
 Substitution of the full-rank retry bound
 $\mathsf{Retry}_{K,\tau}$ into \eqref{eq:special-xl-cost} gives published-model exponents
-128.81713, 171.68562, and 214.12301.  Replacing $b_4$ by the validated signed AXN circuit
+128.81713, 171.68562, and 214.12301.  Replacing $b_4$ by the
+author-reported signed AXN circuit
 $g_4^{\mathrm{AXN}}$ gives converted arithmetic exponents 132.17187,
 175.04035, and 217.47775.  The NAND sensitivity gives 133.04031, 175.90879,
 and 218.34618.
+
+\section{Pinned Generic-MQ Objective}\label{app:generic-mq-certificate}
+
+For completeness, this section records the finite optimization used for every
+generic-MQ row.  This removes any dependence on an implicit software default
+or an unquoted ``Appendix A convention.''  We first factor out the common
+cost assigned to one field operation.  For $n,m\ge1$, define the arithmetic
+schedule
+\[
+ \widetilde{\operatorname{CFXL}}_q(n,m)
+ =\min_{0\le k'<n}
+ q^{k'}\,3
+ \binom{n-k'+D}{D}^{\!2}
+ \binom{n-k'+2}{2},
+\]
+where, for each candidate $k'$, $D$ is the least nonnegative integer such
+that
+\[
+ [t^D]\frac{(1-t^2)^m}{(1-t)^{\,n-k'+1}}\le0.
+\]
+A candidate for which no such $D$ occurs is omitted.  Hashimoto's
+underdetermined-system objective is
+\[
+\begin{split}
+ \widetilde{\mathcal H}_q(n,m)=\min_{a,k}\ \{&
+ (m-a-k+1)\widetilde{\operatorname{CFXL}}_q(a,a)\\
+ &+q^k\bigl(
+ \widetilde{\operatorname{CFXL}}_q(a-1,a-1)
+ +\widetilde{\operatorname{CFXL}}_q(m-a-k,m-a)\bigr)\},
+\end{split}
+\]
+over integers $1\le a\le m$, $0\le k\le m-a$, subject to
+\[
+ n\ge(a+1)(m-k-a+1),
+ \qquad
+ n\ge a(m-k)-(a-1)^2+k.
+\]
+The minimization is further restricted to points for which the third CFXL
+call is defined: either $(a,k)=(m,0)$, giving
+$\widetilde{\operatorname{CFXL}}_q(0,0)$, or $a<m$ and
+$0\le k<m-a$.  Thus no value
+$\widetilde{\operatorname{CFXL}}_q(0,j)$ with $j>0$ is implicitly used.
+The boundary conventions are
+\[
+ \widetilde{\operatorname{CFXL}}_q(0,0)=1,
+ \qquad
+ \widetilde{\operatorname{CFXL}}_q(1,1)=q,
+\]
+where the second convention assigns one primitive unit to direct evaluation
+at each field element because the displayed Hilbert trigger does not occur.
+Within a CFXL call, an
+exact tie is resolved by the smallest $k'$; an exact outer tie is resolved
+lexicographically by $(a,k)$.  The search compares exact integer arithmetic
+schedules and rounds only the final base-2 logarithm.  The Model schedule is
+$b_1\widetilde{\mathcal H}_q(n,m)$; the AXN and NAND schedules replace $b_1$
+by $g_1^{\rm AXN}$ and $g_1^{\rm NAND}$, respectively.
+For $q=19$, the second boundary convention is the elementary
+$\operatorname{MQ}(19,1,1)$ solver that exhaustively evaluates all 19 field
+elements.
+
+\begin{table}[H]
+\centering
+\caption{Exact witnesses used by the pinned generic-MQ search.  Here $k'$ is
+the inner specialization minimizing the third call
+$\widetilde{\operatorname{CFXL}}_q(m-a-k,m-a)$.
+The first three rows are the generic symmetry-quotient baselines used for the
+structured rows' internal estimator gains; grouped residual systems share the
+same optimum.  Exact-integer comparison is used to choose among points that
+agree to all displayed decimal places.}
+\label{tab:generic-mq-witnesses}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}l r r r r@{}}
+\toprule
+Residual system & $(a,k,k')$ & $D$ & Model exponent & AXN arithmetic schedule\\
+\midrule
+$50/102,\ 50/98$ structured baseline & $(1,1,10)$ & 12 & 136.039949042 & 140.34608\\
+$70/146,\ 70/142$ structured baseline & $(1,1,11)$ & 18 & 180.595403793 & 184.90153\\
+$90/182,\ 90/178$ structured baseline & $(1,1,18)$ & 19 & 224.687086566 & 228.99321\\
+\midrule
+$48/112$ fixed-skew  & $(2,10,1)$ & 11 & 129.440299085 & 133.74643\\
+$72/168$ fixed-skew  & $(2,15,0)$ & 16 & 183.438029550 & 187.74416\\
+$96/256$ zero-offset & $(2,10,6)$ & 23 & 235.194737432 & 239.50086\\
+$96/224$ fixed-skew  & $(1,1,18)$  & 21 & 237.843096284 & 242.14922\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Same-Basis Ordered-Label Estimator Baseline}\label{app:ordered-baseline}
 
 The comparison with the official Version~2.3 table mixes cost conventions, so
 we also recost a reproducible \emph{estimator baseline} under exactly the same
-AXN arithmetic basis as the selected attacks.  This baseline feeds the full
+AXN arithmetic basis as the selected conditional schedules.  This baseline feeds the full
 ordered-label equation/variable dimensions from the earlier affine-column
 accounting into the pinned generic-MQ optimizer and replaces each charged
 base-field operation by $g_1^{\mathrm{AXN}}=441$.  An attacker can indeed feed
@@ -2587,8 +3039,9 @@ the introduction.
 
 \begin{table}[H]
 \centering
-\caption{Historical ordered-label generic-MQ estimator and selected attack,
-both recosted in the same AXN arithmetic basis.  ``Estimator input'' gives the
+\caption{Historical ordered-label generic-MQ estimator and selected
+conditional AXN arithmetic schedule, both recosted in the same AXN arithmetic
+basis.  ``Estimator input'' gives the
 equation/variable dimensions of the unreduced affine-column equations.  The
 system is executable, but treating its reversed labels as independent generic
 quadratic features is counterfactual on a symmetric key.}
@@ -2599,7 +3052,7 @@ quadratic features is counterfactual on a symmetric key.}
 \begin{tabular}{@{}c l c r r r@{}}
 \toprule
 Level & Parameters & \shortstack{Estimator\\input} & \shortstack{Ordered-label\\AXN} &
-\shortstack{Selected\\AXN} & Saving\\
+\shortstack{Selected cond.\\AXN schedule} & \shortstack{Estimator\\difference}\\
 \midrule
 I   & $(28,5,4,4)$  & $80/132$  & 206.69 & 132.17 &  74.52\\
 I   & $(48,16,2,2)$ & $64/128$  & 171.77 & 133.75 &  38.02\\
@@ -2610,72 +3063,70 @@ III & $(72,24,2,2)$ & $96/192$  & 242.15 & 187.74 &  54.41\\
 III & $(38,5,4,5)$  & $100/172$ & 250.29 & 175.04 &  75.25\\
 \midrule
 V   & $(50,9,4,4)$  & $144/236$ & 345.49 & 217.48 & 128.01\\
-V   & $(96,32,2,2)$ & $128/256$ & 311.08 & 239.50 &  71.58\\
+V   & $(96,32,2,2)$ & $128/256$ & 311.08 & 242.15 &  68.94\\
 V   & $(52,6,4,6)$  & $144/232$ & 347.13 & 217.48 & 129.66\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The exact unrounded savings are $38.02124$--$129.65538$ bits.  This comparison
+The estimator-difference endpoints, rounded to five decimals, are
+$38.02124$--$129.65539$ bits.  This comparison
 still inherits the generic-MQ and special-XL solving models, but it removes the
 field-operation and gate-basis mismatch from the comparison itself.
 
-\section{Fixed-Skew Certificate}\label{app:fixed-skew}
+\section{Reproducibility Contract}\label{app:artifact}
 
-For the official $\ell=2$ matrix, direct arithmetic gives
-\[
- 9I+10S=\begin{pmatrix}0&1\\1&7\end{pmatrix},
- \qquad e_0^\transpose(9I+10S)=e_1^\transpose.
-\]
-Together with \eqref{eq:fixed-skew-offset}, this proves
-\eqref{eq:fixed-skew-identity} without a rank or genericity assumption.  The
-remaining public preflight checks $\rank Q_R=K$ and
-$\rank C_{R,\mathbf v}=M-K$.
-
-The resulting residual dimensions are $48/112$, $72/168$, and $96/224$.
-The reoptimized generic-MQ convention gives exponents 129.44030, 183.43803,
-and 237.84310.  The last optimum uses Hashimoto's $a=1$ boundary and the direct
-$\operatorname{MQ}(19,1,1)$ solver described in the main text.  Replacing the coarse factor $b_1$ by the validated signed AXN circuit
-$g_1^{\mathrm{AXN}}$ gives converted arithmetic exponents 133.74643,
-187.74416, and 242.14922.  By \Cref{cor:full-space}, a global polar-rank
-lower bound $r$ adds at most
-\[
- \log_2\!\left(1+(1-19^{-K})19^{K-r}\right)
-\]
-bits for target retries.  Requiring positive AXN arithmetic budget below the nominal NIST references gives
-thresholds 46, 68, and 89.  The stronger condition $r\ge2K$, namely 96, 144,
-and 192, makes every target solvable.  These are the values in \Cref{tab:l2-costs} and
-\Cref{tab:fixed-skew-evidence}.
-
-\section{Artifact and Reproduction}\label{app:artifact}
-
-The release contains the complete paper source, bibliography, and a
-self-contained evidence directory with:
+Machine-readable certificates for the reported computations exist, but this
+manuscript does not provide an immutable archive locator for the complete
+supporting bundle.  The computational claims are therefore labeled
+author-reported and are not used as proofs of a global rank condition.  A
+complete archival package enabling independent reproduction should provide
+all of the following:
 \begin{itemize}
-\item the public-key generator, direct verifier, and official Level-I
-known-answer public key and signature;
-\item the quotient, affine-feature, structured-offset, stable-kernel, and
-rejection checks;
-\item all 121 structured preflight records, all 13 structured-slice records,
-and 60 fixed-skew preflights;
-\item 102,796 structured cross-polar ranks, 21,992 dual directional-derivative
-ranks, 3,888 fixed-skew polar ranks, and 29,424 zero-offset filter ranks,
-including the exceptional-direction campaigns;
-\item exhaustive $\ell=2$ relation enumeration, both rejection certificates,
-accepted-target bounds, and generic-MQ costs;
-\item the complete special-XL and two-block cost searches, 128 exact
-$\ell=4$ and 48 control Macaulay experiments, and the target-generation bound;
-\item 110 exhaustive toy checks of the exact collision and rank-spectrum formulas,
-including rank-defective and compatibility-defective cases, plus genericity
-diagnostics on six actual $\ell=2$ headline cores;
-\item an independent rank implementation checked on 2,036 matrices, a
-projective-distinctness audit of all 124,788 structured rank-test directions,
-and independent scalar evaluators for the released gate circuits and headline
-cost conversions.
+\item the exact paper source and bibliography, an immutable repository commit
+or archive identifier, and a root manifest hashing every released file;
+\item the public-key generator and unmodified verifier, the official
+known-answer inputs and outputs, and the literal square and rectangular
+output-order regression tests;
+\item implementations of the quotient, affine feature map, structured offsets,
+stable kernel, and block-symmetry rejection test, with every public choice, seed, key
+identifier, slice basis, and preflight transcript needed to reproduce the
+reported 121 structured instances, 13 slices, and 60 fixed-skew instances,
+as well as the complete 361-relation $\ell=2$ quotient-rank transcript;
+\item every direction vector and exact rank transcript underlying the reported
+cross-polar, directional-derivative, fixed-skew, and zero-offset campaigns,
+together with the field representation, matrix dimensions, storage format,
+elimination algorithm, pivot convention, and a separately implemented rank
+cross-check;
+\item the existing cost-search code and exact-integer certificates for
+\Cref{app:cost-certificates,app:generic-mq-certificate}, including tie
+breaking, endpoint handling, table-generation commands, and machine-readable
+outputs, together with the exact path and revision of every historical
+analysis script used for a floor-versus-ceiling comparison;
+\item the rejection-sampling and target-generation code, the per-parameter
+chunk layouts and acceptance probabilities, the duplicate-digest and
+chosen-prefix schedule, and the exact Level-V salt-space and prefix-budget
+calculation in \Cref{app:zero-offset};
+\item for each Macaulay experiment, the complete polynomial profile, selected
+multidegree, monomial order, row and column counts, number of nonzeros, field
+encoding, matrix-construction and storage algorithms, exact-rank or
+kernel algorithm, random seed, software versions, invocation command,
+hardware description, the full kernel-dimension histogram, and the
+base-field root count or other record certifying $Z=1$ for each planted case
+used to assess $p_{\rm ker}^{(1)}$;
+\item source or netlists for every field and AES circuit, circuit conventions,
+known-answer inputs, separately implemented evaluators, validation
+transcripts, and hashes; and
+\item environment and dependency lockfiles plus a one-command workflow that
+rebuilds every paper table from the archived raw records.
 \end{itemize}
-All finite-field ranks are computed exactly over $\F_{19}$.  The release
-records hashes of the scripts, public keys, stable kernels, selected slices,
-and polar bases, together with a manifest for every file.
+The intended inventory spans the computational claims throughout this
+manuscript: exact public preflights and finite-field ranks over $\F_{19}$,
+bounded cost searches, smaller Macaulay controls, fully enumerated small-field
+probability checks, target-generation calculations, and circuit validation.
+Until the certificates and supporting records are attached to an immutable
+locator cited here, those computations remain author-reported and are not
+independently reproducible from this manuscript alone.
 
 \begingroup
 \footnotesize
