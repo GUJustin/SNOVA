@@ -1,12 +1,11 @@
-# Submission-ready SNOVA paper bundle
+# Reviewed SNOVA manuscript package
 
-Primary files:
+This package contains two separate revised LaTeX papers:
 
-- `snova-symmetry-quotient-anonymous.pdf`: conference-submission version.
-- `snova-symmetry-quotient-public.pdf`: author-named ePrint version.
-- `snova-symmetry-quotient-disclosure.pdf`: coordinated-disclosure version.
-- `snova-symmetry-quotient.tex` and `references.bib`: source.
-- `artifact/`: exact certificates and generators supporting the numerical and probability claims.
-- `reports/FINAL_AUDIT.md`: release checks and remaining scientific qualifications.
+- `alignment_trap/`
+- `symmetry_quotient_attack/`
 
-Run `./build_all.sh` to rebuild all three PDF variants.
+See `REVIEW_NOTES.md` for the correctness, numerical, build, and visual-audit summary.
+Each paper directory contains its source, bibliography, compiled PDF, Makefile,
+and a `SHA256SUMS` manifest. The concrete attack paper also contains its
+reproducibility artifact.

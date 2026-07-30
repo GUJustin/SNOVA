@@ -1,0 +1,1037 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{aliascnt}
+\usepackage{booktabs,tabularx,array,longtable,multirow}
+\usepackage[section]{placeins}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+
+\allowdisplaybreaks
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\setlist{leftmargin=*,topsep=3pt,itemsep=1.5pt,parsep=0pt,partopsep=0pt}
+
+\definecolor{deepblue}{RGB}{23,69,124}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=deepblue,
+  citecolor=deepblue,
+  urlcolor=deepblue,
+  pdftitle={The Alignment Trap: Structural Limits of SNOVA-Style Matrix Signatures},
+  pdfauthor={Justin Thaler, Kai Zhang, Scott Kominers, Quang Dao},
+  pdfsubject={Alignment rigidity and Hermitian feature-capacity bounds for matrix-based MQ signatures},
+  pdfkeywords={SNOVA, key-randomness alignment, double centralizer, normalizer, Hermitian quotient, multivariate signatures}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\newcommand{\F}{\mathbb F}
+\newcommand{\Mat}{\operatorname{Mat}}
+\newcommand{\Sym}{\operatorname{Sym}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\transpose}{\mathsf T}
+\newcommand{\SNOVA}{\textsf{SNOVA}}
+
+\title{The Alignment Trap:\\Structural Limits of SNOVA-Style Matrix Signatures}
+\author{%
+  Justin Thaler\thanks{a16z crypto research and Georgetown University} \and
+  Kai Zhang\thanks{MIT} \and
+  Scott Kominers\thanks{Harvard University and a16z crypto research} \and
+  Quang Dao\thanks{Carnegie Mellon University and LayerZero Labs}%
+}
+\date{29 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Matrix-based MQ signatures can compress public keys by choosing secret block
+coefficients that align with public left and right multiplier algebras.  We
+show that full-capacity alignment is rigid.  If the multiplier algebras are
+degree-$d$ fields and a $d$-dimensional linear secret support commutes with
+them on the two sides, then the support and the multiplier fields are forced
+to be one adjoint pair.  Allowing secret coefficients to relabel multipliers
+by field automorphisms does not escape: every nonzero linear support contained
+in a field normalizer lies in one Frobenius-semilinear coset.  Even linearity
+is not essential: a sufficiently large arbitrary two-sided normalizer support
+forces the same adjoint pair.  Replacing the field by a genuinely
+noncommutative irreducible algebra only shrinks the dimension of its commuting
+multiplier algebra.
+
+For odd characteristic, the adjoint pair induces a canonical involution on
+the $d^2$ ordered left/right labels.  Symmetric base forms factor through a
+Hermitian quotient of dimension $d(d+1)/2$, while skew-symmetric forms factor
+through the complementary anti-Hermitian quotient of dimension $d(d-1)/2$.
+A transpose-stable $w$-dimensional base-form family therefore cannot realize
+$wd^2$ independent ordered features.  Achieving the raw count requires a
+maximally non-self-adjoint family whose symmetric and skew projections are
+both injective and whose two polynomial image channels are full and disjoint.
+
+These results give a precise trilemma for SNOVA-style designs: accept the
+Hermitian capacity loss, restore a full anti-Hermitian/exterior channel, or
+abandon the alignment-based congruence-reuse mechanism.  The theorem does not
+claim that every construction in the latter two branches is insecure.  It
+shows that none is a local repair preserving the present alignment philosophy
+and its ordered-label security count.  As an application, the symmetric
+$q=19$ SNOVA Version~2.3 forms collapse $16$ labels to $10$ when $d=4$ and
+$4$ labels to $3$ when $d=2$; the resulting concrete all-parameter forgery is
+developed separately in the companion cryptanalysis.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+SNOVA-style matrix signatures obtain compact public descriptions by reusing a
+small family of congruence-transformed quadratic forms.  Their public maps are
+expanded by multiplying matrix-valued variables on the left and right by
+members of a small algebra.  A security analysis may then count the ordered
+left/right labels as distinct quadratic directions.  The same algebraic
+alignment that makes the public-key derivation work, however, constrains which
+label spaces can genuinely remain independent.
+
+This paper isolates that architectural constraint.  It deliberately does not
+repeat the concrete forgery analysis of SNOVA Version~2.3; that analysis is
+given in the companion paper~\cite{ThalerEtAl2026SymmetryQuotient}.  Here the
+question is broader and structural:
+
+\begin{quote}
+How much left/right feature capacity can a matrix-based MQ design retain while
+its secret coefficients align with the public multiplier algebras strongly
+enough to reuse one congruence-transformed family of forms?
+\end{quote}
+
+Our first answer is a capacity theorem.  Let $\mathcal T$ be an irreducible
+secret algebra acting on $\F_q^d$, and let $D$ be its centralizer.  The finite
+double-centralizer theorem forces
+\[
+  D\cong\F_{q^e},\qquad
+  \mathcal T\cong\Mat_{d/e}(\F_{q^e})
+\]
+for a divisor $e\mid d$.  Every pointwise aligned multiplier algebra lies in
+$D$ or $D^\transpose$, so it has dimension at most $e$.  The field case
+$e=d$ is therefore the unique extremum retaining $d$ multiplier dimensions on
+each side.  Moving to a genuinely noncommutative secret algebra enlarges the
+secret algebra only by shrinking the public multiplier capacity.
+
+At full multiplier dimension the rigidity is stronger.  Degree-$d$ field
+algebras in $\Mat_d(\F_q)$ are self-centralizing.  Hence a full
+$d$-dimensional pointwise aligned secret support is exactly the right
+multiplier field and the transpose of the left multiplier field.  This does
+not assume that the support is an algebra, is irreducible, or is closed under
+multiplication.  Automorphism relabeling also fails to create a new degree of
+freedom: a linear support whose nonzero elements normalize a degree-$d$ field
+is contained in one Frobenius-semilinear coset.  We further give a cardinality
+criterion showing that sufficiently large nonlinear supports are equally
+rigid.
+
+Our second answer concerns quadratic features.  Once alignment forces the
+left and right fields to be an adjoint pair, scalar transposition defines a
+canonical involution on their ordered tensor labels.  Symmetric base forms see
+only the Hermitian quotient; skew-symmetric forms see only the anti-Hermitian
+quotient.  This yields the exact capacities $d(d+1)/2$ and $d(d-1)/2$.
+For a family $W$ of base matrices, the total rank is controlled by the ranks
+of the symmetric and skew projections of $W$.  A transpose-stable family
+always loses capacity.  Recovering all ordered labels requires
+$W\cap W^\transpose=0$, full symmetric and skew projections, and disjoint
+polynomial image channels.  Thus ``make the forms slightly nonsymmetric'' is
+not a local repair.
+
+The resulting conclusion is a trilemma rather than a universal impossibility
+claim.  A design must accept the Hermitian cap, deliberately restore the full
+anti-Hermitian channel, or change the alignment and key-derivation mechanism.
+The second and third branches may contain secure constructions, but they are
+architecturally different from the symmetric aligned design whose security is
+based on counting ordered labels.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item We classify the multiplier capacity of irreducible aligned secret
+      algebras by the finite double-centralizer theorem.
+\item We prove rigidity for pointwise alignment, semilinear normalizer
+      alignment, and sufficiently large nonlinear supports.
+\item We derive the Hermitian and anti-Hermitian quotient dimensions for an
+      arbitrary adjoint pair of multiplier fields.
+\item We quantify the nonsymmetry necessary to recover the raw ordered-label
+      count and formulate the resulting no-local-repair trilemma.
+\item We specialize the theorem to the symmetric public forms of SNOVA
+      Version~2.3 and connect the structural loss to the companion concrete
+      cryptanalysis.
+\end{enumerate}
+
+\paragraph{Scope.}
+The alignment theorems hold over arbitrary finite fields; the decomposition
+into symmetric and anti-Hermitian channels uses odd characteristic.  We do not
+assert that every maximally non-self-adjoint or non-aligned descendant is
+broken.  We prove that such a descendant has left the design regime in which
+full alignment, transpose-stable forms, and a $d^2$ ordered-label count coexist.
+
+\section{Model and notation}\label{sec:model}
+Let $V=\F_q^d$ and identify $\operatorname{End}_{\F_q}(V)$ with
+$\Mat_d(\F_q)$.  A \emph{degree-$d$ field algebra} is an embedded copy
+$A\cong\F_{q^d}$ in $\Mat_d(\F_q)$.  For a subalgebra $B$, write
+\[
+ \mathcal C(B)=\{X:XB=BX\}
+\]
+for its centralizer and $N(B)$ for the normalizer of $B^\times$ in
+$\operatorname{GL}_d(\F_q)$.
+
+A right multiplier algebra $A_R$ and a left multiplier algebra $A_L$ act on a
+base matrix $P$ through ordered labels $\xi\otimes\eta\in A_L\otimes A_R$:
+\[
+  \Phi_P(\xi\otimes\eta)(u)
+    =u^\transpose\Sigma_\xi P\Sigma_\eta u.
+\]
+The block embeddings $\Sigma_\xi$ do not affect the local $d\times d$
+algebraic arguments, so we suppress their ambient identity factors when
+studying alignment.
+
+Pointwise alignment means that each secret block coefficient $t$ satisfies
+\[
+ t^\transpose a_L=a_Lt^\transpose,
+ \qquad
+ a_Rt=ta_R
+\]
+for all public multipliers.  Semilinear alignment relaxes commutation to
+normalization, allowing conjugation by $t$ to relabel field elements by a
+Frobenius automorphism.  These are exactly the identities needed to move
+public multipliers past secret coefficients while keeping one
+congruence-transformed base-form family reusable.
+
+\section{Alignment capacity and rigidity}\label{sec:alignment-rigidity}
+\label{sec:alignment-forces-adjoint}
+
+The public-key derivation uses two properties of the alignment algebra at
+once.  Secret block coefficients commute with the public right multipliers,
+and their transposes commute with the public left multipliers.  These are not
+basis conventions: with full-dimensional support, they determine the two
+multiplier algebras.
+
+The first theorem removes a possible escape before specializing to a field.
+It is a finite double-centralizer statement: a noncommutative irreducible
+secret algebra can be large only by making its commuting multiplier algebra
+small.
+
+\begin{theorem}[Alignment capacity and the field extremum]
+\label{thm:alignment-capacity}
+Let $\mathcal T\subseteq\Mat_d(\F_q)$ be a unital algebra acting
+irreducibly on $V=\F_q^d$, and put $D=\mathcal C(\mathcal T)$.  Then there
+is a divisor $e\mid d$ such that
+\begin{equation}
+ D\cong\F_{q^e},
+ \qquad
+ \mathcal T=\mathcal C(D)\cong
+       \Mat_{d/e}(\F_{q^e}),
+ \qquad
+ \dim_{\F_q}\mathcal T=\frac{d^2}{e}.          \label{eq:double-centralizer-shape}
+\end{equation}
+If public right and left multiplier algebras satisfy
+\[
+ A_R\subseteq\mathcal C(\mathcal T),
+ \qquad
+ A_L\subseteq\mathcal C(\mathcal T^\transpose),
+\]
+then
+\begin{equation}
+ \dim_{\F_q}A_R\le e,
+ \qquad
+ \dim_{\F_q}A_L\le e.                         \label{eq:alignment-capacity}
+\end{equation}
+In particular, retaining a $d$-dimensional multiplier algebra on either side
+forces $e=d$, $\dim_{\F_q}\mathcal T=d$, and
+$\mathcal T=D\cong\F_{q^d}$.  Every genuinely noncommutative irreducible
+choice has $e<d$ and therefore strictly fewer than $d^2$ ordered multiplier
+labels before any symmetry quotient is taken.
+\end{theorem}
+
+\begin{proof}
+By Schur's lemma, $D=\operatorname{End}_{\mathcal T}(V)$ is a finite
+division algebra.  Wedderburn's little theorem makes it a field
+$\F_{q^e}$.  The faithful $D$-action makes $V$ a $D$-vector space, so
+$e\mid d$ and $r:=\dim_DV=d/e$.  Because the assumed irreducibility says
+that $V$ is a simple $\mathcal T$-module, the Jacobson density theorem
+identifies the image of $\mathcal T$ with $\operatorname{End}_D(V)$.
+All spaces are finite, so density is equality~\cite{Jacobson1989BasicAlgebraII}.
+Hence
+$\mathcal T=\mathcal C(D)\cong\Mat_r(\F_{q^e})$ and has
+$\F_q$-dimension $er^2=d^2/e$.
+
+The two alignment inclusions place $A_R$ inside $D$ and $A_L$ inside
+$D^\transpose=\mathcal C(\mathcal T^\transpose)$, proving
+\eqref{eq:alignment-capacity}.  Since $e\le d$, a multiplier algebra of
+$\F_q$-dimension $d$ forces $e=d$ and $r=1$.  Then
+$\mathcal T=D$ is itself a degree-$d$ field.  If $\mathcal T$ is
+noncommutative, $r>1$, so $e<d$ and the product of the left and right label
+dimensions is at most $e^2<d^2$.
+\end{proof}
+
+For $d=4$, the alternatives are especially stark: the field extremum has a
+four-dimensional centralizer and sixteen ordered labels; an irreducible
+$\Mat_2(\F_{q^2})$ secret algebra has only a two-dimensional centralizer
+and four ordered labels; and the full matrix algebra has only scalar
+multipliers.  The irreducibility hypothesis belongs only to this capacity
+classification.  It is not a loophole at full multiplier dimension:
+\Cref{prop:pointwise-alignment-rigidity} below traps every pointwise aligned
+secret coefficient in the degree-$d$ multiplier field, whether the generated
+algebra is irreducible or reducible.
+
+\begin{lemma}[A full-degree field is self-centralizing]
+\label{lem:field-centralizer}
+Let $B\subseteq\Mat_d(\F_q)$ be a field of $\F_q$-dimension $d$.  Then
+\[
+  \mathcal C(B)=B.
+\]
+\end{lemma}
+
+\begin{proof}
+View $V=\F_q^d$ as a $B$-module.  The embedding is faithful and
+$\dim_{\F_q}B=\dim_{\F_q}V=d$, so $V$ is one-dimensional over $B$
+(and hence the $B$-action is automatically irreducible).  An
+$\F_q$-linear endomorphism commutes with $B$ exactly when it is
+$B$-linear.  Every $B$-linear endomorphism of the
+one-dimensional $B$-space $V$ is multiplication by an element of $B$.
+\end{proof}
+
+The field centralizer is also the building block for more permissive
+alignment in which secret mixing relabels public multipliers by a field
+automorphism rather than commuting with them pointwise.
+
+\begin{lemma}[Normalizer and uniqueness of the aligned field]
+\label{lem:field-normalizer}
+Let $d>1$, let $B\subseteq\Mat_d(\F_q)$ be as in
+\Cref{lem:field-centralizer}, and let $\varphi:x\mapsto x^q$ denote the
+$\F_q$-linear Frobenius map after identifying $\F_q^d$ with $B$.  Then
+\begin{equation}
+ N(B)=B^\times\rtimes\langle\varphi\rangle.          \label{eq:singer-normalizer}
+\end{equation}
+Moreover, if $C\subseteq\Mat_d(\F_q)$ is another field of
+$\F_q$-dimension $d$ and $C^\times\subseteq N(B)$, then $C=B$.
+\end{lemma}
+
+\begin{proof}
+Conjugation by an element of $N(B)$ induces an $\F_q$-automorphism of $B$,
+so it induces $x\mapsto x^{q^k}$ for some $k$.  Composing with
+$\varphi^{-k}$ leaves an element that centralizes $B$, hence lies in
+$B^\times$ by \Cref{lem:field-centralizer}.  This proves
+\eqref{eq:singer-normalizer}.
+
+Choose a generator $c$ of the cyclic group $C^\times$, so
+$\operatorname{ord}(c)=q^d-1$.  Write $c=b\varphi^k$ using
+\eqref{eq:singer-normalizer}.  If $k\ne0$, put
+$g=\gcd(d,k)$ and $e=d/g$.  Then $(b\varphi^k)^e$ is a norm lying in
+$\F_{q^g}^\times$, and therefore
+\[
+ \operatorname{ord}(c)\mid e(q^g-1)
+ \le d(q^{d/2}-1)<q^d-1.
+\]
+The final strict inequality follows from $q^{d/2}+1>d$, which holds for
+$q\ge2$ and $d>1$.
+This contradicts $\operatorname{ord}(c)=q^d-1$.  Thus $k=0$, so
+$c\in B^\times$ and $C=\F_q[c]=B$.
+\end{proof}
+
+A more permissive design might choose secret coefficients from a linear
+space that normalizes the multiplier field, so that moving a multiplier past
+a secret coefficient applies a Frobenius automorphism rather than fixing the
+multiplier pointwise.  Even this freedom is rigid at the SNOVA dimensions.
+
+\begin{lemma}[Linear normalizer support is one semilinear coset]
+\label{lem:linear-normalizer-support}
+Let $A\subseteq\Mat_d(\F_q)$ be a degree-$d$ field and let
+$\varphi:x\mapsto x^q$ be Frobenius in an $A$-coordinate model.  If
+$0\ne U\subseteq\Mat_d(\F_q)$ is an $\F_q$-linear subspace satisfying
+\begin{equation}
+ U\setminus\{0\}\subseteq N(A),                    \label{eq:linear-support-normalizes}
+\end{equation}
+then, for every $0\ne u_0\in U$,
+\begin{equation}
+ Uu_0^{-1}\subseteq A,
+ \qquad
+ U\subseteq Au_0=A\varphi^k\text{ for one }0\le k<d,
+ \qquad
+ \dim_{\F_q}U\le d.                               \label{eq:semilinear-coset-support}
+\end{equation}
+If $\dim U=d$, then $U=A\varphi^k$.  If additionally $1\in U$, then
+$U\subseteq A$, with equality when $\dim U=d$.
+
+Now let $U$ have dimension $d$.  If
+$U\setminus\{0\}$ normalizes a right multiplier field $A_R$ and
+$U^\transpose\setminus\{0\}$ normalizes a left multiplier field $A_L$,
+then
+\begin{equation}
+  A_L=A_R^\transpose.                              \label{eq:linear-support-adjoint-pair}
+\end{equation}
+Thus full-dimensional automorphism-relabeling support still determines the
+same adjoint multiplier pair; it can only twist the secret support by one
+Frobenius-semilinear coset.  No relation between $q$ and $d$ is required.
+\end{lemma}
+
+\begin{proof}
+The standard linearized-polynomial representation gives the direct-sum
+decomposition
+\begin{equation}
+ \operatorname{End}_{\F_q}(A)
+   =\bigoplus_{k=0}^{d-1}A\varphi^k.                \label{eq:linearized-direct-sum}
+\end{equation}
+Indeed, the maps $x\mapsto\sum_{k=0}^{d-1}a_kx^{q^k}$ are linearly
+independent: a nonzero such polynomial has ordinary degree at most
+$q^{d-1}<q^d$ and therefore cannot vanish on all $q^d$ elements of $A$.
+Their total $\F_q$-dimension is $d^2$, so they span every $\F_q$-linear
+endomorphism.  Together with \eqref{eq:singer-normalizer}, this says that
+every nonzero normalizer element lies in exactly one summand
+$A\varphi^k$.
+
+Fix $0\ne u_0\in U$ and put $V=Uu_0^{-1}$.  Then $V$ is an
+$\F_q$-linear subspace, $1\in V$, and
+$V\setminus\{0\}\subseteq N(A)$.  Suppose that
+$v=a\varphi^k\in V$ with $k\ne0$.  By the direct sum
+\eqref{eq:linearized-direct-sum}, $1+v$ is nonzero and has nonzero
+components in two distinct summands.  Hence $1+v\notin N(A)$, contradicting
+$1+v\in V$.  Thus every element of $V$ lies in $A$, proving
+$Uu_0^{-1}\subseteq A$.  Writing $u_0=a_0\varphi^k$ now gives
+$U\subseteq A\varphi^k$ and all remaining one-sided conclusions.
+
+For the two-sided statement, the first part and $\dim U=d$ give
+$Uu_0^{-1}=A_R$.  Since $u_0$ normalizes $A_R$, this also gives
+$u_0^{-1}U=A_R$.  Applied to $U^\transpose$, the same argument gives
+$A_L=U^\transpose u_0^{-\transpose}$.  Therefore
+\[
+ A_L=U^\transpose u_0^{-\transpose}
+     =(u_0^{-1}U)^\transpose=A_R^\transpose,
+\]
+which proves \eqref{eq:linear-support-adjoint-pair}.
+\end{proof}
+
+\begin{lemma}[Large nonlinear normalizer support is rigid]
+\label{lem:large-normalizer-intersection}
+Let $A,C\subseteq\Mat_d(\F_q)$ be degree-$d$ field algebras.  If
+$A\ne C$, then
+\begin{equation}
+ |N(A)\cap N(C)|
+ \le d^2\bigl(q^{d-1}-1\bigr).                    \label{eq:normalizer-intersection-bound}
+\end{equation}
+Consequently, let $\mathcal S\subseteq\Mat_d(\F_q)$ be an arbitrary
+not-necessarily-linear support such that every nonzero $t\in\mathcal S$
+normalizes a right multiplier field $A_R$ and $t^\transpose$ normalizes a
+left multiplier field $A_L$.  If
+\begin{equation}
+ |\mathcal S\setminus\{0\}|>
+ d^2\bigl(q^{d-1}-1\bigr),                         \label{eq:large-support-threshold}
+\end{equation}
+then $A_L=A_R^\transpose$.  In particular, a support of cardinality $q^d$
+containing zero forces the adjoint pair whenever $q\ge d^2$.
+\end{lemma}
+
+\begin{proof}
+Write
+\[
+ N(A)=\bigcup_{k=0}^{d-1}(A\varphi^k\setminus\{0\}),
+ \qquad
+ N(C)=\bigcup_{j=0}^{d-1}(C\psi^j\setminus\{0\})
+\]
+using \Cref{lem:field-normalizer}.  The displayed components are
+$d$-dimensional $\F_q$-linear subspaces after adjoining zero.  If
+$A\varphi^k=C\psi^j$ for some pair $(k,j)$, choose a nonzero element $u_0$
+in that common space.  Right-normalizing the common space by $u_0^{-1}$
+gives both $A$ and $C$, so $A=C$.  Hence, when $A\ne C$, every pairwise
+intersection has dimension at most $d-1$ and contains at most
+$q^{d-1}-1$ nonzero elements.  A union bound over the $d^2$ pairs proves
+\eqref{eq:normalizer-intersection-bound}.
+
+Put $C=A_L^\transpose$.  If $t^\transpose$ normalizes $A_L$, transposing
+the conjugation identity shows that $t$ normalizes $C$.  Thus
+$\mathcal S\setminus\{0\}\subseteq N(A_R)\cap N(C)$.  The strict inequality
+\eqref{eq:large-support-threshold} forces $A_R=C=A_L^\transpose$.  Finally,
+when $|\mathcal S|=q^d$ and $0\in\mathcal S$, the required strict inequality
+follows from
+\[
+ q^d-1-d^2(q^{d-1}-1)
+ =q^{d-1}(q-d^2)+(d^2-1)>0
+\]
+for $q\ge d^2$.
+\end{proof}
+
+\begin{proposition}[Pointwise full-degree alignment is rigid]
+\label{prop:pointwise-alignment-rigidity}
+Let $A_L,A_R\subseteq\Mat_d(\F_q)$ be degree-$d$ field algebras and let
+$U\subseteq\Mat_d(\F_q)$ be an $\F_q$-linear secret-coefficient support.
+If
+\begin{equation}
+ t^\transpose a_L=a_Lt^\transpose,
+ \qquad
+ a_Rt=ta_R                                      \label{eq:alignment-commutation}
+\end{equation}
+for every $t\in U$, $a_L\in A_L$, and $a_R\in A_R$, then
+\begin{equation}
+ U\subseteq A_R\cap A_L^\transpose,
+ \qquad
+ \dim_{\F_q}U\le d.                              \label{eq:pointwise-support-intersection}
+\end{equation}
+If $\dim_{\F_q}U=d$, then
+\begin{equation}
+  U=A_R=A_L^\transpose.                            \label{eq:pointwise-adjoint-pair}
+\end{equation}
+This conclusion needs neither irreducibility of the algebra generated by
+$U$ nor closure of $U$ under multiplication.
+\end{proposition}
+
+\begin{proof}
+By \Cref{lem:field-centralizer}, the degree-$d$ field $A_R$ is
+self-centralizing.  The right commutation in
+\eqref{eq:alignment-commutation} therefore puts every $t\in U$ in $A_R$.
+The left commutation puts $t^\transpose$ in
+$\mathcal C(A_L)=A_L$, hence $t\in A_L^\transpose$.  This proves
+\eqref{eq:pointwise-support-intersection}.  If $\dim U=d$, equality of
+dimensions forces \eqref{eq:pointwise-adjoint-pair}.
+\end{proof}
+
+The alignment condition is visible on one central summand.  Let $t$ be a
+secret block coefficient, let $a_L$ and $a_R$ be public left and right
+multipliers, and substitute $X=TU$.  One obtains terms of the form
+\[
+ U_i^\transpose t^\transpose a_L F a_R sU_j.
+\]
+To reuse one congruence-transformed public form while keeping the public
+multipliers outside it, the derivation moves $a_L$ past $t^\transpose$ and
+$a_R$ past $s$.  The official construction achieves this by drawing all of
+these coefficients from one symmetric commutative field
+\cite{SNOVA23}.  The general consequence is stronger.
+
+\begin{theorem}[Full alignment determines the multiplier pair]
+\label{thm:alignment-multiplier-pair}
+Let $A_L,A_R\subseteq\Mat_d(\F_q)$ be degree-$d$ field algebras.
+The multiplier algebras are necessarily an adjoint pair under any of the
+following alignment hypotheses:
+\begin{enumerate}[label=(\roman*)]
+\item a $d$-dimensional $\F_q$-linear secret support $U$ satisfies
+      pointwise alignment \eqref{eq:alignment-commutation};
+\item a $d$-dimensional $\F_q$-linear support $U$ has every nonzero
+      element normalizing $A_R$ and every nonzero element of $U^\transpose$
+      normalizing $A_L$; or
+\item an arbitrary support $\mathcal S$ satisfies the same two-sided
+      normalizer condition and
+      $|\mathcal S\setminus\{0\}|>d^2(q^{d-1}-1)$.
+\end{enumerate}
+More precisely,
+\begin{equation}
+  A_L=B^\transpose,
+  \qquad
+  A_R=B                                             \label{eq:adjoint-pair}
+\end{equation}
+for the degree-$d$ field $B=A_R$.  In case (i),
+$U=B=A_L^\transpose$.  In case (ii),
+$U=B\varphi^k$ for one Frobenius power $\varphi^k$.  Case (iii) requires
+neither linearity nor algebra closure of the support.  No irreducibility or
+$q$-versus-$d$ hypothesis is needed.
+\end{theorem}
+
+\begin{proof}
+Case (i) is \Cref{prop:pointwise-alignment-rigidity}, case (ii) is
+\Cref{lem:linear-normalizer-support}, and case (iii) is
+\Cref{lem:large-normalizer-intersection}.  Each gives
+$A_L=A_R^\transpose$; putting $B=A_R$ gives \eqref{eq:adjoint-pair}.
+\end{proof}
+
+Thus choosing different left and right algebras does not make them
+independent: full alignment forces the adjoint pair $B^\transpose$ and $B$.
+The official same-algebra construction is the special case in which this pair
+coincides.
+
+\begin{corollary}[Same-algebra alignment forces transpose stability]
+\label{cor:normalizer-alignment}
+If the secret coefficients and both multiplier families use one degree-$d$
+field algebra $A$, then full alignment forces
+\begin{equation}
+ A^\transpose=A.                                    \label{eq:transpose-stable-A}
+\end{equation}
+If pointwise public multipliers span $A$ but one insists on
+$A^\transpose\ne A$, every alignable secret coefficient lies in the proper
+subspace $A\cap A^\transpose$.
+\end{corollary}
+
+\begin{proof}
+The first claim is \eqref{eq:adjoint-pair} with $A_L=A_R=B=A$.  For the
+second, an alignable $t\in A$ has
+$t^\transpose\in\mathcal C(A)=A$, so
+$t\in A\cap A^\transpose$.
+\end{proof}
+
+When \eqref{eq:transpose-stable-A} holds, transpose induces
+\[
+ \sigma:A\longrightarrow A,
+ \qquad \sigma(a)=a^\transpose.
+\]
+Because $A$ is commutative, this anti-automorphism is an automorphism.
+
+\begin{corollary}[Classification of the same-algebra adjoint]
+\label{cor:alignment-adjoint-classification}
+The map $\sigma$ is an $\F_q$-automorphism of
+$A\cong\F_{q^d}$ satisfying $\sigma^2=1$.  Consequently
+\[
+ \sigma=\operatorname{id},
+ \quad\text{or, when $d$ is even,}\quad
+ \sigma(x)=x^{q^{d/2}}.
+\]
+In particular, when $d$ is odd, full same-algebra alignment forces every
+element of $A$ to be symmetric.  Changing the generator or basis cannot
+produce any other adjoint.
+\end{corollary}
+
+\begin{proof}
+For $a,b\in A$,
+$\sigma(ab)=b^\transpose a^\transpose=\sigma(a)\sigma(b)$, and transpose is
+$\F_q$-linear and involutory.  The $\F_q$-automorphism group of
+$\F_{q^d}$ is cyclic of order $d$, generated by Frobenius.  It has no
+nontrivial element of order two when $d$ is odd and has the unique such
+element $x\mapsto x^{q^{d/2}}$ when $d$ is even.
+\end{proof}
+
+\section{The Hermitian quotient forced by alignment}
+\label{sec:alignment-hermitian}
+
+Assume now that $q$ is odd.  Under full alignment, write
+$A_L=B^\transpose$ and $A_R=B$ as in \eqref{eq:adjoint-pair}.  Define an
+involution on the ordered left/right label space by
+\begin{equation}
+ \tau(\xi\otimes\eta)
+   =\eta^\transpose\otimes\xi^\transpose,
+ \qquad
+ \xi\in A_L,\ \eta\in A_R.                         \label{eq:twisted-label-involution}
+\end{equation}
+The Hermitian and anti-Hermitian label quotients are
+\begin{align}
+ \operatorname{Her}^2(A_L,A_R)
+   &= (A_L\otimes_{\F_q}A_R)/
+      \Span\{z-\tau z:z\in A_L\otimes A_R\},       \label{eq:hermitian-square}\\
+ \operatorname{AHer}^2(A_L,A_R)
+   &= (A_L\otimes_{\F_q}A_R)/
+      \Span\{z+\tau z:z\in A_L\otimes A_R\}.       \label{eq:antihermitian-square}
+\end{align}
+For a base matrix $P$, put
+\[
+ \Phi_P(\xi\otimes\eta)(u)
+   =u^\transpose\Sigma_\xi P\Sigma_\eta u.
+\]
+
+\begin{theorem}[Alignment--Hermitian factorization]
+\label{thm:alignment-hermitian-factorization}
+For every base matrix $P$,
+\begin{equation}
+  \Phi_P\circ\tau=\Phi_{P^\transpose}.              \label{eq:transpose-intertwining}
+\end{equation}
+Consequently:
+\begin{enumerate}[label=(\roman*)]
+\item if $P^\transpose=P$, then $\Phi_P$ factors through
+      $\operatorname{Her}^2(A_L,A_R)$;
+\item if $P^\transpose=-P$, then $\Phi_P$ factors through
+      $\operatorname{AHer}^2(A_L,A_R)$;
+\item the quotient dimensions are
+\begin{equation}
+ \dim_{\F_q}\operatorname{Her}^2(A_L,A_R)
+      =\frac{d(d+1)}2,
+ \qquad
+ \dim_{\F_q}\operatorname{AHer}^2(A_L,A_R)
+      =\frac{d(d-1)}2.                              \label{eq:hermitian-dimensions}
+\end{equation}
+\end{enumerate}
+Thus every fully aligned symmetric redesign has the same universal
+$d(d+1)/2$ cap, even if it uses distinct left and right algebras; additional
+dependencies can only lower the rank.
+\end{theorem}
+
+\begin{proof}
+The block embedding is transpose-compatible:
+$\Sigma_{a^\transpose}^\transpose=\Sigma_a$.  Therefore, for a pure
+tensor, transposing the scalar gives
+\begin{align*}
+ \Phi_P(\tau(\xi\otimes\eta))(u)
+ &=u^\transpose\Sigma_{\eta^\transpose}P
+                  \Sigma_{\xi^\transpose}u\\
+ &=u^\transpose\Sigma_\xi P^\transpose\Sigma_\eta u
+ =\Phi_{P^\transpose}(\xi\otimes\eta)(u),
+\end{align*}
+which proves \eqref{eq:transpose-intertwining}.  The two factorization
+statements follow.
+
+Choose a basis $b_1,\ldots,b_d$ of $B$ and the corresponding basis
+$b_1^\transpose,\ldots,b_d^\transpose$ of $B^\transpose$.  In the basis
+$b_i^\transpose\otimes b_j$, the involution $\tau$ is ordinary swap:
+\[
+ b_i^\transpose\otimes b_j
+ \longmapsto b_j^\transpose\otimes b_i.
+\]
+Because $q$ is odd, the tensor product is the direct sum of the $+1$ and
+$-1$ eigenspaces.  They have dimensions $(d^2+d)/2$ and $(d^2-d)/2$,
+which are the dimensions of the two quotients.
+\end{proof}
+
+\begin{corollary}[Noncommutative alignment only lowers symmetric capacity]
+\label{cor:noncommutative-capacity}
+Let $\mathcal T$ be any irreducible secret algebra from
+\Cref{thm:alignment-capacity}, with centralizer
+$D\cong\F_{q^e}$.  Under pointwise alignment using the full centralizer pair
+$D^\transpose,D$, every symmetric base form has ordered-label rank at most
+\begin{equation}
+  \frac{e(e+1)}2.                                  \label{eq:general-centralizer-hermitian-cap}
+\end{equation}
+The raw label space has dimension only $e^2$.  Hence the field extremum
+$e=d$ simultaneously maximizes the aligned multiplier capacity and maximizes
+the symmetric quotient; every genuinely noncommutative irreducible secret
+algebra has a strictly smaller cap.
+\end{corollary}
+
+\begin{proof}
+Choose a basis $b_1,\ldots,b_e$ of $D$ and the transpose basis of
+$D^\transpose$.  On the $e^2$ labels
+$b_i^\transpose\otimes b_j$, scalar transposition again acts by ordinary
+swap.  A symmetric form therefore identifies $(i,j)$ with $(j,i)$ and leaves
+at most $e(e+1)/2$ directions.  The strict comparison follows from $e<d$ in
+the noncommutative case of \Cref{thm:alignment-capacity}.
+\end{proof}
+
+\begin{table}[H]
+\centering
+\caption{The alignment-capacity alternatives for the public block sizes.
+The final column is the symmetric-form cap when the full centralizer pair is
+used.  Noncommutativity increases secret-algebra dimension only by shrinking
+the public multiplier labels.}
+\label{tab:alignment-capacity-examples}
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}c l r r r r@{}}
+\toprule
+block $d$ & irreducible secret algebra $\mathcal T$ & $e$ & $\dim\mathcal T$ & raw labels & symmetric cap\\
+\midrule
+$2$ & $\F_{q^2}$ & $2$ & $2$ & $4$ & $3$\\
+$2$ & $\Mat_2(\F_q)$ & $1$ & $4$ & $1$ & $1$\\
+$4$ & $\F_{q^4}$ & $4$ & $4$ & $16$ & $10$\\
+$4$ & $\Mat_2(\F_{q^2})$ & $2$ & $8$ & $4$ & $3$\\
+$4$ & $\Mat_4(\F_q)$ & $1$ & $16$ & $1$ & $1$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In the official same-algebra case $A_L=A_R=A$, the adjoint $\sigma$ from
+\Cref{cor:alignment-adjoint-classification} rewrites
+\eqref{eq:twisted-label-involution} as
+\[
+ \tau(\xi\otimes\eta)=\sigma(\eta)\otimes\sigma(\xi).
+\]
+When $\sigma=\operatorname{id}$, the two quotients are the ordinary symmetric
+and alternating squares.  The theorem therefore rules out three superficial
+repairs at once.  A nonsymmetric generator does not help if same-algebra
+alignment is retained; distinct left and right algebras are forced to be an
+adjoint pair and give the same quotient; and increasing $q$ does not change
+the dimensions.
+
+\section{How much nonsymmetry is required to escape}
+\label{sec:maximally-nonselfadjoint}
+
+The preceding theorem does not claim that every arbitrary nonsymmetric base
+family is already broken.  It instead quantifies how radical such a repair
+must be.  Let $W$ be a $w$-dimensional space of base matrices and define
+\[
+ W_+=\Span\{P+P^\transpose:P\in W\},
+ \qquad
+ W_-=\Span\{P-P^\transpose:P\in W\},
+ \qquad s_\pm=\dim W_\pm.
+\]
+Let $\mathcal I_+$ and $\mathcal I_-$ be the polynomial image spaces
+generated by $W_+$ and $W_-$, respectively, over all aligned ordered labels.
+
+\begin{theorem}[Hermitian-channel rank bound]
+\label{thm:mixed-base-rank-bound}
+For the complete feature map generated by $W$ and the aligned ordered
+label space $A_L\otimes A_R$,
+\begin{equation}
+ \rank\Phi_W
+ \le
+ s_+\frac{d(d+1)}2+s_-\frac{d(d-1)}2.               \label{eq:mixed-base-cap}
+\end{equation}
+In particular:
+\begin{enumerate}[label=(\alph*)]
+\item if $W$ is transpose-stable, then $s_++s_-=w$ and
+\begin{equation}
+ \rank\Phi_W\le w\frac{d(d+1)}2<wd^2
+ \qquad(d>1);                                      \label{eq:transpose-stable-W-cap}
+\end{equation}
+\item attaining the raw ordered-label rank $wd^2$ requires
+\begin{equation}
+ s_+=s_-=w.                                         \label{eq:both-projections-full}
+\end{equation}
+Hence both symmetrization and skew-symmetrization must be injective on $W$.
+Equality also forces
+\begin{equation}
+ \dim\mathcal I_+=w\frac{d(d+1)}2,
+ \qquad
+ \dim\mathcal I_-=w\frac{d(d-1)}2,
+ \qquad
+ \mathcal I_+\cap\mathcal I_-=\{0\},             \label{eq:full-disjoint-channels}
+\end{equation}
+and necessarily
+\begin{equation}
+ W\cap W^\transpose=\{0\}.                         \label{eq:maximally-nonselfadjoint}
+\end{equation}
+\end{enumerate}
+Thus a full-rank nonsymmetric repair cannot be a small perturbation of a
+symmetric or transpose-stable family: it must be maximally
+non-self-adjoint and must expose full, mutually disjoint Hermitian and
+anti-Hermitian channels.  Moreover,
+$W\cap W^\transpose=0$ forces
+\begin{equation}
+  \dim(W+W^\transpose)=2w.                        \label{eq:transpose-closure-doubles}
+\end{equation}
+Hence the escape doubles the dimension of the transpose-stable closure: its
+canonical decomposition contains $w$ independent Hermitian and $w$
+independent anti-Hermitian base directions.
+\end{theorem}
+
+\begin{proof}
+Because $2$ is invertible,
+$P=(P+P^\transpose)/2+(P-P^\transpose)/2$.  Apply
+\Cref{thm:alignment-hermitian-factorization} to the two summands and then
+sum their image-dimension bounds.  This proves
+\eqref{eq:mixed-base-cap}.
+
+If $W$ is transpose-stable, it is the direct sum of its symmetric and
+skew-symmetric eigenspaces, so $s_++s_-=w$.  Since
+$d(d+1)/2\ge d(d-1)/2$, \eqref{eq:transpose-stable-W-cap} follows.
+For arbitrary $W$, both $s_+$ and $s_-$ are at most $w$.  Equality in the
+upper bound $wd^2=w(d(d+1)/2+d(d-1)/2)$ therefore requires
+\eqref{eq:both-projections-full}.  Moreover,
+$\operatorname{im}\Phi_W\subseteq\mathcal I_++\mathcal I_-$, while
+\[
+ \dim\mathcal I_+\le s_+\frac{d(d+1)}2,
+ \qquad
+ \dim\mathcal I_-\le s_-\frac{d(d-1)}2.
+\]
+Equality $\rank\Phi_W=wd^2$ forces equality in both image bounds and in
+the dimension formula for $\mathcal I_++\mathcal I_-$, proving
+\eqref{eq:full-disjoint-channels}.
+
+Suppose now that $0\ne P\in W\cap W^\transpose$.  Write $P=Q^\transpose$
+with $Q\in W$.  If $P+Q\ne0$, then $P+Q$ is a nonzero symmetric element of
+$W$, contradicting injectivity of skew-symmetrization.  If $P+Q=0$, then
+$P$ is a nonzero skew-symmetric element of $W$, contradicting injectivity of
+symmetrization.  Hence \eqref{eq:maximally-nonselfadjoint} is necessary.  Finally,
+\[
+ \dim(W+W^\transpose)
+   =\dim W+\dim W^\transpose-\dim(W\cap W^\transpose)=2w,
+\]
+which proves \eqref{eq:transpose-closure-doubles}.
+\end{proof}
+
+\begin{corollary}[Alignment--Hermitian no-go theorem]
+\label{cor:alignment-no-go}
+Consider an odd-characteristic SNOVA-style redesign that retains:
+\begin{enumerate}[label=(\roman*)]
+\item degree-$d$ aligned left/right multiplier fields and a secret block
+      support that is either a full $d$-dimensional linear space or has more
+      than $d^2(q^{d-1}-1)$ nonzero coefficients;
+\item key-randomness alignment through the standard congruence-reuse
+      identity, either by pointwise commutation or by multiplier-field
+      automorphism relabeling; and
+\item a security count of $wd^2$ ordered power-pair features from $w$ base
+      forms.
+\end{enumerate}
+Then no reducible or noncommutative choice of secret support, generator
+change, basis change, field-size increase, distinct aligned multiplier pair,
+or transpose-stable base-family modification can validate that count.  A repair
+must choose at least one of the following departures:
+\begin{enumerate}[label=\textbf{\arabic*.}]
+\item retain symmetric or transpose-stable forms and accept the Hermitian
+      cap in \eqref{eq:transpose-stable-W-cap};
+\item replace them by a maximally non-self-adjoint family satisfying
+      \eqref{eq:both-projections-full}--\eqref{eq:maximally-nonselfadjoint},
+      including the full disjoint-channel condition
+      \eqref{eq:full-disjoint-channels}, thereby restoring a full
+      anti-Hermitian (exterior when $\sigma=1$) channel; or
+\item abandon full alignment or change the public-key derivation so that the
+      congruence-transformed forms can no longer be reused in the same way.
+\end{enumerate}
+The companion cryptanalysis gives explicit forgery systems for all nine
+Version~2.3 rows~\cite{ThalerEtAl2026SymmetryQuotient}.  The theorem does not
+assert that every construction in the second or third branch is already
+broken; it proves that either branch is a fundamental architectural change
+rather than a local repair of the present philosophy.
+\end{corollary}
+
+\begin{proof}
+Full alignment determines the adjoint multiplier pair by
+\Cref{thm:alignment-multiplier-pair}.  The symmetric and
+transpose-stable branches are bounded by
+\Cref{thm:alignment-hermitian-factorization,thm:mixed-base-rank-bound}.
+Achieving the full ordered rank forces the second branch by
+\Cref{thm:mixed-base-rank-bound}.  Refusing the adjoint-pair structure
+forces abandonment of full alignment by
+\Cref{thm:alignment-multiplier-pair}.
+\end{proof}
+
+The anti-Hermitian channel is not an invented bookkeeping device.  When
+$\sigma=1$ it is exactly $\bigwedge^2 A$, the exterior channel that appears
+in wedge and exterior-algebra cryptanalysis; the complementary Hermitian
+channel is the symmetric-algebra side studied in odd-characteristic UOV
+analysis~\cite{Ran2026,JinEtAl2026,BrosEtAl2026SNOVAWedge}.  Those prior
+results do not by themselves prove every maximally non-self-adjoint redesign
+insecure.  They do explain why restoring the missing channel is not the same
+as restoring generic random-MQ behavior.
+
+\section{Application to SNOVA Version~2.3}\label{sec:snova-application}
+
+For one base form, the ordered label space is $A\otimes_{\F_q}A$.  The
+following corollary specializes the Hermitian quotient to Version~2.3.
+
+\begin{corollary}[Symmetric-square factorization]\label{thm:symmetry-quotient}
+Let $A=\F_q[S]$ have dimension $d$, and assume $S^\transpose=S$ and
+$P_i^\transpose=P_i$.  For each $i$, the map
+\[
+  A\otimes_{\F_q}A\longrightarrow \F_q[u]^{\rm hom}_2,
+  \qquad
+  \xi\otimes\eta\longmapsto u^\transpose\Sigma_\xi P_i\Sigma_\eta u
+\]
+is invariant under $\xi\otimes\eta\mapsto\eta\otimes\xi$.  It factors
+through
+\[
+  \Sym^2_{\F_q}(A)=
+  (A\otimes_{\F_q}A)/\Span\{\xi\otimes\eta-\eta\otimes\xi\}.
+\]
+Consequently the direct sum over $m_1$ base forms has rank at most
+$m_1\binom{d+1}{2}$.  After any public linear map to $M$ outputs, its rank is
+at most
+\begin{equation}
+  \min\left\{M,\;m_1\binom{d+1}{2}\right\}.          \label{eq:symmetry-cap}
+\end{equation}
+If the minimal polynomial of $S$ has degree $\ell$, then $d=\ell$ and the
+ordered feature vector is obtained by duplicating the off-diagonal
+coordinates of an unordered feature vector.
+\end{corollary}
+
+\begin{proof}
+Here $\sigma=\operatorname{id}$, so the claim follows directly from
+\Cref{thm:alignment-hermitian-factorization}.  Concretely, every element of
+$A$ is symmetric.  Since the displayed value is a scalar,
+\[
+ u^\transpose\Sigma_\xi P_i\Sigma_\eta u
+ =\bigl(u^\transpose\Sigma_\xi P_i\Sigma_\eta u\bigr)^\transpose
+ =u^\transpose\Sigma_\eta P_i\Sigma_\xi u.
+\]
+Thus every alternating label $\xi\otimes\eta-\eta\otimes\xi$ lies in the
+kernel.  The symmetric square has dimension $\binom{d+1}{2}$, and a later
+linear map cannot enlarge its image.  When powers of $S$ form a basis, the
+coordinate statement is exactly the duplication of each off-diagonal
+unordered pair into its two ordered positions.
+\end{proof}
+
+The corollary gives an upper bound: extra public dependencies can only reduce
+the quadratic image further.  Every concrete attack checks the exact public
+rank before solving.  The outer map cannot repair the loss because it sees only
+the already-equal polynomial values.  The factorization itself uses only
+transposition symmetry.  Odd characteristic is needed later for the familiar
+decomposition into symmetric and alternating tensors and for the polar-form
+analysis.  The concrete symmetric-square corollary and the
+odd-characteristic forgery analysis do not cover the submitted nonsymmetrized
+$q=16$ map.  The alignment theorem still diagnoses its field-algebra
+architecture, but the characteristic-two label decomposition and its wedge
+attack are different.
+
+The published construction uses a single algebra
+$A=\F_q[S]\subseteq\Mat_d(\F_q)$ with $S^\transpose=S$ and symmetric base
+matrices.  Full same-algebra alignment therefore has trivial adjoint on $A$,
+and the Hermitian quotient is the ordinary symmetric square.  One base form
+contributes at most
+\[
+  \binom{d+1}{2}
+\]
+independent quadratic features, rather than the $d^2$ ordered labels used in
+the unquotiented count.  Thus
+\[
+ d=4:\quad 16\longrightarrow10,
+ \qquad
+ d=2:\quad 4\longrightarrow3.
+\]
+The loss occurs before any outer linear mixing and cannot be repaired by that
+mixing.
+
+The companion cryptanalysis~\cite{ThalerEtAl2026SymmetryQuotient} turns this
+identity into complete square forgery systems for every published $q=19$
+Version~2.3 parameter set.  That paper contains the exact affine reduction,
+rejection handling, root-spectrum analysis, symbolic-homotopy recovery,
+streamed-XL alternatives, and concrete numerical ledgers.  None of those
+attack details are needed for the architectural theorem here; conversely, the
+concrete break does not depend on the broader no-local-repair theorem.
+
+The separation is useful.  The concrete paper answers whether the published
+scheme survives.  This paper answers which parts of the surrounding design
+philosophy can be retained in a repair.  Keeping full alignment and a
+transpose-stable base family forces the Hermitian cap.  Recovering the raw
+ordered-label count requires a maximally non-self-adjoint family and a full
+anti-Hermitian channel, or else a different key-derivation mechanism.
+
+\section{Relation to prior work and limitations}\label{sec:prior-scope}
+The anti-Hermitian channel is the exterior square when the field adjoint is
+trivial.  Exterior and wedge channels already play a central role in
+cryptanalysis of SNOVA and related UOV-style systems
+\cite{BrosEtAl2026SNOVAWedge,TsengEtAl2026Wedge}.  Complementary symmetric
+channels arise in odd-characteristic UOV analyses
+\cite{Ran2026,JinEtAl2026}.  Our contribution is not a new solver for those
+channels.  It is a rigidity theorem explaining why full-capacity alignment
+canonically produces the adjoint pair and why transpose-stable public forms
+cannot support the raw ordered-label count.
+
+Several boundaries are important.  First, a maximally non-self-adjoint family
+may evade the Hermitian cap; our theorem gives necessary conditions for full
+capacity, not a cryptanalysis of every family satisfying them.  Second, a
+design may abandon full alignment, accept a larger public key, or use a
+key-derivation identity outside the congruence-reuse model.  Third, in
+characteristic two the symmetric/skew eigenspace decomposition changes and
+must be analyzed through the appropriate exterior-channel formalism.  These
+are genuine departures, not contradictions of the theorem.
+
+\section{Conclusion}
+Full-capacity key-randomness alignment is far more rigid than a choice of
+basis or generator.  It forces degree-$d$ multiplier fields into an adjoint
+pair, survives Frobenius-semilinear relabeling and large nonlinear supports,
+and is uniquely maximized by the field case among irreducible secret
+algebras.  In odd characteristic, the adjoint pair splits ordered quadratic
+labels into Hermitian and anti-Hermitian sectors.  Symmetric or
+transpose-stable public forms cannot realize the raw $d^2$ feature count.
+
+Accordingly, a SNOVA-style repair cannot simultaneously preserve full
+alignment, congruence reuse, transpose-stable forms, and the ordered-label
+security rationale.  It must accept the smaller quotient, restore a full and
+disjoint anti-Hermitian channel through a maximally non-self-adjoint base
+family, or replace the alignment mechanism.  The companion paper shows that
+the published Version~2.3 design, which takes the first branch, admits the
+explicit all-nine forgery systems analyzed there.
+
+\printbibliography
+\end{document}
