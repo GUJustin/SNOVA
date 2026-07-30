@@ -89,22 +89,27 @@ Finite-cardinality symbolic homotopy gives selected-degree-free recovery for
 all nine systems.  In a unit-leading multiplication ledger, before an
 unmeasured multiplier $\kappa_{\rm hom}$, the worst adaptive exponents are
 $132.188$, $183.795$, and $233.844$.  These are break-even operation counts,
-not complete classical-gate bounds.  We therefore add a separate finite-gate
+not complete classical-gate bounds.  We therefore add a separate explicit Boolean-ledger
 analysis of the Level-I $\ell=2$ row.  It applies the published \emph{Just
 Guess} transformation to the $16$ extension-field diagonal equations,
 streams assignments to eight remaining extension variables, and filters the
-result through the independent cross channel and the original verifier.
-Every field operation in the published expected per-trial ledger is assigned
-a Boolean-circuit cost, with explicit reserves for control, filtering, and the
-verifier.  Under the same random-system regularity premise used by the
-published Just Guess analysis, this finite-gate instantiation is below
-$2^{132.047}$ gates.  If a
-trial supplies at least $19^{16}/4$ sign-canonical diagonal roots, the cross
-channel succeeds with probability above $0.171$, giving a success-adjusted
-exponent below $134.595+\log_2\kappa_{\rm JG}$, where $\kappa_{\rm JG}$ is an
-explicit candidate-generation and restart multiplier.  The break-even
-condition is $\log_2\kappa_{\rm JG}<8.406$; a factor-$16$ sensitivity point
-gives $2^{138.595}$.  This replaces the opaque homotopy multiplier on the
+result through the cross channel and the original verifier.  The diagonal
+and cross coefficients are not independent after the native byte-reduced
+coefficients are transformed to Frobenius channels.  We instead prove, by an
+exact finite enumeration of the official $\ell=2$ block transform, that every
+nonzero conditional cross-channel functional has maximum atom at most
+$49/829$.  Every field operation in the published expected-operation ledger
+is assigned a Boolean-circuit cost, with declared reserves for control,
+filtering, and verification.  Under the same random-system regularity premise
+used by the published Just Guess analysis, the per-trial ledger is below
+$2^{132.047}$ gates.  If a trial supplies at least $19^{16}/4$
+sign-canonical diagonal roots, the conditional cross-channel second moment
+gives success probability above $0.0961$ and a success-adjusted exponent below
+$135.426+\log_2\kappa_{\rm JG}$.  Here $\kappa_{\rm JG}$ explicitly includes
+candidate-generation regularity, transformation restarts, and any cost beyond
+the declared filtering reserve.  The break-even condition is
+$\log_2\kappa_{\rm JG}<7.575$; a factor-$16$ sensitivity point gives
+$2^{139.426}$.  This replaces the opaque homotopy multiplier on the
 numerically weakest row by a substantially narrower, transcript-checkable
 premise, but it is not presented as an unconditional complete-gate break.
 
@@ -234,7 +239,7 @@ The exact break-even conditions for the adaptive maxima are
  23.205,\qquad38.156
 \]
 at Levels I, III, and V.  We do not assign a preferred value to
-$\kappa_{\rm hom}$.  The finite-gate Level-I route in
+$\kappa_{\rm hom}$.  The explicit Boolean-ledger Level-I route in
 \Cref{sec:jg-finite-gate} removes this multiplier from the numerically
 weakest row.
 
@@ -267,9 +272,9 @@ random-XOF idealization; exact fixed-key certificates are an alternative.
 The symbolic-homotopy complexity is theorem-backed, but
 $\kappa_{\rm hom}$ contains soft-$O$ factors, evaluation and interpolation,
 basis transforms, inversion, factorization, filtering, memory traffic,
-control, and implementation constants.  The Just Guess section replaces that multiplier by a finite-gate
-instantiation of the published expected per-trial schedule and a separate
-$\kappa_{\rm JG}$ recording candidate-generation regularity and restarts.  We
+control, and implementation constants.  The Just Guess section replaces that multiplier by a Boolean-ledger
+instantiation of the published expected-operation schedule and a separate
+$\kappa_{\rm JG}$ recording candidate-generation regularity, restarts, and excess processing beyond the declared reserve.  We
 do not claim a production timing, a low-memory homotopy theorem, an
 unconditional all-nine complete-gate break, or polynomial-time recovery: the
 displayed B\'ezout and guessing quantities remain exponential.
@@ -280,7 +285,7 @@ current parameter coupling, simultaneously restoring the former ordered-label
 feature cap and eliminating the guaranteed full-affine square requires
 $45.00\%$--$60.71\%$ more verifier outputs before any security margin is
 added.  Eliminating the zero-offset chosen-message square by dimensions alone
-gives the stronger but narrower $96.875\%$--$128.00\%$ floor.  These are
+gives the stronger but narrower $101.5625\%$--$144.00\%$ floor.  These are
 necessary, not sufficient, repaired dimensions.
 \paragraph{Contributions.}
 The paper makes five principal contributions.
@@ -295,7 +300,7 @@ The paper makes five principal contributions.
       verifier's rejection rule and the polynomial system.
 \item It gives complete-square and adaptive certified-core Las Vegas recovery
       theorems and an all-nine break-even ledger, and it instantiates a
-      separate finite Boolean-gate Level-I attack using Just Guess and the
+      separate explicit Boolean-ledger Level-I sensitivity using Just Guess and the
       quotient-channel split.
 \item It proves combined structural repair floors and retains a complementary
       streamed-XL branch for readers interested in explicit low-state
@@ -309,7 +314,7 @@ construction and symmetry quotient.  \Cref{sec:affine-reduction} gives the
 exact affine-column and output reductions.  \Cref{sec:stable-rejection}
 constructs fresh slices, handles rejection, and explains exact target
 sampling.  The full-domain root and complete-square theorems begin in
-\Cref{sec:v7-overview}; the finite-gate Level-I attack appears in
+\Cref{sec:v7-overview}; the explicit Boolean-ledger Level-I route appears in
 \Cref{sec:jg-finite-gate}.  The low-state XL complement, implementation
 evidence, countermeasures, and conclusion follow afterward.
 
@@ -527,9 +532,10 @@ $C_{R,v}$ & Affine constraint matrix after projecting away the quadratic image.\
 $L,s,h$ & Solver slice, its $A$-dimension when $A$-linear, and its base-field dimension.\\
 $\bar\eta_L^U,\eta_{128}$ & Full-domain directional collision mass and the instantiated certified allowance.\\
 $\rho_{\rm byte}=14/256$ & Maximum atom of one XOF byte reduced modulo $19$.\\
+$\rho_{\rm cond}=49/829$ & Maximum conditional atom used by the Level-I cross-channel filter.\\
 $\AXN$ & Unit-cost two-input AND/XOR/XNOR circuit model, with free wiring and fan-out.\\
 $\kappa_{\rm hom}$ & Per-route, per-row ratio of complete end-to-end homotopy work to the unit-leading multiplication-schedule ledger.\\
-$\kappa_{\rm JG}$ & Expected regularity/restart multiplier excluded from the finite-gate Just Guess ledger.\\
+$\kappa_{\rm JG}$ & Candidate-regularity, restart, and excess-processing multiplier excluded from the Just Guess Boolean ledger.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -1968,7 +1974,7 @@ mixture is performed before taking logarithms.  At Levels III and V, the
 complete core is already faster.
 
 
-\section{A finite-gate Level-I route via Just Guess}
+\section{An explicit Boolean-ledger Level-I route via Just Guess}
 \label{sec:jg-finite-gate}
 
 The homotopy ledger deliberately leaves $\kappa_{\rm hom}$ explicit.  This
@@ -1989,11 +1995,15 @@ Write the quotient map in its two Frobenius channels as
   \qquad A=\F_{19^2}.
 \]
 Here $D$ is the diagonal channel and $H$ is the Hermitian cross channel.  The
-retained consistent target is $(t_D,t_H)$.  The two coefficient families
-occupy disjoint Frobenius orbits; in the code-faithful random-XOF model the
-cross channel remains fresh after conditioning on the diagonal-channel
-solver transcript.  A fixed-key transcript can check the same separation
-explicitly.
+retained consistent target is $(t_D,t_H)$.  We additionally reject the event
+$t_D=0$, of probability $19^{-32}$ under the exact uniform target sampler.
+Conditioned on consistency and $t_D\ne0$, the pair $(t_D,t_H)$ remains exactly
+uniform over the retained target set.
+
+The two channel families are distinct linear images of the same native
+byte-reduced public coefficients.  They are therefore \emph{not independent}.
+The argument below uses an exact conditional atom bound for the official
+$\ell=2$ channel transform instead.
 
 \subsection{The streamed diagonal solver}
 Apply Just Guess to the $m=16$ equations $D(x)=t_D$ in $n=64$ variables over
@@ -2017,46 +2027,96 @@ branch, solves the remaining $5\times5$ linear system, and checks the five
 withheld equations.  Surviving points are tested against $H(x)=t_H$, the
 format rule, affine reconstruction, and the unmodified verifier.
 
-Let $\mathcal R$ denote the event that this capped computation supplies at
-least $19^{16}/4$ distinct sign-canonical diagonal roots.  This is a concrete,
+Let $\mathcal R$ denote the event that this computation supplies at least
+$19^{16}/4$ distinct sign-canonical diagonal roots.  This is a concrete,
 transcript-checkable form of the published Just Guess random-system
-regularity premise.  We write $\kappa_{\rm JG}$ for the expected restart
-multiplier required to obtain $\mathcal R$, including transformation retries
-and the negligible format loss.  Unlike $\kappa_{\rm hom}$, it does not hide
-a soft-$O$ algebraic solver.  The field-operation schedule of one trial is
-instantiated below, together with declared reserves for control, filtering,
-and verification.
+regularity premise.  We write $\kappa_{\rm JG}$ for the expected multiplier
+needed to obtain $\mathcal R$.  It includes transformation and linearization
+retries, candidate-abundance failures, the negligible format and $t_D=0$
+losses, and any candidate-processing cost beyond the explicit reserve below.
+Unlike $\kappa_{\rm hom}$, it does not hide a generic soft-$O$ algebraic
+solver, but it remains an unmeasured premise.
 
-\subsection{Independent cross-channel filtering}
+\subsection{Conditional cross-channel filtering}
 For $x\in A^{64}$ put $\Psi(x)=xx^{19\,\transpose}$.  If
 $\Psi(x)=\Psi(y)$ for nonzero $x,y$, then $y=\lambda x$ with
 $\lambda\lambda^{19}=1$.  If also $D(x)=D(y)=t_D\ne0$, then
 $\lambda^2=1$, so $y=\pm x$.  Retaining one representative of each sign pair
 therefore makes the cross tensors distinct.
 
-\begin{lemma}[Cross-channel second moment]
+\begin{lemma}[Exact conditional channel atom]
+\label{lem:jg-conditional-atom}
+Use the native-coordinate random-XOF model, in which one field symbol has raw
+integer weight $14$ for residues $0,\ldots,8$ and $13$ for residues
+$9,\ldots,18$.  Condition on the complete diagonal-channel coefficient
+family $D$.  For every native coefficient block and every nonzero
+$\F_{19}$-linear functional of its remaining Hermitian coefficient, every
+conditional atom has probability at most
+\begin{equation}
+  \rho_{\rm cond}=\frac{49}{829}<0.059108.             \label{eq:jg-rho-cond}
+\end{equation}
+Conditioned on $D$, different native blocks and different base forms remain
+independent.
+\end{lemma}
+
+\begin{proof}
+Diagonalize the official matrix
+$S=\left(\begin{smallmatrix}1&2\\2&15\end{smallmatrix}\right)$ over
+$A=\F_{19}[u]/(u^2+1)$.  Its eigenvalues are $8\pm2u$, with eigenvectors
+$(1,13\pm u)$.  For a native symmetric diagonal block
+$\left(\begin{smallmatrix}a&b\\b&c\end{smallmatrix}\right)$, the diagonal
+coefficient and Hermitian coefficient are
+\[
+ D=(a+7b+16c)+(2b+7c)u,\qquad H=a+7b+18c.
+\]
+For an off-diagonal native block
+$\left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)$, they are
+\[
+ D=(a+13b+13c+16d)+(b+c+7d)u,
+\]
+\[
+ H=(a+13b+13c+18d)+(18b+c)u.
+\]
+These maps act separately on disjoint native blocks.  Exact enumeration of
+all $19^3$ diagonal tuples with their product weights gives maximum
+conditional atom $49/829$.  Exact enumeration of all $19^4$ off-diagonal
+tuples and all $20$ projective nonzero linear functionals on the $A$-valued
+Hermitian coefficient gives the smaller maximum
+$169246/2971565$.  The artifact reproduces both rational values directly
+from the displayed formulae.  Conditioning separately on the $D$-image of
+each independent native block preserves blockwise and base-form independence.
+\end{proof}
+
+\begin{lemma}[Conditional cross-channel second moment]
 \label{lem:jg-cross-moment}
 Let $C$ be any set of $T=c\,19^{16}$ sign-canonical solutions of
-$D(x)=t_D$, where $t_D\ne0$ and $0<c\le1$.  In the code-faithful random-XOF
-model for the independent cross channel and a uniform $t_H$,
+$D(x)=t_D$, where $t_D\ne0$ and $0<c\le1$.  Condition on the entire diagonal
+channel and on any solver transcript determined by it.  For a uniform
+independent target $t_H$,
 \begin{equation}
- \Pr[\exists x\in C:H(x)=t_H]
- \ge \frac{c}{1+c(19\rho_{\rm byte})^{16}},
- \qquad \rho_{\rm byte}=\frac{14}{256}.             \label{eq:jg-cross-success}
+ \Pr[\exists x\in C:H(x)=t_H\mid D]
+ \ge \frac{c}{1+c(19\rho_{\rm cond})^{16}}.           \label{eq:jg-cross-success}
 \end{equation}
-For $c=1/4$, this lower bound exceeds $0.17105$.
+For $c=1/4$, this lower bound is
+$0.0961344407\ldots$.
 \end{lemma}
 
 \begin{proof}
 Let $N=|\{x\in C:H(x)=t_H\}|$.  Uniformity of $t_H$ gives
-$\mathbb EN=c$.  For distinct $x,y\in C$, the Hermitian tensors differ.  For
-each of the sixteen independent base forms, $H_i(x)=H_i(y)$ is a nonzero
-affine equation in fresh byte-reduced symbols and has probability at most
-$\rho_{\rm byte}$.  Hence
+$\mathbb EN=c$.  For distinct $x,y\in C$, the Hermitian tensors differ.
+For each of the sixteen independent base forms, the equality
+$H_i(x)=H_i(y)$ is a nonzero linear equation in the Hermitian block
+coefficients.  Condition on all blocks except one on which this functional is
+nonzero.  By \Cref{lem:jg-conditional-atom}, its conditional probability is
+at most $\rho_{\rm cond}$.  Independence across the sixteen base forms gives
+\[
+ \Pr[H(x)=H(y)\mid D]\le \rho_{\rm cond}^{16}.
+\]
+Consequently
 \[
  \mathbb E N(N-1)
- \le T(T-1)19^{-16}\rho_{\rm byte}^{16}
- <c^2(19\rho_{\rm byte})^{16}.
+ \le T(T-1)19^{-16}\rho_{\rm cond}^{16}
+ <c^2(19\rho_{\rm cond})^{16}.
 \]
 Cauchy--Schwarz gives
 $\Pr[N>0]\ge(\mathbb EN)^2/\mathbb E[N^2]$, proving the claim.
@@ -2067,9 +2127,9 @@ We use the verified $692$-gate multiplier and $84$-gate adder over $A$.  A
 monic quadratic over $A$ is solved by a fixed Tonelli--Shanks schedule.  The
 artifact checks all $361$ possible discriminants and obtains
 \begin{equation}
-  C_{\rm root}=16{,}886\quad\AXN\text{ gates}.       \label{eq:jg-root-gates}
+  C_{\rm root}=16{,}886\quad\AXN\text{ gates}.        \label{eq:jg-root-gates}
 \end{equation}
-Instantiating the published finite Just Guess formulas at
+Instantiating the published expected Just Guess operation formulas at
 $(n,m,k,p)=(64,16,5,6)$ gives, per guess,
 \[
   2684.089\text{ extension multiplications},\qquad
@@ -2079,63 +2139,68 @@ $(n,m,k,p)=(64,16,5,6)$ gives, per guess,
 Rounding upward and adding one million gates for comparisons, address logic,
 and branch control gives
 \begin{equation}
- C_{\rm guess}=3{,}179{,}584\quad\AXN\text{ gates}. \label{eq:jg-guess-gates}
+ C_{\rm guess}=3{,}179{,}584\quad\AXN\text{ gates}.  \label{eq:jg-guess-gates}
 \end{equation}
-We reserve $2^{40}$ gates per $z$ assignment for candidate filtering and a
-full verifier call.  Target sampling, the public transformation, and all rank
+We declare a reserve of $2^{40}$ gates per $z$ assignment for candidate
+filtering and verifier calls.  This is a ledger allowance, not a theorem that
+it dominates every possible candidate population; any excess is included in
+$\kappa_{\rm JG}$.  Target sampling, the public transformation, and all rank
 preflights are polynomial-sized additive terms.
 
 \begin{proposition}[Finite-gate Level-I sensitivity]
 \label{prop:jg-level1-gates}
-Under the published Just Guess expected-operation model, one complete
-$A^8$-streaming trial costs
+Under the published Just Guess expected-operation model, the Boolean ledger
+for one $A^8$-streaming trial is
 \begin{equation}
  W_{\rm JG}^{\rm trial}
  =|A|^{8+5}C_{\rm guess}+|A|^8 2^{40}
- <2^{132.047}.                                      \label{eq:jg-expected-work}
+ <2^{132.047}.                                       \label{eq:jg-expected-work}
 \end{equation}
 On event $\mathcal R$, \Cref{lem:jg-cross-moment} with $c=1/4$ gives an
-expected cross-channel restart multiplier below $5.847$.  Consequently the
-success-adjusted Boolean-gate estimate is
+expected cross-channel restart multiplier below $10.403$.  Consequently the
+success-adjusted Boolean-gate ledger is
 \begin{equation}
   \log_2 W_{\rm JG}
-  <134.595+\log_2\kappa_{\rm JG}.                   \label{eq:jg-final}
+  <135.426+\log_2\kappa_{\rm JG}.                    \label{eq:jg-final}
 \end{equation}
 It is below the Level-I reference $143$ whenever
 \begin{equation}
-  \log_2\kappa_{\rm JG}<8.406.                      \label{eq:jg-break-even}
+  \log_2\kappa_{\rm JG}<7.575.                       \label{eq:jg-break-even}
 \end{equation}
 For orientation only, a factor-$16$ regularity reserve gives exponent
-$138.595$ and $4.405$ bits of remaining margin.
+$139.426$ and $3.574$ bits of remaining margin.
 A separate capped-tree schedule follows at most $63$ quadratic nodes and
 $64$ leaves per guess and aborts any branch whose residual linear system is
 not unique.  Its trial exponent is $137.714$; after the same cross-channel
-restart it is $140.261+\log_2\kappa_{\rm JG}^{\rm cap}$.  Thus this
+restart it is $141.093+\log_2\kappa_{\rm JG}^{\rm cap}$.  Thus this
 strictly bounded-work sensitivity remains below $143$ when
-$\log_2\kappa_{\rm JG}^{\rm cap}<2.739$.  It is reported as a
-sensitivity check, not as a proof of the capped candidate event.
+$\log_2\kappa_{\rm JG}^{\rm cap}<1.908$.  It is reported as a sensitivity
+check, not as a proof of the capped candidate event.
 \end{proposition}
 
 \begin{proof}
 There are $|A|^8$ streamed assignments and $|A|^5$ guesses per assignment.
 Substituting the verified field circuits and quadratic-root schedule into the
-published operation formulas gives \eqref{eq:jg-expected-work}; the artifact
-recomputes the integer ledger before taking logarithms.  On $\mathcal R$, take
-any $19^{16}/4$ sign-canonical candidates.  The reciprocal of the bound in
-\eqref{eq:jg-cross-success} is below $5.847$, adding $2.548$ bits.  The
-remaining transformation and candidate-collection restarts are, by
-definition, $\kappa_{\rm JG}$.  Every candidate is checked by the original
-verifier, so all failure modes are one-sided.
+published expected-operation formulas gives \eqref{eq:jg-expected-work}; the
+artifact recomputes the integer ledger before taking logarithms.  On
+$\mathcal R$, take any $19^{16}/4$ sign-canonical candidates.  The reciprocal
+of \eqref{eq:jg-cross-success} is
+$10.4020993\ldots$, adding $3.378803$ bits.  The remaining regularity,
+transformation, candidate-collection, and excess filtering multipliers are,
+by definition, included in $\kappa_{\rm JG}$.  Every candidate is checked by
+the original verifier, so all failure modes are one-sided.
 \end{proof}
 
 \paragraph{Interpretation.}
 This proposition materially narrows the referee's cost-model objection but
 does not erase it by notation.  It replaces the homotopy soft-$O$ multiplier
-on the weakest row by (i) a complete per-trial Boolean circuit and (ii) the
-specific, publicly auditable event that the Just Guess run yields enough
-diagonal roots.  A production-size fixed-key transcript would measure
-$\kappa_{\rm JG}$ directly.  The two $\ell=4$ Level-I rows still retain
-$\kappa_{\rm hom}$ in their homotopy ledgers.
+on the weakest row by (i) an explicit Boolean ledger for the published
+expected-operation schedule and (ii) the specific, publicly auditable event
+that the Just Guess run yields enough diagonal roots.  It does not provide a
+complete circuit for every control path or prove candidate abundance.  A
+production-size fixed-key transcript would measure $\kappa_{\rm JG}$ directly.
+The two $\ell=4$ Level-I rows still retain $\kappa_{\rm hom}$ in their
+homotopy ledgers.
 
 \section{Adaptive \texorpdfstring{$\ell=4$}{ell=4} recovery}
 \label{sec:v7-l4}
@@ -2373,7 +2438,7 @@ Levels III and V.  For $\ell=4$, use
 \Cref{lem:v7-l4-projective-jacobian} and fall back to
 \Cref{cor:v7-l4-direct-square}.  The machine-readable ledger mixes branch
 work before taking logarithms, charges the union of the relevant spectrum
-tails, and finally normalizes by the exact structural-preflight density.\end{proof}
+tails, and is conditional on the exact structural preflight; only the common spectrum-event density is normalized probabilistically.\end{proof}
 
 \paragraph{Lower-output refinement.}
 Deliberately using the one-eigenblock $\ell=2$ core whenever its certificate
@@ -2602,14 +2667,15 @@ The main all-nine checker recomputes dimensions, separator choices, adaptive
 mixtures, target-sampling acceptance, and repair floors, while the separate
 field-circuit checker verifies the tower identities and all $19^2=361$
 scalar products.  The new Just Guess checker independently recomputes the
-finite-gate expected per-trial ledger, the capped-tree sensitivity, the
+expected-operation Boolean ledger, the capped-tree sensitivity, the
 quadratic-root truth table, the cross-channel
 second moment, and every displayed break-even threshold.  The release does
 not claim that these consistency checks instantiate an official public key or
 run the production verifier; those are distinct fixed-key certificate tasks.
-The public leading-Jacobian preflight is deterministic on a fixed key.  The
-random-XOF calculation is used only to normalize expected work over generated
-keys; a failed preflight invokes a complete-core fallback.
+The public leading-Jacobian preflight is deterministic on a fixed key; its
+failure invokes a complete-core fallback.  The separate structural preflight
+is an exact condition for the displayed ell=4 routes and is not assigned a
+random success probability in the ledger.
 
 \subsection{What is not claimed}
 The release does not contain a production-size end-to-end forgery or a
@@ -2756,16 +2822,17 @@ combinations.  For an exactly uniform target, the consistency event in
 \eqref{eq:upgrade-general-zero-split} has probability $q^{-(M'-\rho_Q)}$ and,
 conditioned on it, $z$ is uniform in $\F_q^{\rho_Q}$.
 
-If the public vinegar summand $V'$ has dimension $d(v-1)$ and
+With zero offsets no reserved line is needed, so use the full public-vinegar
+space $V_{\rm vin}\cong A^v$, of base-field dimension $dv$.  If
 \begin{equation}
- \rho_Q\le d(v-1),                                      \label{eq:upgrade-zero-square-condition}
+ \rho_Q\le dv,                                          \label{eq:upgrade-zero-square-condition}
 \end{equation}
 then dimensions alone leave an ordinary $\rho_Q$-dimensional slice
-$L\subseteq V'$ on which the complete residual system is square: it has
-$\rho_Q$ equations in $\rho_Q$ variables.  Consequently, ruling out this
+$L\subseteq V_{\rm vin}$ on which the complete residual system is square: it
+has $\rho_Q$ equations in $\rho_Q$ variables.  Consequently, ruling out this
 chosen-message square by dimensions alone requires
 \begin{equation}
- \rho_Q>d(v-1).                                         \label{eq:upgrade-zero-square-rank-floor}
+ \rho_Q>dv.                                             \label{eq:upgrade-zero-square-rank-floor}
 \end{equation}
 \end{proposition}
 
@@ -2780,17 +2847,17 @@ therefore impose the consistency equations in
 sends a uniform target to independent uniform residual and consistency
 coordinates, proving the distribution statement.  Under
 \eqref{eq:upgrade-zero-square-condition}, choose any $\rho_Q$-dimensional
-linear subspace of $V'$ and restrict all $\rho_Q$ residual equations to an
-affine coset of it.  This gives the asserted complete square system.
+linear subspace of $V_{\rm vin}$ and restrict all $\rho_Q$ residual equations
+to an affine coset of it.  This gives the asserted complete square system.
 \end{proof}
 
 Symmetry bounds the actual quotient rank by
 \begin{equation}
- \rho_Q\le \min\left\{M',\;m_1'\binom{d+1}{2}\right\}.  \label{eq:upgrade-zero-square-cap}
+ \rho_Q\le \min\left\{M',\;m_1'\binom{d+1}{2}\right\}.
+                                                               \label{eq:upgrade-zero-square-cap}
 \end{equation}
 Hence making \eqref{eq:upgrade-zero-square-rank-floor} even possible forces
-both terms on the right of \eqref{eq:upgrade-zero-square-cap} above
-$d(v-1)$.
+both terms on the right of \eqref{eq:upgrade-zero-square-cap} above $dv$.
 
 \begin{theorem}[Dimension-only floor against the zero-offset fallback]
 \label{thm:upgrade-zero-offset-floor}
@@ -2802,16 +2869,16 @@ Put
 \[
  C_d=\binom{d+1}{2},
  \qquad
- m_{\rm sq}=\left\lfloor\frac{d(v-1)}{C_d}\right\rfloor+1.
+ m_{\rm sq}=\left\lfloor\frac{dv}{C_d}\right\rfloor+1.
 \]
 A necessary condition for eliminating the zero-offset chosen-message square
 by dimensions alone is
 \begin{equation}
  x'\ge
- \max\left\{v,\;d(m_{\rm sq}-1)+1\right\},
- \qquad M'=dx'.                                       \label{eq:upgrade-zero-offset-floor}
+ \max\left\{v+1,\;d(m_{\rm sq}-1)+1\right\},
+ \qquad M'=dx'.                                        \label{eq:upgrade-zero-offset-floor}
 \end{equation}
-If the redesign also restores the old ordered-label cap $K_{\rm ord}$, the
+If the redesign also restores the nominal ordered-label cap $K_{\rm ord}$, the
 right side of \eqref{eq:upgrade-zero-offset-floor} must additionally be
 maximized with
 \[
@@ -2827,27 +2894,27 @@ ordered-cap terms:
 \toprule
 Level & parameters & current $M$ & dimension-only $M'$ & increase\\
 \midrule
-I   & $(28,5,4,4)$  & $80$  & $164$ & $105.00\%$\\
-I   & $(48,16,2,2)$ & $64$  & $126$ & $96.875\%$\\
-I   & $(28,4,4,5)$  & $80$  & $164$ & $105.00\%$\\
-III & $(40,7,4,4)$  & $112$ & $244$ & $117.86\%$\\
-III & $(72,24,2,2)$ & $96$  & $190$ & $97.92\%$\\
-III & $(38,5,4,5)$  & $100$ & $228$ & $128.00\%$\\
-V   & $(50,9,4,4)$  & $144$ & $308$ & $113.89\%$\\
-V   & $(96,32,2,2)$ & $128$ & $254$ & $98.44\%$\\
+I   & $(28,5,4,4)$  & $80$  & $180$ & $125.00\%$\\
+I   & $(48,16,2,2)$ & $64$  & $130$ & $103.125\%$\\
+I   & $(28,4,4,5)$  & $80$  & $180$ & $125.00\%$\\
+III & $(40,7,4,4)$  & $112$ & $260$ & $132.14\%$\\
+III & $(72,24,2,2)$ & $96$  & $194$ & $102.08\%$\\
+III & $(38,5,4,5)$  & $100$ & $244$ & $144.00\%$\\
+V   & $(50,9,4,4)$  & $144$ & $324$ & $125.00\%$\\
+V   & $(96,32,2,2)$ & $128$ & $258$ & $101.5625\%$\\
 V   & $(52,6,4,6)$  & $144$ & $324$ & $125.00\%$\\
 \bottomrule
 \end{tabular}
 \end{center}
 Thus eliminating this fallback by dimensions alone requires
-$96.875\%$--$128.00\%$ more outputs across the published rows.
+$101.5625\%$--$144.00\%$ more outputs across the published rows.
 \end{theorem}
 
 \begin{proof}
 Condition \eqref{eq:upgrade-zero-square-rank-floor} and the two caps in
 \eqref{eq:upgrade-zero-square-cap} require
-$dx'>d(v-1)$ and $m_1'C_d>d(v-1)$.  The first inequality is equivalent to
-$x'\ge v$.  The second requires $m_1'\ge m_{\rm sq}$, and the least integer
+$dx'>dv$ and $m_1'C_d>dv$.  The first inequality is equivalent to
+$x'\ge v+1$.  The second requires $m_1'\ge m_{\rm sq}$, and the least integer
 $x'$ with $\lceil x'/d\rceil\ge m_{\rm sq}$ is
 $d(m_{\rm sq}-1)+1$.  This proves
 \eqref{eq:upgrade-zero-offset-floor}.  The two extra ordered-cap terms are
@@ -2884,12 +2951,13 @@ bounds.
 
 The new Just Guess route addresses the most serious numerical objection more
 concretely.  For the Level-I $\ell=2$ row it replaces symbolic homotopy by a
-finite-gate instantiation of the published expected schedule of guesses,
+Boolean-ledger instantiation of the published expected schedule of guesses,
 quadratic roots, linear solves, quotient checks, and verifier calls.  The
 expected trial ledger is below $2^{132.047}$;
-a proved cross-channel second moment yields the success-adjusted expression
-$2^{134.595}\kappa_{\rm JG}$.  Thus the Level-I comparison is below $2^{143}$
-when $\log_2\kappa_{\rm JG}<8.406$.  This is a substantially narrower and
+an exact conditional-channel atom calculation and a cross-channel second
+moment yield the success-adjusted expression
+$2^{135.426}\kappa_{\rm JG}$.  Thus the Level-I comparison is below $2^{143}$
+when $\log_2\kappa_{\rm JG}<7.575$.  This is a substantially narrower and
 fixed-key-testable premise than $\kappa_{\rm hom}$, but it is still a premise,
 not an unconditional complete-gate break.
 
@@ -2897,7 +2965,7 @@ A repair retaining the architecture cannot be a small rejection patch.
 Restoring the former feature cap and eliminating the guaranteed full-affine
 square already requires $45.00\%$--$60.71\%$ more verifier outputs under the
 current coupling.  Eliminating the zero-offset chosen-message square by
-dimensions alone requires $96.875\%$--$128.00\%$ more.  A smaller redesign
+dimensions alone requires $101.5625\%$--$144.00\%$ more.  A smaller redesign
 must retain and explicitly price the square system and target filter, change
 the target interface, or abandon the symmetric/affine architecture.
 
@@ -3051,7 +3119,8 @@ source, bibliography, compiled PDF, build instructions, and hashes.  The
 \item a standalone generator and independently coded checker for the corrected
       all-nine conditional homotopy ledger;
 \item the complete $150$-gate scalar multiplier netlist and tower checks;
-\item the finite Just Guess, quadratic-root, and cross-channel ledgers; and
+\item the Just Guess expected-operation and capped ledgers, the quadratic-root
+      check, and the exact conditional Frobenius-channel atom enumeration; and
 \item a wrapper checker that runs both the all-nine and referee-revision
       checks.
 \end{itemize}

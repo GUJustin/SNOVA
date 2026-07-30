@@ -543,7 +543,7 @@ def main() -> None:
     print("- no random structural-preflight probability appears in the ledger")
     print("- all 361 F19 multiplier pairs, SHA-256, field/tower identities, determinant")
     print("- target sampling, coefficient/spectrum bounds, dimensions, separators, repair floors")
-    print("- rounded/exact manuscript rows and boxed levelwise maxima")
+    print("- stored ledger rows and independently recomputed boxed levelwise maxima")
     print("- excluded by design: reduction proof, XOF model, homotopy proof, kappa_hom")
 
 

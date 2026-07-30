@@ -14,6 +14,7 @@ verify:
 regenerate:
 	$(PYTHON) artifact/generate_ledger.py
 	$(PYTHON) artifact/field_circuits.py
+	$(PYTHON) artifact/research/verify_l2_channel_conditional_atoms.py
 	$(PYTHON) artifact/research/jg_revised_ledger.py
 	$(PYTHON) artifact/research/jg_capped_tree_ledger.py
 

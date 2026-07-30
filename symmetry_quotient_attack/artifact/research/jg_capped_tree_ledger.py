@@ -10,6 +10,7 @@ separate event measured by kappa_JG^cap.
 from __future__ import annotations
 import json, math
 from pathlib import Path
+from fractions import Fraction
 
 HERE=Path(__file__).resolve().parent
 ART=HERE.parent
@@ -43,9 +44,11 @@ per_guess=mul*GM+add*GA+root_calls*GR+control
 filter_per_z=2**40
 trial=Q**zdim*(Q**k*per_guess+filter_per_z)
 trial_exp=math.log2(trial)
-# Same c=1/4 cross-channel second moment as the expected-tree ledger.
-rho=14/256
-p_cross=.25/(1+.25*(19*rho)**16)
+# Same exact conditional-channel second moment as the expected-tree ledger.
+atom=json.loads((ART/'l2_channel_conditional_atom_ledger.json').read_text())
+rho=Fraction(*atom['common_upper_bound']['fraction'])
+c=Fraction(1,4)
+p_cross=float(c/(1+c*(19*rho)**16))
 cross_bits=math.log2(1/p_cross)
 adjusted=trial_exp+cross_bits
 out={
@@ -54,6 +57,7 @@ out={
   'tree':{'quadratic_nodes_per_guess':root_calls,'leaves_per_guess':leaves,'field_multiplications_per_guess':mul,'field_additions_per_guess':add},
   'gate_costs':{'F19_2_multiplication':GM,'F19_2_addition':GA,'quadratic_all_roots':GR,'control_per_guess':control,'filter_and_verifier_per_z':filter_per_z,'per_guess':per_guess},
   'per_trial':{'AXN':trial,'exponent':trial_exp},
+  'conditional_channel_atom':{'fraction':[rho.numerator,rho.denominator],'float':float(rho)},
   'cross_second_moment':{'success_probability_lower_bound':p_cross,'restart_bits_upper_bound':cross_bits},
   'success_adjusted_before_kappa_JG_cap':{'exponent':adjusted,'headroom_to_143':143-adjusted},
   'break_even':{'log2_kappa_JG_cap_upper_bound':143-adjusted},

@@ -1,53 +1,75 @@
-# Focused strengthening audit after the Mode-A report
+# Final focused research and correctness audit
 
 ## Objective
 
-Replace or sharply narrow the unknown homotopy multiplier on the Level-I
-bottleneck, while preserving one-sided forgery soundness and honest resource
-accounting.
+Stress-test the editor's corrections and the later Level-I Just Guess route,
+then retain only claims supported by exact algebra, a stated random model, or
+an explicit sensitivity multiplier.
 
-## Routes investigated
+## Editor corrections
 
-- Random projected square cores: valid but no exponent improvement.
-- Direct Just Guess on the full 48-equation F19 quotient: too expensive.
-- Mixed inclusion of cross-channel equations: no favorable classical
-  tradeoff in the scanned feasible parameter range.
-- Worst-case binary-tree Just Guess: finite and reproducible, but leaves only
-  2.739 bits for the capped candidate-regularity multiplier.
-- Expected-tree Just Guess on the 16 A-valued diagonal equations, streaming
-  an A^8 family and filtering through the cross channel: best result.
+The following high-impact editor changes were re-derived and found correct:
 
-## Best retained result
+- the outer map is deterministic and receives no random rank probability;
+- the affine-rank union bound is over projective quotient-dual directions;
+- the reserved line must be coordinate-aligned under biased byte sampling;
+- the finite-cardinality homotopy separator succeeds with probability at least
+  `1-B^2/|E|` when sampled from the full coefficient space;
+- the target-rejection sampler is exact, with minimum acceptance
+  `0.1524622985242944` over the official output lengths;
+- rank-deficient fourth-block completion must be declared incomplete unless a
+  separately priced enumeration procedure is used.
 
-For A=F_{19^2}, `(n,m,k,p)=(64,16,5,6)` satisfies the published Just Guess
-structural inequalities.  With the verified 692-gate A multiplier, 84-gate A
-adder, and a 16,886-gate all-roots routine for monic quadratics over A, the
-published expected schedule gives 3,179,584 AXN gates per guess.  Streaming
-A^8 assignments and all A^5 guesses gives exponent 132.046522 before success
-repetitions.
+The audit found one missed editor port: the zero-offset repair theorem must
+use the full `A^v` public-vinegar space. The corrected output-increase range is
+`101.5625%--144.00%`.
 
-For any set of `c*19^16` sign-canonical diagonal roots, a fresh cross channel
-and uniform cross target satisfy
+## Just Guess correction
 
-    Pr[match] >= c / (1 + c*(19*14/256)^16).
+The earlier Just Guess draft treated the diagonal and cross Frobenius
+channels as independent after conditioning on the diagonal solver transcript.
+That is false for the native byte-biased coefficient distribution.
 
-At c=1/4 this is at least 0.1710527744, adding 2.547487 bits.  Hence the
-success-adjusted expression is
+For `S=[[1,2],[2,15]]` over `F_19[u]/(u^2+1)`, eigenvectors
+`(1,13+u)` and `(1,13-u)` give the exact block transforms printed in the
+paper. Exhaustive weighted enumeration gives:
 
-    134.594009 + log2(kappa_JG).
+    diagonal max conditional atom = 49/829
+    off-diagonal max conditional functional atom = 169246/2971565
 
-## Remaining gap
+Conditioning on all diagonal coefficients remains blockwise because the
+transform is local to each independent native matrix block. For distinct
+sign-canonical diagonal roots, one nonzero Hermitian functional per base form
+then yields pair-collision probability at most `(49/829)^16`.
 
-The transformation-selected search family depends on the diagonal system.
-The current proof does not establish that one trial produces at least
-`19^16/4` sign-canonical roots with a bounded expected number of
-transformation/linearization retries.  This is isolated as `kappa_JG`.
-Attempts to remove it by a naive diagonal second moment fail because the
-search family is transformation-dependent.  A proof would need either:
+At `c=1/4`, the corrected second moment is
 
-1. a fresh-coefficient decoupling theorem for the Just Guess transformation;
-2. a distributional invariance theorem for the transformed random system; or
-3. a fixed-key production transcript measuring candidate abundance and
-   restarts.
+    Pr[cross match] >= c / (1 + c*(19*49/829)^16)
+                    = 0.09613444074026915...
 
-No stronger unconditional claim is made.
+This adds `3.378802812` bits. The resulting sensitivities are:
+
+    expected-operation route:
+      135.425324835 + log2(kappa_JG)
+      break-even log2(kappa_JG) < 7.574675165
+
+    capped-tree route:
+      141.092306187 + log2(kappa_JG_cap)
+      break-even log2(kappa_JG_cap) < 1.907693813
+
+The per-`z` `2^40` filtering amount is a declared reserve, not a proved bound
+for every candidate population. Any excess belongs to `kappa_JG`.
+
+## Remaining limitations
+
+The package still does not contain:
+
+1. official-v2.3 public keys and end-to-end equality tests against the pinned
+   verifier;
+2. realized structural-preflight certificates for every official fixed key;
+3. a proof or production measurement of the Just Guess candidate-abundance
+   multiplier;
+4. a complete end-to-end Boolean implementation of symbolic homotopy.
+
+These are stated limitations. They are not renamed as theorems or hidden in
+unqualified "breaks all nine" language.

@@ -1,16 +1,24 @@
 {
   "break_even": {
-    "log2_kappa_JG_upper_bound": 8.405991385819874
+    "log2_kappa_JG_upper_bound": 7.574675164510296
   },
   "candidate_event": {
     "minimum_sign_canonical_candidates": "19^16/4",
-    "regularity_multiplier_symbol": "kappa_JG"
+    "regularity_multiplier_symbol": "kappa_JG",
+    "target_filter": "t_D != 0"
+  },
+  "conditional_channel_atom": {
+    "float": 0.05910735826296743,
+    "fraction": [
+      49,
+      829
+    ]
   },
   "cross_second_moment": {
-    "beta": 1.846148964833118,
-    "restart_bits_upper_bound": 2.547486590705363,
-    "restart_multiplier_upper_bound": 5.846148964833119,
-    "success_probability_lower_bound": 0.17105277440164332
+    "beta": 6.402099313208114,
+    "restart_bits_upper_bound": 3.3788028120149507,
+    "restart_multiplier_upper_bound": 10.402099313208115,
+    "success_probability_lower_bound": 0.09613444074026915
   },
   "expected_field_counts_per_guess": {
     "additions": 2621.086111111086,
@@ -21,11 +29,11 @@
     "F19_2_addition": 84,
     "F19_2_multiplication": 692,
     "control_per_guess": 1000000,
-    "filter_and_verifier_per_z": 1099511627776,
+    "declared_filter_and_verifier_reserve_per_z": 1099511627776,
     "per_guess": 3179584,
     "quadratic_all_roots": 16886
   },
-  "model": "published Just Guess expected-operation model with a fully instantiated per-trial Boolean circuit and an exact cross-channel second moment",
+  "model": "published Just Guess expected-operation model, explicit field/root Boolean costs, declared filtering reserve, and exact conditional-channel atom bound",
   "parameters": {
     "A_size": 361,
     "k": 5,
@@ -37,45 +45,45 @@
     "z_A_dimension": 8
   },
   "per_trial": {
-    "AXN": 5622946510007201103415816815838245623360,
+    "AXN_ledger": 5622946510007201103415816815838245623360,
     "exponent": 132.04652202347475
   },
   "sensitivity": {
     "128": {
-      "exponent": 141.59400861418013,
-      "headroom_to_143": 1.405991385819874
+      "exponent": 142.4253248354897,
+      "headroom_to_143": 0.5746751645102961
     },
     "16": {
-      "exponent": 138.59400861418013,
-      "headroom_to_143": 4.405991385819874
+      "exponent": 139.4253248354897,
+      "headroom_to_143": 3.574675164510296
     },
     "2": {
-      "exponent": 135.59400861418013,
-      "headroom_to_143": 7.405991385819874
+      "exponent": 136.4253248354897,
+      "headroom_to_143": 6.574675164510296
     },
     "256": {
-      "exponent": 142.59400861418013,
-      "headroom_to_143": 0.40599138581987404
+      "exponent": 143.4253248354897,
+      "headroom_to_143": -0.4253248354897039
     },
     "32": {
-      "exponent": 139.59400861418013,
-      "headroom_to_143": 3.405991385819874
+      "exponent": 140.4253248354897,
+      "headroom_to_143": 2.574675164510296
     },
     "4": {
-      "exponent": 136.59400861418013,
-      "headroom_to_143": 6.405991385819874
+      "exponent": 137.4253248354897,
+      "headroom_to_143": 5.574675164510296
     },
     "64": {
-      "exponent": 140.59400861418013,
-      "headroom_to_143": 2.405991385819874
+      "exponent": 141.4253248354897,
+      "headroom_to_143": 1.574675164510296
     },
     "8": {
-      "exponent": 137.59400861418013,
-      "headroom_to_143": 5.405991385819874
+      "exponent": 138.4253248354897,
+      "headroom_to_143": 4.574675164510296
     }
   },
   "success_adjusted_before_kappa_JG": {
-    "exponent": 134.59400861418013,
-    "headroom_to_143": 8.405991385819874
+    "exponent": 135.4253248354897,
+    "headroom_to_143": 7.574675164510296
   }
 }

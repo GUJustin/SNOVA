@@ -1,0 +1,80 @@
+{
+  "common_upper_bound": {
+    "float": 0.05910735826296743,
+    "fraction": [
+      49,
+      829
+    ]
+  },
+  "diagonal_block_transform": {
+    "D_real": "a+7b+16c",
+    "D_u": "2b+7c",
+    "H": "a+7b+18c"
+  },
+  "diagonal_max_conditional_atom": {
+    "float": 0.05910735826296743,
+    "fraction": [
+      49,
+      829
+    ],
+    "witness": {
+      "D": [
+        2,
+        6
+      ],
+      "H": 2,
+      "conditional_denominator_weight": 46424,
+      "numerator_weight": 2744
+    }
+  },
+  "eigenvalues": [
+    "8+2u",
+    "8-2u"
+  ],
+  "eigenvectors": [
+    "(1,13+u)",
+    "(1,13-u)"
+  ],
+  "field": "F_19[u]/(u^2+1)",
+  "native_symbol_integer_weights": {
+    "0..8": 14,
+    "9..18": 13,
+    "normalizer": 256
+  },
+  "off_diagonal_block_transform": {
+    "D_real": "a+13b+13c+16d",
+    "D_u": "b+c+7d",
+    "H_real": "a+13b+13c+18d",
+    "H_u": "18b+c"
+  },
+  "off_diagonal_max_conditional_functional_atom": {
+    "float": 0.05695517345237274,
+    "fraction": [
+      169246,
+      2971565
+    ],
+    "witness": {
+      "D": [
+        9,
+        8
+      ],
+      "conditional_denominator_weight": 11886260,
+      "functional": [
+        1,
+        0
+      ],
+      "numerator_weight": 676984,
+      "value": 9
+    }
+  },
+  "official_S": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      15
+    ]
+  ]
+}

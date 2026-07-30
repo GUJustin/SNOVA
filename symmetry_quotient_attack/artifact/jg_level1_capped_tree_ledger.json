@@ -1,10 +1,17 @@
 {
   "break_even": {
-    "log2_kappa_JG_cap_upper_bound": 2.739010034152585
+    "log2_kappa_JG_cap_upper_bound": 1.9076938128430072
+  },
+  "conditional_channel_atom": {
+    "float": 0.05910735826296743,
+    "fraction": [
+      49,
+      829
+    ]
   },
   "cross_second_moment": {
-    "restart_bits_upper_bound": 2.547486590705363,
-    "success_probability_lower_bound": 0.17105277440164332
+    "restart_bits_upper_bound": 3.3788028120149507,
+    "success_probability_lower_bound": 0.09613444074026915
   },
   "gate_costs": {
     "F19_2_addition": 84,
@@ -28,8 +35,8 @@
     "exponent": 137.71350337514204
   },
   "success_adjusted_before_kappa_JG_cap": {
-    "exponent": 140.26098996584741,
-    "headroom_to_143": 2.739010034152585
+    "exponent": 141.092306187157,
+    "headroom_to_143": 1.9076938128430072
   },
   "tree": {
     "field_additions_per_guess": 196277,

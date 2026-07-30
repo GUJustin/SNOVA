@@ -12,6 +12,7 @@ import math
 import runpy
 import subprocess
 import sys
+from collections import defaultdict
 from fractions import Fraction
 from pathlib import Path
 
@@ -90,6 +91,41 @@ assert quad==16886
 root_ledger=json.loads((HERE/'f361_quadratic_root_ledger.json').read_text())
 assert root_ledger['complete_monic_quadratic_root_upper_bound_AXN']==quad
 
+# Independent exact enumeration of the conditional ell=2 channel atoms.
+weights=[14 if x<=8 else 13 for x in range(P)]
+diag=defaultdict(lambda: defaultdict(int))
+for a in range(P):
+    for b in range(P):
+        for c in range(P):
+            D=((a+7*b+16*c)%P,(2*b+7*c)%P)
+            H=(a+7*b+18*c)%P
+            diag[D][H]+=weights[a]*weights[b]*weights[c]
+diag_max=Fraction(0)
+for dist in diag.values():
+    den=sum(dist.values())
+    diag_max=max(diag_max,*(Fraction(num,den) for num in dist.values()))
+assert diag_max==Fraction(49,829)
+
+off=defaultdict(lambda: defaultdict(int))
+for a in range(P):
+    for b in range(P):
+        for c in range(P):
+            for d in range(P):
+                D=((a+13*b+13*c+16*d)%P,(b+c+7*d)%P)
+                H=((a+13*b+13*c+18*d)%P,(18*b+c)%P)
+                off[D][H]+=weights[a]*weights[b]*weights[c]*weights[d]
+functionals=[(1,beta) for beta in range(P)]+[(0,1)]
+off_max=Fraction(0)
+for dist in off.values():
+    den=sum(dist.values())
+    for alpha,beta in functionals:
+        vals=defaultdict(int)
+        for (h0,h1),num in dist.items():
+            vals[(alpha*h0+beta*h1)%P]+=num
+        off_max=max(off_max,*(Fraction(num,den) for num in vals.values()))
+assert off_max==Fraction(169246,2971565)
+assert off_max<diag_max
+
 # Independent recomputation of the revised Just Guess ledger.
 Q=P*P; m,n,k,p=16,64,5,6; ell=m-k-p
 def aa(x): return x*(x+1)/2+x, x*(x+1)/2+x-1
@@ -111,16 +147,15 @@ assert per_guess==3_179_584
 base=Q**8*(Q**k*per_guess+2**40)
 base_exp=math.log2(base)
 assert abs(base_exp-132.04652202347475)<1e-12
-rho=Fraction(14,256); candidate_fraction=Fraction(1,4)
-beta=float((P*rho)**16)
-p_cross=float(candidate_fraction)/(1+float(candidate_fraction)*beta)
-assert abs(p_cross-0.17105277440164332)<1e-15
+candidate_fraction=Fraction(1,4)
+beta=(P*diag_max)**16
+p_cross=float(candidate_fraction/(1+candidate_fraction*beta))
+assert abs(p_cross-0.09613444074026915)<1e-15
 cross_bits=math.log2(1/p_cross)
 adjusted=base_exp+cross_bits
-assert abs(adjusted-134.59400861418013)<1e-12
-assert abs((143-adjusted)-8.405991385819874)<1e-12
-assert abs((adjusted+4)-138.59400861418013)<1e-12
-
+assert abs(adjusted-135.4253248354897)<1e-12
+assert abs((143-adjusted)-7.574675164510299)<1e-12
+assert abs((adjusted+4)-139.4253248354897)<1e-12
 
 # Strictly capped binary-tree sensitivity ledger.
 capped=json.loads((HERE/'jg_level1_capped_tree_ledger.json').read_text())
@@ -128,9 +163,12 @@ assert capped['tree']['quadratic_nodes_per_guess']==63
 assert capped['tree']['leaves_per_guess']==64
 assert capped['gate_costs']['per_guess']==161548042
 assert abs(capped['per_trial']['exponent']-137.71350337514204)<1e-12
-assert abs(capped['success_adjusted_before_kappa_JG_cap']['exponent']-140.26098996584741)<1e-12
-assert abs(capped['break_even']['log2_kappa_JG_cap_upper_bound']-2.739010034152585)<1e-12
+assert abs(capped['success_adjusted_before_kappa_JG_cap']['exponent']-141.092306187157)<1e-12
+assert abs(capped['break_even']['log2_kappa_JG_cap_upper_bound']-1.9076938128430099)<1e-12
 
+atom_ledger=json.loads((HERE/'l2_channel_conditional_atom_ledger.json').read_text())
+assert Fraction(*atom_ledger['diagonal_max_conditional_atom']['fraction'])==diag_max
+assert Fraction(*atom_ledger['off_diagonal_max_conditional_functional_atom']['fraction'])==off_max
 ledger=json.loads((HERE/'jg_level1_revised_ledger.json').read_text())
 assert abs(ledger['per_trial']['exponent']-base_exp)<1e-12
 assert abs(ledger['cross_second_moment']['success_probability_lower_bound']-p_cross)<1e-15
@@ -140,6 +178,7 @@ print("Referee-revision checks passed")
 print("- corrected all-nine conditional-ledger recomputation")
 print("- F19^2 Tonelli-Shanks on all 361 discriminants")
 print("- 16,886-gate monic-quadratic all-roots bound")
+print("- exact ell=2 conditional atoms 49/829 and 169246/2971565")
 print("- 2^132.046522 expected-tree and 2^137.713503 capped-tree Just Guess ledgers")
-print("- cross success > 0.171052 and exponent 134.594009 + log2(kappa_JG)")
-print("- Level-I break-even log2(kappa_JG) < 8.405991")
+print("- cross success > 0.096134 and exponent 135.425325 + log2(kappa_JG)")
+print("- Level-I break-even log2(kappa_JG) < 7.574675")
