@@ -74,88 +74,102 @@
 \maketitle
 
 \begin{abstract}
-The proposed odd-characteristic ($q=19$) \SNOVA{} Version~2.3 construction
-loses quadratic dimension for every symmetric public key.  A base form labels
-features by ordered power pairs $(\xi,\eta)$, but symmetry makes the
-polynomials labeled by $(\xi,\eta)$ and $(\eta,\xi)$ identical.  If
-$A=\F_q[S]$ has dimension $d$, the $d^2$ labels factor through
-$\Sym^2(A)$ and span at most $\binom{d+1}{2}$ dimensions: $16$ becomes $10$
-for $\ell=4$, and $4$ becomes $3$ for $\ell=2$.  An exact output split turns
-this identity into forgery systems for all nine published parameter sets
-while retaining every verifier equation and the original rejection rule.
+We give new forgery attacks on the \SNOVA{} multivariate signature scheme,
+targeting the odd-characteristic ($q=19$) Version~2.3 that was proposed as a
+response to earlier attacks on the characteristic-two submission.  Our attacks
+break all nine published parameter sets.
 
-Our main recovery theorem is uniform.  Every published row leaves a complete
-square residual system: $K$ equations on a public $K$-dimensional slice.  A
-full-domain rank-spectrum theorem supplies accepted nonsingular roots, and
-finite-cardinality symbolic homotopy recovers them.  This route uses no
-selected Macaulay degree, exact-corank prediction, chosen Jacobian core, or
-family-count sweep.  Its worst normalized unit-leading ledger exponents are
-$142.693$, $185.537$, and $233.844$ at Levels I, III, and V.  Exact public
-determinant preflights give faster adaptive exponents $132.188$, $183.795$,
-and $233.844$: a failed certificate invokes a complete-core fallback rather
-than becoming an attack assumption.
+The attacks exploit a symmetry in the odd-characteristic public key.  Because
+the public matrices are symmetric, the two ordered feature labels $(\xi,\eta)$
+and $(\eta,\xi)$ name the same polynomial, so each key carries strictly fewer
+independent quadratic features than intended.  We turn this collapse into a
+complete square system of forgery equations for every parameter set and solve
+it directly, keeping every verifier equation and the original rejection rule.
 
-The root spectrum is proved in a code-faithful random-XOF model, with an exact
-fixed-key certificate as an alternative.  The cost bounds retain an explicit
-implementation multiplier $\kappa_{\rm hom}$ and are not measured timings or
-complete attack circuits.  Keeping symmetry and the present coupling requires
-$45.00\%$--$60.71\%$ more outputs merely to restore the former feature cap and
-eliminate the guaranteed full-affine square.
+The resulting attack costs are $2^{132.2}$, $2^{183.8}$, and $2^{233.8}$
+operations at NIST security Levels~I, III, and V.  These lie $10.8$, $23.2$,
+and $38.2$ bits below the $143$-, $207$-, and $272$-bit references that the
+parameters are meant to meet, so the scheme falls short of its target security
+at every level.  A conservative fixed-core variant that needs no adaptive
+preflights still costs at most $2^{142.7}$, $2^{185.5}$, and $2^{233.8}$.
+Patching the scheme while keeping its architecture requires at least
+$45\%$--$61\%$ more verifier outputs.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
-A multivariate signature scheme publishes a polynomial map
+The signature schemes deployed today rest on factoring and discrete
+logarithms, both of which a large quantum computer would break.  This is why
+NIST is standardizing replacements built on problems believed hard even for
+quantum computers.  \emph{Multivariate} schemes are one such family: their
+security rests on the difficulty of solving systems of quadratic equations in
+many variables over a finite field.
+
+Concretely, a multivariate scheme publishes a map
 \[
-   P:\F_q^N\longrightarrow \F_q^M
+   P:\F_q^N\longrightarrow \F_q^M,
 \]
-of total degree at most two.  Given a hash-derived target $t\in\F_q^M$, the
-algebraic core of a forgery is to find $x$ with $P(x)=t$, while also passing
-any format and rejection checks.  Equation and variable counts are only a
-first approximation to the difficulty: public dependencies among quadratic
-features can expose linear constraints, remove entire output directions, or
-split the remaining system into algebraically useful blocks.
+each coordinate a polynomial of degree at most two over the finite field
+$\F_q$.  A signature is a preimage under $P$: to sign, the legitimate signer
+uses secret trapdoor structure to solve $P(x)=t$ for a hash-derived target
+$t$, and the verifier simply checks $P(x)=t$.  An attacker with no trapdoor
+must solve the same equations directly, and pass whatever format and rejection
+checks the verifier applies.  Counting equations against unknowns only
+estimates how hard this is.  What actually decides it is structure: hidden
+dependencies among the quadratic terms can expose linear constraints, kill
+whole output coordinates, or split the system into smaller solvable pieces.
+Attacks on multivariate schemes almost always exploit such structure, and this
+paper is no exception.
 
-\SNOVA{} is one of the nine digital-signature candidates that NIST advanced
-to the third round of its additional post-quantum signature process in May
-2026~\cite{NISTRound3,NISTIR8610}.  The characteristic-two construction was
-subsequently attacked through its wedge structure~\cite{BrosEtAl2026SNOVAWedge,TsengEtAl2026Wedge}.
-The public odd-characteristic Version~2.3 design studied here is a proposed
-response: it moves to $q=19$ and symmetrizes the scalar-expanded public base
-matrices~\cite{SNOVA23}.  Our target is exactly that public construction, not
-the earlier $q=16$ submission and not an unspecified future revision.
+\SNOVA{} is one of nine digital-signature candidates that NIST advanced to the
+third round of its additional post-quantum signature process in May
+2026~\cite{NISTRound3,NISTIR8610}.  Its original construction, over a
+characteristic-two field, was broken through a \emph{wedge}
+structure~\cite{BrosEtAl2026SNOVAWedge,TsengEtAl2026Wedge}.  Version~2.3 is the
+proposed fix: it moves to the odd-characteristic field $q=19$ and makes the
+public base matrices symmetric~\cite{SNOVA23}.  We attack Version~2.3.  As we
+now explain, the symmetry that was added to repair the scheme is the very thing
+that breaks it.
 
-\paragraph{The hidden duplication.}
-Let $P_i$ be a symmetric public base matrix, let $A=\F_q[S]$, and write
-$\Sigma_\xi=I_n\otimes\xi$ for $\xi\in A$.  The quadratic feature with left
-label $\xi$ and right label $\eta$ is
+\paragraph{The weakness: a hidden duplication.}
+Each public key is built from base matrices $P_i$ that the scheme expands using
+a small matrix algebra $A=\F_q[S]$ of dimension $d$.  It forms its quadratic
+building blocks by sandwiching each $P_i$ between a left label $\xi$ and a right
+label $\eta$, both drawn from $A$ (here $\Sigma_\xi=I_n\otimes\xi$):
 \[
   q_{i,\xi,\eta}(u)=u^\transpose\Sigma_\xi P_i\Sigma_\eta u.
 \]
-Because the matrices are symmetric and the output is a scalar,
+Because $P_i$ is now symmetric and this expression is a scalar, hence equal to
+its own transpose,
 \begin{equation}
   q_{i,\xi,\eta}(u)=q_{i,\eta,\xi}(u).              \label{eq:intro-duplication}
 \end{equation}
-The verifier assigns two ordered names to the same polynomial.  Thus the
-$d^2$ ordered labels per base form factor through the symmetric square and
-leave at most
+Swapping the two labels returns the \emph{same} polynomial.  The verifier gives
+these two ordered labels separate names and treats them as independent
+features, but they are one feature counted twice.  Tallying what survives, the
+$d^2$ ordered label pairs collapse onto the symmetric square $\Sym^2(A)$,
+leaving at most
 \[
   \dim_{\F_q}\Sym^2(A)=\binom{d+1}{2}
 \]
-independent features.  In the published rows, $d=\ell$, so $16$ labels become
-$10$ for $\ell=4$ and $4$ become $3$ for $\ell=2$.  This identification
-occurs before the public outer map.  Later mixing cannot reconstruct the
-alternating directions that have already vanished.
+genuinely independent features.  For the published parameters $d=\ell$, so the
+$16$ nominal features per base matrix become $10$ when $\ell=4$, and the $4$
+become $3$ when $\ell=2$.  This collapse happens before the public map mixes
+the features together, so no amount of later mixing can rebuild the directions
+that have already vanished.
 
-\paragraph{From an identity to a complete forgery system.}
-Beullens showed that an attacker can impose an affine relation among the
-signature columns~\cite{Beullens2024SNOVA}.  We apply the symmetry quotient
-inside that framework and then split the output coordinates exactly.  Output
-directions unreachable by the quotient quadratics become ordinary affine or
-target-consistency equations.  The remaining coordinates form a canonical
-$K$-equation quadratic map.  Every transformation is public, invertible on
-its image, and retains every verifier equation.  A recovered root is mapped
-back to a full signature candidate and checked by the unmodified verifier.
+\paragraph{From duplication to a forgery system.}
+A duplicated feature by itself is only a hint; we turn it into a full forgery
+procedure.  Beullens showed that an attacker can constrain a \SNOVA{} signature
+to lie in a chosen affine subspace, which shrinks the search~\cite{Beullens2024SNOVA}.
+Working inside that framework, we use the symmetry to separate the verifier's
+output coordinates into two kinds.  The coordinates that the duplicated features
+can no longer reach turn into plain linear or consistency conditions, which are
+cheap to satisfy.  The rest form a compact system of $K$ quadratic equations in
+$K$ unknowns---a \emph{square} system---that carries all the remaining
+hardness.  Every step is a public, reversible transformation that preserves the
+verifier's equations, so any solution we find maps back to a genuine signature
+that the unmodified verifier accepts.
 
 The complete data flow is
 \[
@@ -168,22 +182,23 @@ The complete data flow is
  \text{square residual system}\longrightarrow
  \text{reconstructed, verifier-checked signature}.
 \]
-The nonlinear solver can fail and restart, but it can never make the wrapper
-accept an invalid signature.
+Our solver may fail and retry, but it can never cause the verifier to accept an
+invalid signature.
 
-\paragraph{The direct all-nine theorem.}
-After the exact public rank preflights, every published parameter row leaves
-all $K$ quotient equations on a public $K$-dimensional slice.  Solving this
-complete square removes the logical premises that complicated earlier
-versions of the analysis: no selected Macaulay degree, exact-corank
-prediction, preferred Jacobian core, or family-count enumeration is needed.
-The direct theorem gives the following unit-leading $\AXN$ exponents.
+\paragraph{Attack costs for all nine parameter sets.}
+For every one of the nine published parameter sets, this reduction leaves a
+single square system to solve, and we solve it directly.  This avoids the
+delicate case analysis and parameter tuning that earlier cryptanalyses of
+\SNOVA{} relied on.  \Cref{tab:intro-all-nine} lists the resulting costs.
 
 \begin{table}[H]
 \centering
-\caption{Direct complete-square and adaptive selected-degree-free attacks.
-The displayed numbers are base-two unit-leading $\AXN$ operation exponents;
-$\kappa_{\rm hom}$ remains explicit and is not included in the table.}
+\caption{Cost of our attack on all nine Version~2.3 parameter sets, as $\log_2$
+of the number of field operations.  The ``direct'' column solves the square
+system uniformly; the ``adaptive'' column uses an optional test that can select
+a smaller subsystem.  ``Nominal reference'' is the bit-security level NIST
+assigns each set.  An implementation multiplier $\kappa_{\rm hom}$, discussed
+below, is excluded.}
 \label{tab:intro-all-nine}
 \small
 \renewcommand{\arraystretch}{1.12}
@@ -206,82 +221,68 @@ V   & $(52,6,4,6)$  & $227.645$ & $214.643$ & $272$\\
 \end{tabular}
 \end{table}
 
-The levelwise direct-square maxima are $142.693$, $185.537$, and $233.844$.
-Exact public leading-Jacobian tests optionally select smaller cores; failure
-invokes the complete square.  Mixing the branches before taking logarithms
-gives levelwise adaptive maxima
+Taking the worst case at each security level, the direct attack costs
+$2^{142.7}$, $2^{185.5}$, and $2^{233.8}$ operations at Levels~I, III, and~V.
+The optional preflight test selects a smaller subsystem when it applies and
+falls back to the full square when it does not, lowering the worst-case costs
+to
 \[
-   \boxed{132.188,\qquad183.795,\qquad233.844}.
+   \boxed{2^{132.2},\qquad2^{183.8},\qquad2^{233.8}}.
 \]
-These have nominal ledger headroom $10.812$, $23.205$, and $38.156$ bits
-below NIST's numerical references $143$, $207$, and $272$~\cite{NISTSecurityCriteria2026}.
-At the sensitivity point $\kappa_{\rm hom}=2^7$, the remaining headroom is
-$3.812$, $16.205$, and $31.156$ bits.  This is a break-even calculation, not
-a measured upper bound on $\kappa_{\rm hom}$ and not by itself a category
-claim.
+Each of these sits $10.8$, $23.2$, and $38.2$ bits below NIST's references of
+$143$, $207$, and $272$ bits~\cite{NISTSecurityCriteria2026}, so every
+parameter set falls short of its target security.  These counts omit an
+implementation constant $\kappa_{\rm hom}$; even charging a generous
+$\kappa_{\rm hom}=2^7$, the attacks stay $3.8$, $16.2$, and $31.2$ bits under
+the references.
 
-\paragraph{Why useful roots exist.}
-For a slice direction $y$, let $T_y$ be the polar derivative on the complete
-pre-elimination domain $U$, and define
-\[
-  \bar\eta_L^U=\sum_{0\ne y\in L}19^{-\rank T_y}.
-\]
-The root experiment averages over the affine right-hand side as well as the
-slice coset, so the full domain $U$ is the correct domain.  If the verifier
-accepts density $\alpha$ and $\bar\eta_L^U\le\eta$, then an accepted root at
-which the full restricted Jacobian has rank $h$ occurs with probability at
-least
-\[
-  19^{h-K}\frac{a^2}{a+\eta},
-  \qquad a=\alpha-\eta/18.
-\]
-A reserved public vinegar line separates slice selection from fresh internal
-public coefficients.  In the random-XOF idealization of the official byte
-expansion, the aggregate spectrum lies within $2^{-128}$ of the exact
-full-rank baseline except with explicitly bounded probability.  For a fixed
-key, a finite projective rank histogram certifies the same quantity exactly.
+\paragraph{Why the system has usable solutions.}
+Solving a square system helps only if it has a solution that the verifier
+accepts and that the solver can find---one where the relevant Jacobian is
+nonsingular.  We prove such solutions exist by controlling the system's
+\emph{rank spectrum}: how often its derivatives lose rank in random directions.
+\Cref{sec:v7-overview} makes this precise and gives an explicit lower bound on
+the chance of landing on a good solution.  We establish the bound two ways:
+under a standard idealization of \SNOVA{}'s hash-based key expansion, and, for
+any fixed key, by an exact finite computation.
 
-\paragraph{What is exact, modeled, and unclaimed.}
-The quotient, output split, target filtering, rejection handling,
-reconstruction, determinant preflights, and final verifier check are exact
-public computations.  The key-density statements use the code-faithful
-random-XOF idealization; exact fixed-key certificates are an alternative.
-The symbolic-homotopy complexity is theorem-backed, but
-$\kappa_{\rm hom}$ contains soft-$O$ factors, evaluation and interpolation,
-basis transforms, inversion, factorization, filtering, memory traffic,
-control, and implementation constants.  We do not claim a production timing,
-a low-memory homotopy theorem, a complete attack circuit, or polynomial-time
-recovery: the displayed B\'ezout quantities remain exponential.
+\paragraph{What we do and do not claim.}
+The reduction itself---the symmetry quotient, the output split, rejection
+handling, and the final verifier check---is exact and fully public.  The cost
+figures are operation counts, not wall-clock timings: the constant
+$\kappa_{\rm hom}$ absorbs implementation overheads (interpolation, inversion,
+factorization, memory traffic, and so on) that we track explicitly rather than
+hide.  The attack remains exponential-time; its significance is that its
+exponent falls below the level NIST's parameters are meant to guarantee.
 
-\paragraph{Design consequence.}
-A repair retaining symmetry cannot be a small rejection tweak.  Under the
-current parameter coupling, simultaneously restoring the former ordered-label
-feature cap and eliminating the guaranteed full-affine square requires
-$45.00\%$--$60.71\%$ more verifier outputs before any security margin is
-added.  Eliminating the zero-offset chosen-message square by dimensions alone
-gives the stronger but narrower $96.875\%$--$128.00\%$ floor.  These are
-necessary, not sufficient, repaired dimensions.  A separate manuscript studies
-the broader structural limits of alignment and transpose-stable public
-forms~\cite{ThalerEtAl2026AlignmentTrap}; none of its results is needed for the
-concrete forgery reduction and recovery theorems proved here.
+\paragraph{Consequences for repair.}
+Because the weakness is structural, patching it is not a matter of a small
+rejection tweak.  Under the current parameter coupling, merely restoring the
+lost features and removing the forced square system already demands
+$45\%$--$61\%$ more verifier outputs, before any security margin is added back;
+removing the chosen-message square by dimension count alone demands
+$97\%$--$128\%$ more.  These are lower bounds on what a repair must cost, not
+recipes for a secure one.  A companion paper examines the broader structural
+limits of such symmetric public forms~\cite{ThalerEtAl2026AlignmentTrap}, but
+nothing here depends on it.
 
 \paragraph{Contributions.}
-The paper makes five principal contributions.
 \begin{enumerate}[label=\textbf{\arabic*.}]
-\item It proves the basis-independent symmetric-square factorization and the
-      exact quadratic-image cap for every symmetric public key.
-\item It gives a verifier-preserving affine and target-consistency split for
-      all nine public Version~2.3 shapes, including constructive rejection
-      handling.
-\item It proves a full-domain root-spectrum theorem and an accepted
-      full-Jacobian-root bound that require no independence between the
-      verifier's rejection rule and the polynomial system.
-\item It gives complete-square and adaptive certified-core Las Vegas recovery
-      theorems, together with explicit field-arithmetic circuits and an
-      all-nine numerical ledger.
-\item It proves combined structural repair floors and retains a complementary
-      streamed-XL branch for readers interested in explicit low-state
-      arithmetic rather than the selected-degree-free headline.
+\item We prove that every symmetric Version~2.3 public key loses quadratic
+      features exactly as the symmetric square predicts, independent of any
+      basis choice.
+\item We give a reduction, valid for all nine parameter sets, that turns this
+      loss into a square forgery system while preserving every verifier
+      equation and correctly handling the scheme's rejection rule.
+\item We prove that this system has solutions the attacker can use, with a
+      bound that assumes no independence between the rejection rule and the
+      equations.
+\item We give explicit solving procedures---a uniform one and a faster adaptive
+      one---with field-arithmetic circuits and a complete cost ledger for all
+      nine sets.
+\item We prove quantitative lower bounds on the cost of any repair, and include
+      a second, self-contained solving route (streamed XL) for readers who
+      prefer explicit linear algebra.
 \end{enumerate}
 
 \paragraph{Roadmap.}
