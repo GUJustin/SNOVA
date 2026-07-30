@@ -1,15 +1,12 @@
 {
   "F19_2": {
     "addition": 84,
-    "improvement_gates": 152,
     "multiplication": 692,
     "representation": "F19[u]/(u^2+1)",
-    "subtraction": 116,
-    "v5_multiplication": 844
+    "subtraction": 116
   },
   "F19_4": {
     "addition": 168,
-    "improvement_gates": 536,
     "multiplication": 2628,
     "paper_basis": "F19[t]/(t^4-t-1)",
     "subtraction": 232,
@@ -27,7 +24,6 @@
       13,
       0
     ],
-    "v5_multiplication": 3164,
     "v_t_coordinates": [
       4,
       13,
@@ -38,7 +34,6 @@
   "model": "unit-cost two-input AND/XOR/XNOR; free wires/constants/fan-out",
   "scalar": {
     "addition": 42,
-    "improvement_gates": 44,
     "multiplication": 150,
     "multiplication_netlist_sha256": "e1708a32c1475ad14295c2b34fed976fb09577b127810d29bf237db18aabc131",
     "multiplication_stages": {
@@ -50,7 +45,6 @@
     },
     "negation": 16,
     "subtraction": 58,
-    "v5_multiplication": 194,
     "validated_mul_pairs": 361
   }
 }

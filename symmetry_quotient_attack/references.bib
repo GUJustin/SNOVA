@@ -1,5 +1,5 @@
 @techreport{NISTIR8610,
-  author      = {Gorjan Alagic and Maxime Bros and Pierre Ciadoux and Quynh Dang and Thinh Dang and John Kelsey and Jacob Lichtinger and Yi-Kai Liu and Carl Miller and Dustin Moody and Rene Peralta and Ray Perlner and Angela Robinson and Hamilton Silberg and Daniel Smith-Tone and Noah Waller},
+  author      = {Gorjan Alagic and Maxime Bros and Pierre Ciadoux and Quynh Dang and Thinh Hung Dang and John Kelsey and Jacob Lichtinger and Yi-Kai Liu and Carl Miller and Dustin Moody and Rene Peralta and Ray Perlner and Angela Robinson and Hamilton Silberg and Daniel Smith-Tone and Noah Waller},
   title       = {Status Report on the Second Round of the Additional Digital Signature Schemes for the {NIST} Post-Quantum Cryptography Standardization Process},
   institution = {National Institute of Standards and Technology},
   number      = {NIST IR 8610},
@@ -53,29 +53,6 @@
   note      = {Cryptology ePrint Archive, Paper 2024/1770}
 }
 
-@inproceedings{ChengEtAl2012XL,
-  author    = {Chen-Mou Cheng and Tung Chou and Ruben Niederhagen and Bo-Yin Yang},
-  title     = {Solving Quadratic Equations with {XL} on Parallel Architectures},
-  booktitle = {Cryptographic Hardware and Embedded Systems -- CHES 2012},
-  series    = {Lecture Notes in Computer Science},
-  volume    = {7428},
-  pages     = {356--373},
-  publisher = {Springer},
-  year      = {2012},
-  doi       = {10.1007/978-3-642-33027-8_21}
-}
-
-@article{Coppersmith1994,
-  author  = {Don Coppersmith},
-  title   = {Solving Homogeneous Linear Equations over {GF(2)} via Block Wiedemann Algorithm},
-  journal = {Mathematics of Computation},
-  volume  = {62},
-  number  = {205},
-  pages   = {333--350},
-  year    = {1994},
-  doi     = {10.1090/S0025-5718-1994-1192970-7}
-}
-
 @article{FGLM1993,
   author  = {Jean-Charles Faug\`ere and Patrizia Gianni and Daniel Lazard and Teo Mora},
   title   = {Efficient Computation of Zero-Dimensional Gr\"obner Bases by Change of Ordering},
@@ -109,12 +86,16 @@
   doi     = {10.14495/jsiaml.15.53}
 }
 
-@misc{IkematsuAkiyama2024,
-  author       = {Yasuhiko Ikematsu and Rika Akiyama},
-  title        = {Revisiting the Security Analysis of {SNOVA}},
-  howpublished = {Cryptology ePrint Archive, Paper 2024/096},
-  year         = {2024},
-  url          = {https://eprint.iacr.org/2024/096}
+@inproceedings{IkematsuAkiyama2024,
+  author    = {Yasuhiko Ikematsu and Rika Akiyama},
+  title     = {Revisiting the Security Analysis of {SNOVA}},
+  booktitle = {Proceedings of the 11th ACM Asia Public-Key Cryptography Workshop},
+  pages     = {54--61},
+  publisher = {ACM},
+  year      = {2024},
+  doi       = {10.1145/3659467.3659900},
+  url       = {https://eprint.iacr.org/2024/096},
+  note      = {Cryptology ePrint Archive, Paper 2024/096}
 }
 
 @inproceedings{JinEtAl2026,
@@ -122,20 +103,13 @@
   title     = {Security Analysis on {UOV} Families with Odd Characteristics: Using Symmetric Algebra},
   booktitle = {Public-Key Cryptography -- PKC 2026},
   series    = {Lecture Notes in Computer Science},
+  volume    = {16551},
   pages     = {428--454},
   publisher = {Springer},
   year      = {2026},
   doi       = {10.1007/978-3-032-26731-3_14},
   url       = {https://eprint.iacr.org/2025/1137},
   note      = {Cryptology ePrint Archive, Paper 2025/1137}
-}
-
-@misc{JouxPierrot2015,
-  author       = {Antoine Joux and C\'ecile Pierrot},
-  title        = {Nearly Sparse Linear Algebra and Application to Discrete Logarithms Computations},
-  howpublished = {Cryptology ePrint Archive, Paper 2015/930},
-  year         = {2015},
-  url          = {https://eprint.iacr.org/2015/930}
 }
 
 @article{KehreinKreuzer2005,
@@ -149,12 +123,18 @@
   doi     = {10.1016/j.jpaa.2004.08.028}
 }
 
-@misc{LiDing2024,
-  author       = {Peigen Li and Jintai Ding},
-  title        = {Cryptanalysis of the {SNOVA} Signature Scheme},
-  howpublished = {Cryptology ePrint Archive, Paper 2024/110},
-  year         = {2024},
-  url          = {https://eprint.iacr.org/2024/110}
+@inproceedings{LiDing2024,
+  author    = {Peigen Li and Jintai Ding},
+  title     = {Cryptanalysis of the {SNOVA} Signature Scheme},
+  booktitle = {Post-Quantum Cryptography -- PQCrypto 2024},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {14772},
+  pages     = {79--91},
+  publisher = {Springer},
+  year      = {2024},
+  doi       = {10.1007/978-3-031-62746-0_4},
+  url       = {https://eprint.iacr.org/2024/110},
+  note      = {Cryptology ePrint Archive, Paper 2024/110}
 }
 
 @inproceedings{MayOstuzziRessler2026,
@@ -195,10 +175,10 @@
   author       = {{National Institute of Standards and Technology}},
   title        = {Post-Quantum Cryptography: Security Evaluation Criteria},
   howpublished = {NIST PQC project page},
-  year         = {2026},
-  month        = jun,
+  date         = {2026-06-16},
   url          = {https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization/evaluation-criteria/security-(evaluation-criteria)},
-  note         = {Classical-gate reference exponents 143, 207, and 272; accessed 26 July 2026}
+  urldate      = {2026-07-26},
+  note         = {Living project page; classical-gate reference exponents 143, 207, and 272}
 }
 
 @inproceedings{Ran2026,
@@ -225,6 +205,17 @@
   eprinttype = {arXiv}
 }
 
+@article{Wiedemann1986,
+  author  = {Douglas Wiedemann},
+  title   = {Solving Sparse Linear Equations over Finite Fields},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {32},
+  number  = {1},
+  pages   = {54--62},
+  year    = {1986},
+  doi     = {10.1109/TIT.1986.1057137}
+}
+
 @article{SakataTakagi2026,
   author  = {Kosuke Sakata and Tsuyoshi Takagi},
   title   = {An Efficient Variant of {F4} Algorithm for Solving {MQ} Problem},
@@ -243,7 +234,7 @@
   year         = {2026},
   month        = apr,
   url          = {https://github.com/PQCLAB-SNOVA/SNOVA/tree/9da14981336ede257c41ef53cc069989051e8181},
-  note         = {Accessed 25 July 2026}
+  note         = {Immutable commit cited for parameter generation, symmetric public forms, rejection rules, and fixed SNOVA\_ABQ behavior; accessed 25 July 2026}
 }
 
 @misc{TsengEtAl2026Wedge,
@@ -262,13 +253,4 @@
   month        = sep,
   url          = {https://csrc.nist.gov/presentations/2025/on-the-security-of-round-2-snova},
   note         = {Presented 26 September 2025; accessed 27 July 2026}
-}
-
-
-@misc{ThalerEtAl2026AlignmentTrap,
-  author       = {Justin Thaler and Kai Zhang and Scott Kominers and Quang Dao},
-  title        = {The Alignment Trap: Structural Limits of {SNOVA}-Style Matrix Signatures},
-  howpublished = {Manuscript},
-  year         = {2026},
-  month        = jul
 }
