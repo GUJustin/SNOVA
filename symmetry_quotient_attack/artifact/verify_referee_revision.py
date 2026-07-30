@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Deterministic checks for the referee-revised SNOVA paper.
+
+This checker runs the standalone all-nine recomputation, exhaustively checks
+the F_19^2 quadratic-root routine on every discriminant, and independently
+recomputes the Level-I Just Guess finite-gate and cross-channel numbers.
+"""
+from __future__ import annotations
+
+import json
+import math
+import runpy
+import subprocess
+import sys
+from fractions import Fraction
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+P = 19
+
+# Corrected all-nine conditional-ledger checks.
+runpy.run_path(str(HERE / "verify_final_results.py"), run_name="__main__")
+
+# Rebuild and exhaustively verify the charged field circuits and tower identities.
+subprocess.run([sys.executable, str(HERE / "field_circuits.py")], cwd=HERE, check=True)
+
+# F_19^2 arithmetic, u^2=-1.
+def add(x, y): return ((x[0]+y[0]) % P, (x[1]+y[1]) % P)
+def sub(x, y): return ((x[0]-y[0]) % P, (x[1]-y[1]) % P)
+def neg(x): return ((-x[0]) % P, (-x[1]) % P)
+def mul(x, y): return ((x[0]*y[0]-x[1]*y[1]) % P,
+                       (x[0]*y[1]+x[1]*y[0]) % P)
+def powe(x, e):
+    z=(1,0)
+    while e:
+        if e & 1: z=mul(z,x)
+        x=mul(x,x); e//=2
+    return z
+
+ZERO=(0,0); ONE=(1,0); MINUS_ONE=(18,0)
+elems=[(a,b) for a in range(P) for b in range(P)]
+def legendre(x):
+    if x == ZERO: return 0
+    y=powe(x,180)
+    return 1 if y==ONE else -1 if y==MINUS_ONE else None
+NONRES=next(x for x in elems if legendre(x)==-1)
+C0=powe(NONRES,45)
+
+class Counter:
+    def __init__(self): self.m=0; self.eq=0
+    def M(self,x,y): self.m+=1; return mul(x,y)
+    def E(self,x,y): self.eq+=1; return x==y
+
+def sqrt_ts(n):
+    c=Counter()
+    if c.E(n,ZERO): return [ZERO],c
+    n2=c.M(n,n); n4=c.M(n2,n2); n8=c.M(n4,n4)
+    n16=c.M(n8,n8); n32=c.M(n16,n16)
+    t=c.M(c.M(c.M(n32,n8),n4),n)  # n^45
+    r=c.M(c.M(c.M(n16,n4),n2),n)  # n^23
+    t2=c.M(t,t); leg=c.M(t2,t2)
+    if not c.E(leg,ONE): return [],c
+    M=3; cc=C0
+    while not c.E(t,ONE):
+        tt=c.M(t,t); i=1
+        while i<M and not c.E(tt,ONE):
+            tt=c.M(tt,tt); i+=1
+        assert i<M
+        b=cc
+        for _ in range(M-i-1): b=c.M(b,b)
+        r=c.M(r,b); b2=c.M(b,b); t=c.M(t,b2); cc=b2; M=i
+    rr=neg(r)
+    return ([r] if rr==r else [r,rr]),c
+
+stats=[]
+for d in elems:
+    roots,c=sqrt_ts(d)
+    truth=[x for x in elems if mul(x,x)==d]
+    assert set(roots)==set(truth)
+    stats.append((c.m,c.eq))
+assert max(m for m,_ in stats)==22
+assert max(e for _,e in stats)==8
+
+const=json.loads((HERE/'f19_constant_multiplier_ledger.json').read_text())['counts']
+G_MUL,G_ADD,G_SUB,G_NEG,G_EQ=692,84,116,32,19
+g4=2*int(const['4']); ghalf=2*int(const['10'])
+maxsqrt=max(m*G_MUL+e*G_EQ for m,e in stats)
+quad=G_MUL+g4+G_SUB+maxsqrt+G_NEG+G_ADD+G_SUB+2*ghalf
+assert quad==16886
+root_ledger=json.loads((HERE/'f361_quadratic_root_ledger.json').read_text())
+assert root_ledger['complete_monic_quadratic_root_upper_bound_AXN']==quad
+
+# Independent recomputation of the revised Just Guess ledger.
+Q=P*P; m,n,k,p=16,64,5,6; ell=m-k-p
+def aa(x): return x*(x+1)/2+x, x*(x+1)/2+x-1
+def av(x): return x,x-1
+def subst(x,nlin,check=False):
+    a,b=aa(x); a*=nlin; b*=nlin
+    if not check:
+        c,d=av(x); a+=c*nlin; b+=d*nlin
+    return a,b
+fm=fa=0.0
+for i in range(p):
+    a,b=subst(k+i,1); fm+=a; fa+=b
+a,b=subst(k+p,ell); fm+=ell*a; fa+=ell*b
+fm+=ell**3/3; fa+=ell**3/3
+a,b=aa(m); factor=Q*(1-Q**(-k))/(Q-1)
+fm+=a*factor; fa+=b*factor
+per_guess=math.ceil(fm)*G_MUL+math.ceil(fa)*G_ADD+p*quad+1_000_000
+assert per_guess==3_179_584
+base=Q**8*(Q**k*per_guess+2**40)
+base_exp=math.log2(base)
+assert abs(base_exp-132.04652202347475)<1e-12
+rho=Fraction(14,256); candidate_fraction=Fraction(1,4)
+beta=float((P*rho)**16)
+p_cross=float(candidate_fraction)/(1+float(candidate_fraction)*beta)
+assert abs(p_cross-0.17105277440164332)<1e-15
+cross_bits=math.log2(1/p_cross)
+adjusted=base_exp+cross_bits
+assert abs(adjusted-134.59400861418013)<1e-12
+assert abs((143-adjusted)-8.405991385819874)<1e-12
+assert abs((adjusted+4)-138.59400861418013)<1e-12
+
+
+# Strictly capped binary-tree sensitivity ledger.
+capped=json.loads((HERE/'jg_level1_capped_tree_ledger.json').read_text())
+assert capped['tree']['quadratic_nodes_per_guess']==63
+assert capped['tree']['leaves_per_guess']==64
+assert capped['gate_costs']['per_guess']==161548042
+assert abs(capped['per_trial']['exponent']-137.71350337514204)<1e-12
+assert abs(capped['success_adjusted_before_kappa_JG_cap']['exponent']-140.26098996584741)<1e-12
+assert abs(capped['break_even']['log2_kappa_JG_cap_upper_bound']-2.739010034152585)<1e-12
+
+ledger=json.loads((HERE/'jg_level1_revised_ledger.json').read_text())
+assert abs(ledger['per_trial']['exponent']-base_exp)<1e-12
+assert abs(ledger['cross_second_moment']['success_probability_lower_bound']-p_cross)<1e-15
+assert abs(ledger['success_adjusted_before_kappa_JG']['exponent']-adjusted)<1e-12
+
+print("Referee-revision checks passed")
+print("- corrected all-nine conditional-ledger recomputation")
+print("- F19^2 Tonelli-Shanks on all 361 discriminants")
+print("- 16,886-gate monic-quadratic all-roots bound")
+print("- 2^132.046522 expected-tree and 2^137.713503 capped-tree Just Guess ledgers")
+print("- cross success > 0.171052 and exponent 134.594009 + log2(kappa_JG)")
+print("- Level-I break-even log2(kappa_JG) < 8.405991")

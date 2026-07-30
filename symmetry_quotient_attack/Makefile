@@ -9,10 +9,13 @@ paper.pdf: paper.tex references.bib
 	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error paper.tex
 
 verify:
-	$(PYTHON) artifact/verify_final_results.py
+	$(PYTHON) artifact/verify_referee_revision.py
 
 regenerate:
-	$(PYTHON) artifact/compute_final_results.py
+	$(PYTHON) artifact/generate_ledger.py
+	$(PYTHON) artifact/field_circuits.py
+	$(PYTHON) artifact/research/jg_revised_ledger.py
+	$(PYTHON) artifact/research/jg_capped_tree_ledger.py
 
 clean:
 	$(LATEXMK) -C paper.tex

@@ -1,0 +1,24 @@
+{
+  "complete_monic_quadratic_root_upper_bound_AXN": 16886,
+  "field": "F19^2 = F19[u]/(u^2+1)",
+  "gate_model": {
+    "F19_2_add": 84,
+    "F19_2_equality_upper_bound": 19,
+    "F19_2_mul": 692,
+    "F19_2_neg": 32,
+    "F19_2_sub": 116,
+    "F19_scalar_mul_4_two_components": 122,
+    "F19_scalar_mul_half_two_components": 174
+  },
+  "nonresidue": [
+    1,
+    1
+  ],
+  "scope": "returns all roots or certifies nonsquare; leading coefficient normalized offline because it is public and coset-independent",
+  "tonelli_shanks": {
+    "average_variable_multiplications": 15.33240997229917,
+    "max_equality_tests": 8,
+    "max_variable_multiplications": 22,
+    "verified_discriminants": 361
+  }
+}

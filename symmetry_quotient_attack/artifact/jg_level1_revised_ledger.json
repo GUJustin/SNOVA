@@ -1,0 +1,81 @@
+{
+  "break_even": {
+    "log2_kappa_JG_upper_bound": 8.405991385819874
+  },
+  "candidate_event": {
+    "minimum_sign_canonical_candidates": "19^16/4",
+    "regularity_multiplier_symbol": "kappa_JG"
+  },
+  "cross_second_moment": {
+    "beta": 1.846148964833118,
+    "restart_bits_upper_bound": 2.547486590705363,
+    "restart_multiplier_upper_bound": 5.846148964833119,
+    "success_probability_lower_bound": 0.17105277440164332
+  },
+  "expected_field_counts_per_guess": {
+    "additions": 2621.086111111086,
+    "multiplications": 2684.088888888864,
+    "quadratic_root_calls": 6
+  },
+  "gate_costs": {
+    "F19_2_addition": 84,
+    "F19_2_multiplication": 692,
+    "control_per_guess": 1000000,
+    "filter_and_verifier_per_z": 1099511627776,
+    "per_guess": 3179584,
+    "quadratic_all_roots": 16886
+  },
+  "model": "published Just Guess expected-operation model with a fully instantiated per-trial Boolean circuit and an exact cross-channel second moment",
+  "parameters": {
+    "A_size": 361,
+    "k": 5,
+    "linear_unknowns": 5,
+    "m": 16,
+    "n": 64,
+    "p": 6,
+    "q": 19,
+    "z_A_dimension": 8
+  },
+  "per_trial": {
+    "AXN": 5622946510007201103415816815838245623360,
+    "exponent": 132.04652202347475
+  },
+  "sensitivity": {
+    "128": {
+      "exponent": 141.59400861418013,
+      "headroom_to_143": 1.405991385819874
+    },
+    "16": {
+      "exponent": 138.59400861418013,
+      "headroom_to_143": 4.405991385819874
+    },
+    "2": {
+      "exponent": 135.59400861418013,
+      "headroom_to_143": 7.405991385819874
+    },
+    "256": {
+      "exponent": 142.59400861418013,
+      "headroom_to_143": 0.40599138581987404
+    },
+    "32": {
+      "exponent": 139.59400861418013,
+      "headroom_to_143": 3.405991385819874
+    },
+    "4": {
+      "exponent": 136.59400861418013,
+      "headroom_to_143": 6.405991385819874
+    },
+    "64": {
+      "exponent": 140.59400861418013,
+      "headroom_to_143": 2.405991385819874
+    },
+    "8": {
+      "exponent": 137.59400861418013,
+      "headroom_to_143": 5.405991385819874
+    }
+  },
+  "success_adjusted_before_kappa_JG": {
+    "exponent": 134.59400861418013,
+    "headroom_to_143": 8.405991385819874
+  }
+}

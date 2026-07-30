@@ -1,0 +1,40 @@
+{
+  "break_even": {
+    "log2_kappa_JG_cap_upper_bound": 2.739010034152585
+  },
+  "cross_second_moment": {
+    "restart_bits_upper_bound": 2.547486590705363,
+    "success_probability_lower_bound": 0.17105277440164332
+  },
+  "gate_costs": {
+    "F19_2_addition": 84,
+    "F19_2_multiplication": 692,
+    "control_per_guess": 1000000,
+    "filter_and_verifier_per_z": 1099511627776,
+    "per_guess": 161548042,
+    "quadratic_all_roots": 16886
+  },
+  "model": "strictly capped binary-tree schedule; rank-deficient residual linear branches are abandoned",
+  "parameters": {
+    "A_size": 361,
+    "k": 5,
+    "linear_unknowns": 5,
+    "m": 16,
+    "p": 6,
+    "z_A_dimension": 8
+  },
+  "per_trial": {
+    "AXN": 285690187375669747674848988849806153533658,
+    "exponent": 137.71350337514204
+  },
+  "success_adjusted_before_kappa_JG_cap": {
+    "exponent": 140.26098996584741,
+    "headroom_to_143": 2.739010034152585
+  },
+  "tree": {
+    "field_additions_per_guess": 196277,
+    "field_multiplications_per_guess": 206643,
+    "leaves_per_guess": 64,
+    "quadratic_nodes_per_guess": 63
+  }
+}

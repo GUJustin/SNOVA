@@ -1,0 +1,857 @@
+--- newrev/paper.tex	2026-07-30 17:48:25.000000000 +0000
++++ ported/paper.tex	2026-07-30 19:40:01.351696286 +0000
+@@ -82,8 +82,8 @@
+ $\Sym^2(A)$ and span at most $\binom{d+1}{2}$ dimensions: $16$ becomes $10$
+ for $\ell=4$, and $4$ becomes $3$ for $\ell=2$.  An exact public output split
+ turns this identity into complete square forgery systems for all nine
+-published parameter sets while retaining every verifier equation and the
+-original rejection rule.
++published parameter shapes, conditional on explicit public rank preflights,
++while retaining every verifier equation and the original rejection rule.
+ 
+ Finite-cardinality symbolic homotopy gives selected-degree-free recovery for
+ all nine systems.  In a unit-leading multiplication ledger, before an
+@@ -196,9 +196,7 @@
+ 
+ \begin{table}[H]
+ \centering
+-\caption{Direct complete-square and adaptive selected-degree-free attacks.
+-The displayed numbers are base-two unit-leading $\AXN$ operation exponents;
+-$\kappa_{\rm hom}$ remains explicit and is not included in the table.}
++\caption{Conditional, selected-degree-free attack ledgers for all nine parameter shapes.  The $\ell=4$ entries condition on the exact public structural preflight; all entries normalize the stated spectrum and solver-restart events.  Values are base-two unit-leading $\AXN$ pointwise-multiplication-schedule exponents, excluding $\kappa_{\rm hom}$.}
+ \label{tab:intro-all-nine}
+ \small
+ \renewcommand{\arraystretch}{1.12}
+@@ -206,22 +204,22 @@
+ \toprule
+ Level & Parameters $(v,o,\ell,r)$ & Direct square & Adaptive & Reference\\
+ \midrule
+-I   & $(28,5,4,4)$  & $142.693$ & $128.332$ & $143$\\
++I   & $(28,5,4,4)$  & $142.607$ & $128.246$ & $143$\\
+ I   & $(48,16,2,2)$ & $132.971$ & $132.188$ & $143$\\
+-I   & $(28,4,4,5)$  & $142.692$ & $128.331$ & $143$\\
++I   & $(28,4,4,5)$  & $142.606$ & $128.246$ & $143$\\
+ \midrule
+-III & $(40,7,4,4)$  & $185.537$ & $171.702$ & $207$\\
++III & $(40,7,4,4)$  & $185.451$ & $171.617$ & $207$\\
+ III & $(72,24,2,2)$ & $183.795$ & $183.795$ & $207$\\
+-III & $(38,5,4,5)$  & $185.536$ & $171.702$ & $207$\\
++III & $(38,5,4,5)$  & $185.450$ & $171.616$ & $207$\\
+ \midrule
+-V   & $(50,9,4,4)$  & $227.646$ & $214.644$ & $272$\\
++V   & $(50,9,4,4)$  & $227.560$ & $214.558$ & $272$\\
+ V   & $(96,32,2,2)$ & $233.844$ & $233.844$ & $272$\\
+-V   & $(52,6,4,6)$  & $227.645$ & $214.643$ & $272$\\
++V   & $(52,6,4,6)$  & $227.559$ & $214.557$ & $272$\\
+ \bottomrule
+ \end{tabular}
+ \end{table}
+ 
+-The levelwise direct-square maxima are $142.693$, $185.537$, and $233.844$.
++The levelwise direct-square maxima are $142.607$, $185.451$, and $233.844$.
+ Exact public leading-Jacobian tests optionally select smaller cores; failure
+ invokes the complete square.  Mixing the branches before taking logarithms
+ gives levelwise adaptive maxima
+@@ -398,7 +396,8 @@
+       \max_j\sum_i d_{i,j},\;8B^2
+       \right\}.
+ \]
+-If $|k|\ge E_0$, a randomized symbolic-homotopy algorithm returns a
++If $|k|\ge E_0$, a randomized symbolic-homotopy algorithm whose separating
++form has a coefficient vector sampled uniformly from $k^N$ returns a
+ zero-dimensional parametrization containing every nonsingular root with
+ probability at least $7/8$.  On every run it returns a subset of the
+ nonsingular roots or reports failure.  Its arithmetic cost is
+@@ -408,7 +407,10 @@
+  \left(L+\sum_{i,j}d_{i,j}+N^2\right)N
+  \right)
+ \]
+-operations in $k$.
++operations in $k$.  This soft-$O$ theorem does not instantiate its implied
++constant or polylogarithmic factors.
++More generally, if $|k|\ge\max_j\sum_i d_{i,j}$ and $|k|>B^2$, the same
++algorithm succeeds with probability at least $1-B^2/|k|$.
+ \end{theorem}
+ 
+ \begin{proof}
+@@ -424,25 +426,51 @@
+ \]
+ have the same Vandermonde properties as the start forms in the cited proof:
+ any $n_j$ are independent and any $n_j+1$ are inconsistent.  The product
+-start system therefore has exactly $B$ simple roots and is enumerated within
+-the same soft-linear cost.  The first term in $E_0$ supplies enough distinct
+-nodes.
++start system can be written explicitly.  Put
++\[
++ s_{i,j}=\sum_{\nu=1}^i d_{\nu,j},\qquad s_{0,j}=0,
++\]
++and, for $1\le i\le N$, set
++\[
++ g_i(X)=
++ \prod_{j=1}^b\ \prod_{u=s_{i-1,j}}^{s_{i,j}-1}
++ \kappa_{j,u}(X_j).
++\]
++The factor ranges are disjoint.  An isolated common zero chooses, for each
++$i$, one vanishing factor of $g_i$; exactly $n_j$ choices must come from
++block $j$.  The coefficient in \eqref{eq:bg-Bezout} counts these choices,
++including the $d_{i,j}$ possible factors.  The Vandermonde property gives one
++point for each choice, while inconsistency of any $n_j+1$ forms prevents
++additional vanishing factors.  The corresponding block-diagonal linear
++Jacobian is nonsingular, so all $B$ roots are simple.  They are enumerated
++within the same soft-linear cost.  The first term in $E_0$ supplies enough
++distinct nodes.
+ 
+ The homotopy proof next requires a well-separating linear form.  It identifies
+ at most $B^2$ nonzero vectors on which the coefficient vector must not vanish.
+-For a fixed nonzero vector, a uniform coefficient vector lies in its
+-annihilator with probability at most $|k|^{-1}$.  Since $|k|\ge8B^2$, a union
+-bound gives success at least $7/8$.  The remaining Newton lifting,
+-specialization, squarefree cleaning, and zero-dimensional parametrization use
+-only field operations and inversion at nonsingular points.  Finite fields are
+-perfect, so the rest of the cited correctness and arithmetic analysis is
+-unchanged.
+-\end{proof}
+-
+-The theorem is a time theorem.  It does not promise a small resident state.
+-The final parametrization can itself be enormous, and all soft-$O$ factors,
+-fixed transforms, factorization, filtering, memory traffic, and implementation
+-constants are retained later in $\kappa_{\rm hom}$.
++The cited proof samples from a one-parameter moment-curve family, which is why
++its field-size condition includes an additional factor depending on $N$.
++Here the coefficient vector is instead sampled uniformly from the full space
++$k^N$.  For each fixed nonzero vector, its annihilator inside $k^N$ is a proper
++$k$-linear subspace (possibly of codimension greater than one), so a uniform
++coefficient vector annihilates it with probability at most $|k|^{-1}$.  Since
++$|k|\ge8B^2$, a union bound gives success at least $7/8$.
++
++The remaining Newton lifting, specialization, squarefree cleaning, and
++zero-dimensional parametrization use only field operations and inversion at
++nonsingular points.  Finite fields are perfect, so the rest of the cited
++correctness and arithmetic analysis is unchanged.  Finally, direct
++substitution into the original system and a Jacobian-rank test remove every
++spurious or singular output; hence a run returns only nonsingular roots or
++reports failure.
++\end{proof}
++
++The theorem is a time theorem and does not promise small resident state.  A
++parametrization can contain $O(B)$ field elements, but this output scale is
++dominated asymptotically by the displayed $BB^+$ term, which is typically
++$\Theta(B^2)$.  All soft-$O$ factors, fixed transforms, factorization,
++filtering, memory traffic, and implementation constants are retained later in
++the route- and parameter-dependent multiplier $\kappa_{\rm hom}$.
+ 
+ \subsection{Relation to prior attacks}
+ Beullens rewrote the \SNOVA{} verifier in ordered bilinear power-pair
+@@ -490,14 +518,18 @@
+ $M=or\ell$ & Number of scalar verifier outputs.\\
+ $N_0=n\ell$ & Length of one stacked signature column after the common-column relation.\\
+ $A=\F_q[S]$ & Public commutative matrix algebra; in Version~2.3, $A\cong\F_{q^\ell}$.\\
++$d=\dim_{\F_q}A$ & Algebra degree; $d=\ell$ for every official row.\\
+ $m_1=\lceil or/\ell\rceil$ & Number of public base-form groups.\\
+ $K=m_1\binom{\ell+1}{2}$ & Maximum number of distinct quotient quadratics.\\
+ $Q_R$ & Public matrix mapping quotient features to verifier outputs for relation $R$.\\
+ $W_R,G_R$ & Left-kernel basis and public left inverse used for the exact output split.\\
+ $C_{R,v}$ & Affine constraint matrix after projecting away the quadratic image.\\
+-$L,h$ & Solver slice and its base-field dimension.\\
+-$\bar\eta_L^U$ & Full-domain directional collision mass used by the headline root theorem.\\
+-$\kappa_{\rm hom}$ & Explicit multiplier for homotopy factors not in the unit-leading ledger.\\
++$L,s,h$ & Solver slice, its $A$-dimension when $A$-linear, and its base-field dimension.\\
++$\bar\eta_L^U,\eta_{128}$ & Full-domain directional collision mass and the instantiated certified allowance.\\
++$\rho_{\rm byte}=14/256$ & Maximum atom of one XOF byte reduced modulo $19$.\\
++$\AXN$ & Unit-cost two-input AND/XOR/XNOR circuit model, with free wiring and fan-out.\\
++$\kappa_{\rm hom}$ & Per-route, per-row ratio of complete end-to-end homotopy work to the unit-leading multiplication-schedule ledger.\\
++$\kappa_{\rm JG}$ & Expected regularity/restart multiplier excluded from the finite-gate Just Guess ledger.\\
+ \bottomrule
+ \end{tabularx}
+ \end{table}
+@@ -888,96 +920,177 @@
+ \end{proof}
+ 
+ \subsection{Reserved-line decoupling and the structural preflight}
+-Write the public coordinate space as the coordinate-aligned $A$-linear direct sum
+-\begin{equation}
+- V_{\rm pub}=W\oplus V'\oplus O_{\rm pub},
+- \qquad W=Ae_j,\qquad \dim_AW=1,
+- \quad \dim_AV'=v-1,
+- \quad \dim_AO_{\rm pub}=o.                          \label{eq:public-decomposition}
+-\end{equation}
+-Choose $0\ne w\in W$ for \eqref{eq:structured-offsets}.  The relation,
+-offset multipliers, affine matrix, stable kernel, and a canonical bounded list
+-of candidate slices can be chosen from the outer-map data and the restrictions
+-of the public forms with one argument in $W$.  They do not use the internal
+-coefficients on $V'\times V'$.
+-
+-\begin{lemma}[Reserved-line decoupling]\label{lem:reserved-decoupling}
+-Under \eqref{eq:public-decomposition}, where $W$ and $V'$ are raw
+-coordinate summands in the pinned expansion, $Q_R,C_{R,v},O^F_{R,v}$, the
+-stable kernel, and every candidate slice selected canonically from it depend
+-only on the cross data involving $W$ and the public outer map.  In the
+-random-XOF idealization they are independent of the disjoint raw symbols
+-forming $P_i|_{V'\times V'}$.
++Let $e_1,\ldots,e_n$ be the native $A$-coordinate basis in which the
++key-dependent symmetric public matrices are expanded.  Fix a vinegar index
++$j_0$ and use the coordinate-aligned decomposition
++\begin{align}
++ W&=Ae_{j_0},&
++ V'&=\bigoplus_{\substack{j\ {\rm vinegar}\\j\ne j_0}}Ae_j,&
++ O_{\rm pub}&=\bigoplus_{j\ {\rm oil}}Ae_j,\notag\\
++ V_{\rm pub}&=W\oplus V'\oplus O_{\rm pub},&
++ \dim_AW&=1,&
++ \dim_AV'&=v-1,\qquad \dim_AO_{\rm pub}=o.
++ \label{eq:public-decomposition}
++\end{align}
++The \emph{native-coordinate random-XOF idealization} used below declares the
++native upper-triangular scalar entries of the key-dependent $P_i$ to be
++independent reductions modulo $19$ of independent XOF bytes.  The deterministic
++outer map $E$, the relation $R$, and the complete multiplier vector
++$\Gamma=(\Gamma_0,\ldots,\Gamma_{r-1})$ are fixed and conditioned upon.  No
++$A$-linear change of basis is applied before invoking independence.  A reduced
++byte has maximum atom
++\[
++ \rho_{\rm byte}=\frac{14}{256},
++\]
++because nine residues have fourteen preimages and ten have thirteen.
++
++\begin{lemma}[Coordinate-aligned reserved-line decoupling]
++\label{lem:reserved-decoupling}
++Fix $E,R,\Gamma$, choose $0\ne w\in W$, and use the structured offsets
++\eqref{eq:structured-offsets}.  Then $Q_R$ depends only on $E$ and $R$, while
++$C_{R,v}$, $O^F_{R,v}$, $H^F_{R,v}$, and every deterministically tie-broken
++slice selected from them depend only on native entries having at least one
++index in $W$.  In the native-coordinate random-XOF idealization they are
++independent of the native $V'\times V'$ entries.
+ \end{lemma}
+ 
+ \begin{proof}
+-Every structured offset is in the line $W$.  Hence every offset-linear row is
+-a linear combination of forms
+-$(\Sigma_\xi w)^\transpose P_i\Sigma_\eta$, whose left argument remains in
+-$W$.  The internal $V'\times V'$ block never appears, and this remains true
+-after taking the complete right-$A$ orbit.  Kernels, canonical row-reduced
+-bases, and candidate subspaces derived from these matrices are therefore
+-functions of the cross data alone.
+-\end{proof}
++Every structured offset is in $W$.  Each offset-linear coefficient therefore
++contains one copy of $w$; if it occurs on the right, transpose the scalar and
++use symmetry to put it on the left.  Right multiplication by $A$ preserves
++the first coordinate block.  Thus neither the orbit construction nor any
++deterministic linear-algebra operation on it reads a native $V'\times V'$
++entry.  The two sets of raw XOF symbols are disjoint.  Coordinate alignment is
++essential: the biased byte-reduction distribution is not invariant under an
++arbitrary $A$-linear basis change.
++\end{proof}
++
++\begin{lemma}[Maximum-atom pivot bound]\label{lem:max-atom-pivot}
++Let $X_1,\ldots,X_N$ be independent finite-field variables, each with maximum
++atom at most $\rho_{\rm byte}$.  If a matrix $B$ has rank $t$, then for every
++$c$,
++\[
++ \Pr[BX=c]\le\rho_{\rm byte}^{\,t}.
++\]
++\end{lemma}
+ 
+-The following theorem records the random-key density of the exact structural
+-preflight for the six $\ell=4$ rows.  Put
+-$\rho=14/256$, the maximum atom of one XOF byte reduced modulo $19$, and let
+-$|A|=q^d$.  For the relation $R_j=S^j$, choose
+-$\Gamma_0=1$ and $\Gamma_1=0$.  Define
++\begin{proof}
++Choose $t$ pivot columns.  Condition on all nonpivot variables.  Expose the
++pivot variables in echelon order; at each step at most one value can satisfy
++the next independent equation, and that value has probability at most
++$\rho_{\rm byte}$.  Multiplication gives the claim.
++\end{proof}
++
++Put $\mathcal Q_R=\F_q^M/\im Q_R$.  When $\rank Q_R=K$,
++$\dim_{\F_q}\mathcal Q_R=M-K$, and $C_{R,v}$ is a coordinate matrix for the
++induced linear map $u\mapsto W_R\Lambda_{R,v}u$ to $\mathcal Q_R$.  Let
++$\mathbf X_{W,V'}$ be the vector of native independent public-matrix entries
++in the $W\times V'$ blocks.  For
++$0\ne\lambda\in\mathcal Q_R^\vee$, define $B_\lambda$ by
++\[
++ \operatorname{vec}\!\left(
++   (\lambda\circ C_{R,v})|_{V'}\right)
++ =B_\lambda\mathbf X_{W,V'}+b_\lambda.
++\]
++Here $B_\lambda$ and $b_\lambda$ are fixed once $E,R,\Gamma,\lambda$ and the
++native layout are fixed; they do not depend on the sampled entries in
++$\mathbf X_{W,V'}$.
++Scaling $\lambda$ scales $B_\lambda$, so its rank depends only on
++$[\lambda]$.  Put
++\[
++ t_{\rm src}
++ =\min_{0\ne\lambda\in\mathcal Q_R^\vee}\rank B_\lambda.
++\]
++For an $A$-line $\mathfrak l\subseteq W\oplus O_{\rm pub}$, choose
++$0\ne y_{\mathfrak l}\in\mathfrak l$ and write
++\[
++ O^F_{R,v}y_{\mathfrak l}
++ =D_{\mathfrak l}\mathbf X_{\rm nat}+e_{\mathfrak l}
++\]
++in the complete vector $\mathbf X_{\rm nat}$ of native independent
++public-matrix entries.  The coefficient data
++$D_{\mathfrak l},e_{\mathfrak l}$ are deterministic before those entries are
++sampled, and the rank of $D_{\mathfrak l}$ is independent of the chosen
++generator.  Define
++\[
++ t_W=\rank D_W,\qquad
++ t_{\rm oth}=
++ \min_{\substack{\mathfrak l\subseteq W\oplus O_{\rm pub}\\
++                   \dim_A\mathfrak l=1,\ \mathfrak l\ne W}}
++ \rank D_{\mathfrak l}.
++\]
++These are exact symbolic coefficient-map ranks determined by the fixed
++relation, the complete offset pattern, and the native coordinate layout; they
++do not depend on the sampled values of the key coefficients.  Define
+ \begin{align}
+  \delta_{\rm src}
+- &=\frac{q^{m_1\binom d2}-1}{q-1}\rho^{d(v-1)},       \label{eq:delta-src}\\
++ &=\frac{q^{M-K}-1}{q-1}
++   \rho_{\rm byte}^{d(v-1)},                          \label{eq:delta-src}\\
+  \delta_{\rm proj}
+- &=\rho^{m_1\binom{d+1}{2}}+
+-   \left(\frac{|A|^{1+o}-1}{|A|-1}-1\right)\rho^{m_1d^2},
+-                                                               \label{eq:delta-proj}\\
+- p_M(\rho)&=\prod_{c=1}^{M}(1-\rho^c),\qquad
+- p_{\rm pre}=p_M(\rho)(1-\delta_{\rm src})(1-\delta_{\rm proj}).
+-                                                               \label{eq:ppre}
++ &=\rho_{\rm byte}^{m_1\binom{d+1}{2}}+
++   \left(\frac{|A|^{1+o}-1}{|A|-1}-1\right)
++   \rho_{\rm byte}^{m_1d^2},
++ \qquad |A|=q^d.                                      \label{eq:delta-proj}
+ \end{align}
+ 
+-\begin{theorem}[Density of the complete structural preflight]
++\begin{theorem}[Conditional coefficient-preflight density]
+ \label{thm:structural-preflight}
+-In the code-faithful random-XOF idealization, the six official $\ell=4$
+-shapes simultaneously satisfy
+-\begin{enumerate}[label=(\roman*)]
+-\item $\rank Q_R=K$ and $\rank C_{R,v}=M-K$;
+-\item the stable kernel has trivial intersection with
+-      $W\oplus O_{\rm pub}$;
+-\item its projection to $V'$ is injective, so every selected slice has
+-      nonzero fresh projection;
+-\end{enumerate}
+-with probability at least $p_{\rm pre}$.  For every official $\ell=4$ shape,
++Fix the deterministic outer map $E$, a relation $R$, and the complete vector
++$\Gamma$.  Assume the exact deterministic checks
+ \[
+-  p_{\rm pre}>0.9423222679.
+-\]
+-All conditions are exact public rank tests on a fixed key.
++\rank Q_R=K,\qquad
++t_{\rm src}\ge d(v-1),\qquad
++t_W\ge m_1\binom{d+1}{2},\qquad
++t_{\rm oth}\ge m_1d^2
++\]
++pass.  In the native-coordinate random-XOF idealization,
++\[
++ \Pr[\rank C_{R,v}<M-K]\le\delta_{\rm src},
++\]
++and
++\[
++ \Pr[H^F_{R,v}\cap(W\oplus O_{\rm pub})\ne0]
++ \le\delta_{\rm proj}.
++\]
++Consequently full affine rank and injectivity of
++$H^F_{R,v}\to V'$ hold jointly with probability at least
++$1-\delta_{\rm src}-\delta_{\rm proj}$.  For the six official $\ell=4$
++dimension tuples, direct substitution gives
++$\delta_{\rm src}+\delta_{\rm proj}<2^{-209}$.  The coefficient-map ranks are
++fixed-layout symbolic checks; the realized quotient, affine, and intersection
++ranks are exact public checks on a fixed key.
+ \end{theorem}
+ 
+ \begin{proof}
+-The alternating part of the offset-linear source supplies the $M-K$ missing
+-output directions.  For a nonzero dual alternating tuple, the coefficient map
+-on $V'$ is injective after projection to the cross tensor between the reserved
+-line and a nonzero $A$-line.  A rank-$d(v-1)$ affine condition in fresh symbols
+-therefore has probability at most $\rho^{d(v-1)}$; projectivizing and union
+-bounding gives \eqref{eq:delta-src}.
+-
+-The event that the stable kernel meets the reserved line forces every
+-symmetric restriction on $W\times W$ to vanish.  An intersection with any
+-other $A$-line in $W\oplus O_{\rm pub}$ forces all $m_1d^2$ cross symbols to
+-vanish.  Union bounding over the projective $A$-lines gives
+-\eqref{eq:delta-proj}.  On the complementary source event, choose $M-K$
+-affine columns independent modulo the $K$ quotient columns.  Conditional on
+-the public-form data, each outer-map row misses the span of its predecessors
+-with probability at least $1-\rho^c$ when the remaining codimension is $c$.
+-Multiplying these terms gives $p_M(\rho)$.  The three coefficient regions are disjoint under the coordinate-aligned
+-byte partition stated above, so the probabilities multiply.  This partition
+-and its pivot locations are part of the fixed-key certificate format; the
+-numerical artifact checks the resulting probability formula but does not
+-substitute for an official-source byte-map test.  The last statement is
+-direct substitution of the six public dimensions.
+-\end{proof}
++If $\rank C_{R,v}<M-K$, some nonzero
++$\lambda\in\mathcal Q_R^\vee$ annihilates $C_{R,v}$.  In particular,
++$(\lambda\circ C_{R,v})|_{V'}=0$.  For fixed $[\lambda]$, this is an affine
++system of rank at least $d(v-1)$ in the independent native variables
++$\mathbf X_{W,V'}$; \Cref{lem:max-atom-pivot} bounds its probability by
++$\rho_{\rm byte}^{d(v-1)}$.  Scalar multiples define the same event, and
++$\mathbb P(\mathcal Q_R^\vee)(\F_q)$ has
++$(q^{M-K}-1)/(q-1)$ points.  A union bound proves
++\eqref{eq:delta-src}.
++
++By \Cref{thm:stable-kernel}, $H^F_{R,v}$ is $A$-linear.  Thus a nonzero
++intersection with $W\oplus O_{\rm pub}$ contains an $A$-line
++$\mathfrak l$.  For $\mathfrak l=W$, the coefficient-rank hypothesis and
++\Cref{lem:max-atom-pivot} give probability at most
++$\rho_{\rm byte}^{m_1\binom{d+1}{2}}$.  For every other $A$-line the
++analogous bound is $\rho_{\rm byte}^{m_1d^2}$.  The $(1+o)$-dimensional
++$A$-space $W\oplus O_{\rm pub}$ contains
++$(|A|^{1+o}-1)/(|A|-1)$ lines, exactly one of which is $W$; a union bound
++gives \eqref{eq:delta-proj}.  Finally, the kernel of the projection
++$H^F_{R,v}\to V'$ is precisely
++$H^F_{R,v}\cap(W\oplus O_{\rm pub})$.  A final union bound combines the two
++bad events without assuming independence.  Direct substitution gives the
++displayed uniform numerical bound.
++\end{proof}
++
++No tail of $\Gamma$ is implicit in this statement: the concrete route records
++all $r$ entries and runs the displayed checks for the vector above.  This
++release does not assert that it passes them for every fixed key.  The six
++$\ell=4$ ledgers below are conditional on a successful structural preflight.
+ 
+ \subsection{The guaranteed fresh ordinary square}
+ Let
+@@ -1055,15 +1168,20 @@
+ \subsection{Exactly uniform official targets}
+ The probability theorems use a uniform target over $\F_{19}^M$.  The official
+ binary-to-field conversion has a small modulo bias.  The attacker removes it
+-without changing the verifier.  If a uniform $b$-bit chunk $X$ is to supply
++without changing the verifier.  Here the target hash/XOF chunks are modeled
++as independent uniform bit strings, separately from the native-coordinate
++key-expansion model above.  The pinned conversion uses each full
++eight-byte chunk for fifteen base-$19$ digits and a final partial chunk for
++the remaining digits.  If a uniform $b$-bit chunk $X$ is to supply
+ $a$ base-$19$ digits, retain the message--salt input only when
+ \begin{equation}
+   X<\left\lfloor\frac{2^b}{19^a}\right\rfloor19^a.   \label{eq:target-rejection-sampling}
+ \end{equation}
+ Conditioned on this event, $X\bmod19^a$ is uniform.  Applying the test to each
+ chunk makes the retained official target exactly uniform, and an invertible
+-output change preserves uniformity.  Across the public Version~2.3 lengths,
+-the acceptance probability of this preprocessing is at least $0.152462$.
++output change preserves uniformity.  Exact evaluation over the nine public
++Version~2.3 lengths gives a minimum acceptance probability
++$0.1524622985\ldots$, and hence at least $0.152462$.
+ When target consistency requires more than the $128$-bit salt space, the
+ existential chosen-message attacker varies a message prefix as well as the
+ salt.  Target generation occurs before nonlinear solving and adds to, rather
+@@ -1248,7 +1366,7 @@
+ \end{proof}
+ 
+ The following lemma improves the seeded theorem because it prices exactly the
+-full-domain spectrum used above.  Let $\rho=14/256$ be the maximum atom of one
++full-domain spectrum used above.  Let $\rho_{\rm byte}=14/256$ be the maximum atom of one
+ public-expansion byte reduced modulo $19$.
+ 
+ \begin{lemma}[Full-domain fresh-spectrum theorem]
+@@ -1264,18 +1382,18 @@
+ \]
+ then for all $0\ne y\in L$ and $0\ne b\in\F_q^K$,
+ \begin{equation}
+- \Pr[b\in\ker T_y^{\mathsf T}]\le\rho^t.             \label{eq:v7-pointwise}
++ \Pr[b\in\ker T_y^{\mathsf T}]\le\rho_{\rm byte}^t.             \label{eq:v7-pointwise}
+ \end{equation}
+ Consequently
+ \begin{align}
+  \mathbb E[\bar\eta_L^U]
+  &\le (q^h-1)q^{-K}
+- +(q^h-1)(1-q^{-K})\rho^t,                            \label{eq:v7-eta-expect}\\
++ +(q^h-1)(1-q^{-K})\rho_{\rm byte}^t,                            \label{eq:v7-eta-expect}\\
+  \Pr\!\left[
+   \bar\eta_L^U>(q^h-1)q^{-K}+\varepsilon
+  \right]
+  &\le
+- \frac{(q^h-1)(1-q^{-K})\rho^t}{\varepsilon}.
++ \frac{(q^h-1)(1-q^{-K})\rho_{\rm byte}^t}{\varepsilon}.
+                                                                     \label{eq:v7-eta-tail}
+ \end{align}
+ For the reserved-line construction one may take
+@@ -1312,7 +1430,7 @@
+    \mathbf1_{\{b\in\ker T_y^{\mathsf T}\}}\right).
+ \]
+ Taking expectations gives
+-$q^{-K}+(1-q^{-K})\rho^t$.  Sum over $y\ne0$ to obtain
++$q^{-K}+(1-q^{-K})\rho_{\rm byte}^t$.  Sum over $y\ne0$ to obtain
+ \eqref{eq:v7-eta-expect}.  The excess above the unavoidable baseline
+ $(q^h-1)q^{-K}$ is nonnegative, so Markov's inequality gives
+ \eqref{eq:v7-eta-tail}.  The two displayed choices of $D$ have dimensions
+@@ -1570,16 +1688,18 @@
+ \end{proof}
+ 
+ For a core over $A\in\{\F_{19^2},\F_{19^4}\}$ with B\'ezout number $B$ and
+-start-node requirement $D$, let $g_A$ be $692$ or $2628$ and define
++start-node requirement $D_{\rm start}$, let $g_A$ be $692$ or $2628$ and define
+ \begin{equation}
+- \Gamma_A(B,D)=
+- \min_{\substack{r\ge1:\ |A|^r\ge D,\
+-                   |A|^r>B^2\\2r-1\le|A|}}
+- \frac{(2r-1)g_A}{1-B^2/|A|^r}.                      \label{eq:v7-gamma}
+-\end{equation}
+-Evaluation/interpolation at $2r-1$ base-field points gives the numerator and
+-\Cref{lem:v7-separator} gives the denominator.  The numerical artifact
+-exhausts all admissible $r$ rather than fixing a blanket $8/7$ separator loss.
++ \Gamma_A(B,D_{\rm start})=
++ \min_{\substack{e\ge1:\ |A|^e\ge D_{\rm start},\
++                   |A|^e>B^2\\2e-1\le|A|}}
++ \frac{(2e-1)g_A}{1-B^2/|A|^e}.                      \label{eq:v7-gamma}
++\end{equation}
++Evaluation/interpolation at $2e-1$ base-field points gives the number of
++charged pointwise multiplications in the numerator; the fixed transforms
++themselves remain in $\kappa_{\rm hom}$.  \Cref{lem:v7-separator} gives the
++denominator.  The numerical artifact
++exhausts all admissible $e$.
+ 
+ 
+ \section{The direct complete-square theorem}
+@@ -1648,12 +1768,12 @@
+ $\F_{19^2}$, and charging the complete $692$-gate multiplication circuit gives
+ normalized exponents
+ \[
+- \boxed{142.69267,\qquad185.53659,\qquad227.64611}
++ \boxed{142.60696,\qquad185.45088,\qquad227.56041}
+ \]
+ on the worse shape at Levels I, III, and V.  The corresponding nominal
+ headroom below $143,207,272$ is
+ \[
+- \boxed{0.30733,\qquad21.46341,\qquad44.35389}
++ \boxed{0.39304,\qquad21.54912,\qquad44.43959}
+ \]
+ bits.  Thus the six $\ell=4$ rows are below their numerical references even
+ without a fast-core preflight or the $55\to16$ orbit reduction.
+@@ -1665,9 +1785,10 @@
+ ordinary $K$-slice exists.  The full-domain spectrum theorem applies with
+ $t=4(v-2)$ and the threshold $\eta_{128}(K,K)$.  Substitute
+ $K=50,70,90$ in \eqref{eq:v7-square-work}.  Exact enumeration of the
+-separator extension degree selects $r=13,17,22$ over $\F_{19^2}$; the
+-machine-readable ledger performs the structural normalization and charges
+-the conservative square-row acceptance lower bound.
++separator extension degree selects $e=13,17,22$ over $\F_{19^2}$.  The
++machine-readable ledger conditions on the exact structural preflight,
++normalizes only the certified spectrum event, and charges the conservative
++square-row acceptance lower bound.
+ \end{proof}
+ 
+ \section{The zero-offset \texorpdfstring{$\ell=2$}{ell=2} theorem}
+@@ -1814,7 +1935,7 @@
+ gives
+ \begin{equation}
+  p_{\rm Jac}^{(2)}(s)
+- \ge\prod_{j=1}^s(1-\rho^{2j})>0.9970003329.          \label{eq:v7-l2-jac}
++ \ge\prod_{j=1}^s(1-\rho_{\rm byte}^{2j})>0.9970003329.          \label{eq:v7-l2-jac}
+ \end{equation}
+ A nonzero leading determinant has degree at most $s$ over $A$, so its singular
+ point density is at most $s/19^2$.  With
+@@ -2080,7 +2201,7 @@
+ leading-Jacobian matrix, where $A=\F_{19^4}$.  Then
+ \begin{equation}
+  \Pr[\det J=0]
+- \le \frac{|A|^s-1}{|A|-1}\rho^{4s}.                 \label{eq:v7-l4-jac}
++ \le \frac{|A|^s-1}{|A|-1}\rho_{\rm byte}^{4s}.      \label{eq:v7-l4-jac}
+ \end{equation}
+ For the cost-minimizing values $s=10,14,18$, the failure bounds are at most
+ $3.55350\cdot10^{-5}$, $6.56029\cdot10^{-5}$, and
+@@ -2093,7 +2214,7 @@
+ statement above implies that forcing every selected leading row to annihilate
+ $y$ imposes $s$ independent equations over $A$, hence $4s$ independent affine
+ equations over $\F_{19}$, on fresh public-expansion symbols.  The maximum-atom
+-bound gives probability at most $\rho^{4s}$.  There are
++bound gives probability at most $\rho_{\rm byte}^{4s}$.  There are
+ $(|A|^s-1)/(|A|-1)$ projective directions.  Union-bound over them.  This bound
+ is weaker than a sequential full-rank product would be under a uniform field
+ distribution, but it is valid for the actual biased product distribution used
+@@ -2130,8 +2251,8 @@
+ \[
+  (s;a,b)=(10;5,5),\quad(14;7,7),\quad(18;9,9)
+ \]
+-at Levels I, III, V.  On the worse shape, the fixed-core normalized exponents
+-are $126.346$, $167.124$, and $207.359$.
++at Levels I, III, V.  Conditional on the exact structural preflight, the
++worse-shape fast-core ledger exponents are $126.260$, $167.038$, and $207.273$.
+ 
+ For the simplest fixed-core-free algorithm, a failed preflight invokes the
+ direct ordinary square of \Cref{cor:v7-l4-direct-square}.  Applying
+@@ -2140,14 +2261,14 @@
+ \small
+ \begin{tabular}{@{}c l c r r r@{}}
+ \toprule
+-Level & parameters & fast profile & fast certified & direct fallback & headroom\\
++Level & parameters & fast profile & fast conditional & adaptive mixture & headroom\\
+ \midrule
+-I   & $(28,5,4,4)$ & $(10;5,5)$ & $126.346$ & $128.332$ & $14.668$\\
+-I   & $(28,4,4,5)$ & $(10;5,5)$ & $126.346$ & $128.331$ & $14.669$\\
+-III & $(40,7,4,4)$ & $(14;7,7)$ & $167.124$ & $171.702$ & $35.298$\\
+-III & $(38,5,4,5)$ & $(14;7,7)$ & $167.124$ & $171.702$ & $35.298$\\
+-V   & $(50,9,4,4)$ & $(18;9,9)$ & $207.359$ & $214.644$ & $57.356$\\
+-V   & $(52,6,4,6)$ & $(18;9,9)$ & $207.358$ & $214.643$ & $57.357$\\
++I   & $(28,5,4,4)$ & $(10;5,5)$ & $126.260$ & $128.246$ & $14.754$\\
++I   & $(28,4,4,5)$ & $(10;5,5)$ & $126.260$ & $128.246$ & $14.754$\\
++III & $(40,7,4,4)$ & $(14;7,7)$ & $167.038$ & $171.617$ & $35.383$\\
++III & $(38,5,4,5)$ & $(14;7,7)$ & $167.038$ & $171.616$ & $35.384$\\
++V   & $(50,9,4,4)$ & $(18;9,9)$ & $207.273$ & $214.558$ & $57.442$\\
++V   & $(52,6,4,6)$ & $(18;9,9)$ & $207.273$ & $214.557$ & $57.443$\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+@@ -2156,20 +2277,17 @@
+ its per-orbit completeness and cost records, that numerical branch is omitted
+ from this revision; it is unnecessary for every headline conclusion.
+ 
+-The smaller-output profiles from the same exhaustive search remain useful:
+-$(9;5,4)$, $(10;7,3)$, and $(11;9,2)$ have normalized primary exponents
+-$133.622$, $197.672$, and $261.642$ on the worse shape and packed final-
+-parametrization ceilings approximately $311$ MiB, $68.4$ MiB, and $14.9$ MiB.
+-They are not the headline because their purpose is output volume rather than
+-minimum arithmetic.
++The same profile search can be optimized for output size rather than arithmetic.  We omit those secondary numerical rows here because the revised standalone generator records only the direct and adaptive headline routes.
+ 
+ \section{All-nine consequences}
+ \label{sec:v7-all-nine}
+ 
+ \begin{theorem}[One complete-square theorem for every published row]
+ \label{thm:v7-all-nine-simple}
+-For every published $q=19$ Version~2.3 parameter shape, a public key passing the stated exact rank preflights has a theorem-backed Las
+-Vegas forgery route obtained by solving a complete square residual system.
++For every published $q=19$ Version~2.3 parameter shape, a public key passing
++the stated exact rank preflights and satisfying the certified spectrum event
++(or carrying the corresponding fixed-key certificate) has a selected-degree-free
++Las Vegas forgery route obtained by solving a complete square residual system.
+ It uses no selected Macaulay degree, exact-corank prediction, unique-root
+ assumption, predetermined Jacobian core, family-count pattern, or orbit
+ enumeration.  The unit-leading homotopy ledgers are:
+@@ -2179,21 +2297,21 @@
+ \toprule
+ Level & parameters & complete square & exponent & headroom\\
+ \midrule
+-I   & $(28,5,4,4)$  & ordinary $50\times50$ square & $142.693$ & $0.307$\\
++I   & $(28,5,4,4)$  & ordinary $50\times50$ square & $142.607$ & $0.393$\\
+ I   & $(48,16,2,2)$ & complete two-block square & $132.971$ & $10.029$\\
+-I   & $(28,4,4,5)$  & ordinary $50\times50$ square & $142.693$ & $0.307$\\
+-III & $(40,7,4,4)$  & ordinary $70\times70$ square & $185.537$ & $21.463$\\
++I   & $(28,4,4,5)$  & ordinary $50\times50$ square & $142.606$ & $0.394$\\
++III & $(40,7,4,4)$  & ordinary $70\times70$ square & $185.451$ & $21.549$\\
+ III & $(72,24,2,2)$ & complete two-block square & $183.795$ & $23.205$\\
+-III & $(38,5,4,5)$  & ordinary $70\times70$ square & $185.536$ & $21.464$\\
+-V   & $(50,9,4,4)$  & ordinary $90\times90$ square & $227.646$ & $44.354$\\
++III & $(38,5,4,5)$  & ordinary $70\times70$ square & $185.450$ & $21.550$\\
++V   & $(50,9,4,4)$  & ordinary $90\times90$ square & $227.560$ & $44.440$\\
+ V   & $(96,32,2,2)$ & complete two-block square & $233.844$ & $38.156$\\
+-V   & $(52,6,4,6)$  & ordinary $90\times90$ square & $227.645$ & $44.355$\\
++V   & $(52,6,4,6)$  & ordinary $90\times90$ square & $227.559$ & $44.441$\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+ The worst rows at Levels I, III, and V have exponents
+ \begin{equation}
+- \boxed{142.69267,\qquad185.53659,\qquad233.84399}.   \label{eq:v7-simple-headline}
++ \boxed{142.60696,\qquad185.45088,\qquad233.84399}.   \label{eq:v7-simple-headline}
+ \end{equation}
+ Thus even this deliberately uniform proof is nominally below the
+ $143,207,272$ references at all three levels.
+@@ -2208,24 +2326,24 @@
+ 
+ \begin{theorem}[Optimized adaptive attack on every published row]
+ \label{thm:v7-all-nine}
+-An exact public determinant preflight can replace the direct square by a
+-smaller core without introducing a preferred-core premise: failure invokes
+-the direct complete square.  The resulting all-nine table is
++Under the same structural and spectrum conditions, an exact public determinant
++preflight can replace the direct square by a smaller core without introducing
++a preferred-core premise: failure invokes the direct complete square.  The resulting all-nine table is
+ \begin{center}
+ \small
+ \begin{tabular}{@{}c l l r r@{}}
+ \toprule
+ Level & parameters & adaptive selected-degree-free route & exponent & headroom\\
+ \midrule
+-I   & $(28,5,4,4)$  & channel core, then ordinary square & $128.332$ & $14.668$\\
++I   & $(28,5,4,4)$  & channel core, then ordinary square & $128.246$ & $14.754$\\
+ I   & $(48,16,2,2)$ & one eigenblock, then two-block square & $132.188$ & $10.812$\\
+-I   & $(28,4,4,5)$  & channel core, then ordinary square & $128.332$ & $14.668$\\
+-III & $(40,7,4,4)$  & channel core, then ordinary square & $171.702$ & $35.298$\\
++I   & $(28,4,4,5)$  & channel core, then ordinary square & $128.246$ & $14.754$\\
++III & $(40,7,4,4)$  & channel core, then ordinary square & $171.617$ & $35.383$\\
+ III & $(72,24,2,2)$ & complete two-block square & $183.795$ & $23.205$\\
+-III & $(38,5,4,5)$  & channel core, then ordinary square & $171.702$ & $35.298$\\
+-V   & $(50,9,4,4)$  & channel core, then ordinary square & $214.644$ & $57.356$\\
++III & $(38,5,4,5)$  & channel core, then ordinary square & $171.616$ & $35.384$\\
++V   & $(50,9,4,4)$  & channel core, then ordinary square & $214.558$ & $57.442$\\
+ V   & $(96,32,2,2)$ & complete two-block square & $233.844$ & $38.156$\\
+-V   & $(52,6,4,6)$  & channel core, then ordinary square & $214.643$ & $57.357$\\
++V   & $(52,6,4,6)$  & channel core, then ordinary square & $214.557$ & $57.443$\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+@@ -2432,10 +2550,10 @@
+ 
+ \begin{proof}
+ Any complete root restricts to a first-stage root.  At that partial root its
+-true fourth block satisfies the displayed linear system.  A certified complete
+-trial cannot encounter a consistent rank-deficient case, so full column rank
+-forces the unique true completion, and the remaining diagonal family checks
+-it.  Conversely every retained point satisfies all ten families.
++true fourth block satisfies the displayed linear system.  On a trial that declares no incomplete case, every consistent system
++encountered has full column rank.  Hence the true fourth block is the unique
++completion, and the remaining diagonal family checks it.  Conversely every
++retained point satisfies all ten families.
+ \end{proof}
+ 
+ \subsection{Status of the low-state branch}
+@@ -2626,28 +2744,28 @@
+ \label{prop:upgrade-zero-offset-square-persistence}
+ Consider any symmetric redesign for which the zero-offset common-column
+ relation with $R_0=1$ is defined.  Let $Q_R$ be its quadratic output matrix
+-and put $\rho=\rank Q_R$.  Public row reduction gives an invertible output
++and put $\rho_Q=\rank Q_R$.  Public row reduction gives an invertible output
+ change under which the zero-offset verifier is equivalent to
+ \begin{equation}
+- g_\rho(u)=z\in\F_q^\rho,
++ g_{\rho_Q}(u)=z\in\F_q^{\rho_Q},
+  \qquad
+- t_{\rm con}=0\in\F_q^{M'-\rho},                     \label{eq:upgrade-general-zero-split}
++ t_{\rm con}=0\in\F_q^{M'-\rho_Q},                     \label{eq:upgrade-general-zero-split}
+ \end{equation}
+-where $g_\rho$ consists of $\rho$ independent quadratic output
++where $g_{\rho_Q}$ consists of $\rho_Q$ independent quadratic output
+ combinations.  For an exactly uniform target, the consistency event in
+-\eqref{eq:upgrade-general-zero-split} has probability $q^{-(M'-\rho)}$ and,
+-conditioned on it, $z$ is uniform in $\F_q^\rho$.
++\eqref{eq:upgrade-general-zero-split} has probability $q^{-(M'-\rho_Q)}$ and,
++conditioned on it, $z$ is uniform in $\F_q^{\rho_Q}$.
+ 
+ If the public vinegar summand $V'$ has dimension $d(v-1)$ and
+ \begin{equation}
+- \rho\le d(v-1),                                      \label{eq:upgrade-zero-square-condition}
++ \rho_Q\le d(v-1),                                      \label{eq:upgrade-zero-square-condition}
+ \end{equation}
+-then dimensions alone leave an ordinary $\rho$-dimensional slice
++then dimensions alone leave an ordinary $\rho_Q$-dimensional slice
+ $L\subseteq V'$ on which the complete residual system is square: it has
+-$\rho$ equations in $\rho$ variables.  Consequently, ruling out this
++$\rho_Q$ equations in $\rho_Q$ variables.  Consequently, ruling out this
+ chosen-message square by dimensions alone requires
+ \begin{equation}
+- \rho>d(v-1).                                         \label{eq:upgrade-zero-square-rank-floor}
++ \rho_Q>d(v-1).                                         \label{eq:upgrade-zero-square-rank-floor}
+ \end{equation}
+ \end{proposition}
+ 
+@@ -2655,20 +2773,20 @@
+ With zero offsets, the substituted verifier is $Q_Rz_{\rm sym}(u)=t$ and
+ contains no affine or constant term.  Choose a row basis of $Q_R$ and extend
+ it to an invertible basis change on the $M'$ output coordinates.  The first
+-$\rho$ transformed rows are the independent residual quadratics
+-$g_\rho$; the remaining rows vanish identically on the quadratic image and
++$\rho_Q$ transformed rows are the independent residual quadratics
++$g_{\rho_Q}$; the remaining rows vanish identically on the quadratic image and
+ therefore impose the consistency equations in
+ \eqref{eq:upgrade-general-zero-split}.  An invertible linear transformation
+ sends a uniform target to independent uniform residual and consistency
+ coordinates, proving the distribution statement.  Under
+-\eqref{eq:upgrade-zero-square-condition}, choose any $\rho$-dimensional
+-linear subspace of $V'$ and restrict all $\rho$ residual equations to an
++\eqref{eq:upgrade-zero-square-condition}, choose any $\rho_Q$-dimensional
++linear subspace of $V'$ and restrict all $\rho_Q$ residual equations to an
+ affine coset of it.  This gives the asserted complete square system.
+ \end{proof}
+ 
+ Symmetry bounds the actual quotient rank by
+ \begin{equation}
+- \rho\le \min\left\{M',\;m_1'\binom{d+1}{2}\right\}.  \label{eq:upgrade-zero-square-cap}
++ \rho_Q\le \min\left\{M',\;m_1'\binom{d+1}{2}\right\}.  \label{eq:upgrade-zero-square-cap}
+ \end{equation}
+ Hence making \eqref{eq:upgrade-zero-square-rank-floor} even possible forces
+ both terms on the right of \eqref{eq:upgrade-zero-square-cap} above
+@@ -2741,7 +2859,7 @@
+ This is deliberately a dimension-only theorem, not a claim that every secure
+ repair must literally double its outputs.  A redesign below the table can
+ instead leave the square system present and try to obtain security from the
+-chosen-message consistency factor $q^{M'-\rho}$, from the cost of solving the
++chosen-message consistency factor $q^{M'-\rho_Q}$, from the cost of solving the
+ square system, or from a changed target interface.  It must then publish and
+ price those ingredients explicitly.  The theorem gives a sharp trichotomy:
+ break the symmetric/affine architecture, nearly double the outputs to remove
+@@ -2783,8 +2901,6 @@
+ must retain and explicitly price the square system and target filter, change
+ the target interface, or abandon the symmetric/affine architecture.
+ 
+-\printbibliography
+-
+ \appendix
+ 
+ \section{Exact fixed-key spectrum certificates}\label{app:fixed-key-spectrum}
+@@ -2870,23 +2986,24 @@
+ \begin{table}[H]
+ \centering
+ \caption{Audited exact unit-leading exponents underlying the rounded main
+-text.  ``Direct'' solves the complete square; ``adaptive'' uses an exact
+-fast-core preflight and a complete-core fallback.}
++text, conditional on the exact public structural preflight for the $\ell=4$
++rows.  ``Direct'' solves the complete square; ``adaptive'' is the conditional
++mixture of an exact fast-core preflight and the complete-square fallback.}
+ \label{tab:exact-ledger}
+ \small
+ \begin{tabular}{@{}c l r r r@{}}
+ \toprule
+ Level & Parameters & Direct & Adaptive & Adaptive headroom\\
+ \midrule
+-I   & $(28,5,4,4)$  & $142.692668$ & $128.331985$ & $14.668015$\\
++I   & $(28,5,4,4)$  & $142.606960$ & $128.246278$ & $14.753722$\\
+ I   & $(48,16,2,2)$ & $132.970670$ & $132.188072$ & $10.811928$\\
+-I   & $(28,4,4,5)$  & $142.692082$ & $128.331455$ & $14.668545$\\
+-III & $(40,7,4,4)$  & $185.536587$ & $171.702386$ & $35.297614$\\
++I   & $(28,4,4,5)$  & $142.606374$ & $128.245747$ & $14.754253$\\
++III & $(40,7,4,4)$  & $185.450879$ & $171.616678$ & $35.383322$\\
+ III & $(72,24,2,2)$ & $183.794625$ & $183.794625$ & $23.205375$\\
+-III & $(38,5,4,5)$  & $185.535753$ & $171.701565$ & $35.298435$\\
+-V   & $(50,9,4,4)$  & $227.646114$ & $214.644029$ & $57.355971$\\
++III & $(38,5,4,5)$  & $185.450045$ & $171.615857$ & $35.384143$\\
++V   & $(50,9,4,4)$  & $227.560406$ & $214.558321$ & $57.441679$\\
+ V   & $(96,32,2,2)$ & $233.843987$ & $233.843987$ & $38.156013$\\
+-V   & $(52,6,4,6)$  & $227.645066$ & $214.642984$ & $57.357016$\\
++V   & $(52,6,4,6)$  & $227.559359$ & $214.557277$ & $57.442723$\\
+ \bottomrule
+ \end{tabular}
+ \end{table}
+@@ -2931,20 +3048,27 @@
+ source, bibliography, compiled PDF, build instructions, and hashes.  The
+ \texttt{artifact/} directory contains:
+ \begin{itemize}
+-\item the all-nine homotopy ledger and its consistency checker;
++\item a standalone generator and independently coded checker for the corrected
++      all-nine conditional homotopy ledger;
+ \item the complete $150$-gate scalar multiplier netlist and tower checks;
+ \item the finite Just Guess, quadratic-root, and cross-channel ledgers; and
+-\item a revision checker that regenerates every new number used in
+-      \Cref{sec:jg-finite-gate}.
++\item a wrapper checker that runs both the all-nine and referee-revision
++      checks.
+ \end{itemize}
+ 
+ A clean reproduction is:
+ \begin{verbatim}
+-python3 artifact/verify_referee_revision.py
+-latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
++sha256sum -c SHA256SUMS
++make regenerate
++make verify
++make
+ \end{verbatim}
+-The checker is deterministic and does not require network access.  The paper
+-build uses only the files in the package.  The supplied \texttt{SHA256SUMS}
+-records every distributed file.
++The all-nine generator assigns no random probability to the fixed outer map:
++its $\ell=4$ ledgers condition on the exact public structural preflight.  The
++checker is deterministic, requires Python~3.10 or newer, and does not require
++network access.  The paper build uses only the files in the package.  The
++supplied \texttt{SHA256SUMS} records every distributed file.
++
++\printbibliography
+ 
+ \end{document}
