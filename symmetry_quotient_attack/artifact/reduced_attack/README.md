@@ -1,45 +1,31 @@
-# Reduced-parameter end-to-end SNOVA forgery
+# Correspondence tests
 
-This directory contains an executable demonstration of the symmetry-quotient
-attack on the reduced row
+These tests are deliberately separate from the formula ledgers.
 
-```
-(v,o,q,l,r) = (2,1,19,2,2).
-```
+- `official_key_reduction_harness.py --check` parses one pinned official
+  `(28,5,4,4)` KAT from public fields, verifies the supplied signature in a
+  Python Version 2.3 transcription, checks the common-column decomposition,
+  and confirms quotient/affine ranks 50/30. It leaves the 50-in-102 residual
+  system unsolved and emits no forgery.
+- `reduced_parameter_end_to_end_forgery.py --check` uses the deliberately
+  unofficial shape `(2,1,2,2)`. It interpolates the complete zero-offset
+  restriction `X_i=[u_i|0]`, checks equality of the interpolated and explicit
+  rank-three quotient images, fixes each SHAKE target before the public slice
+  search, and reconstructs a non-planted serialized signature. `--check`
+  recomputes the main trial and eight fresh-key regressions before comparing the
+  deterministic JSON.
+- `verify_reduced_parameter_stress.py` reruns 24 further fresh-key forgeries,
+  reconstructs their targets through the literal evaluator, checks changed-key
+  rejection, obtains rank three on 100 further reduced keys, and round-trips
+  base-19 vectors of lengths 1 through 100.
 
-It is a clean Python transcription of the odd-prime, symmetric, `l=r=2` path
-of the SNOVA reference implementation pinned at commit
-`9da14981336ede257c41ef53cc069989051e8181`.  It preserves the reference
-implementation's q=19 field, public S matrix, fixed-ABQ expansion, hidden-UOV
-public-key generation, base-19 public-key/signature serialization, verifier
-map, target hash, salt, and rejection rule.  Only the dimensions are reduced.
+The reduced forger and literal verifier path share the KAT-anchored Python
+scheme helpers, so these are composition regressions, not independent verifier
+correspondence or production-size cost evidence. The original supplied
+standalone demo required two convention corrections before its attack logic
+could be integrated; `REDUCED_ATTACK_REVIEW.md` records them.
 
-The attack receives only the serialized public key and a chosen digest.  It
-imposes the zero-offset common-column relation, interpolates the complete
-restricted verifier, finds its rank-3 quotient and one target-consistency
-coordinate, searches salts, enumerates public 3-dimensional slices, serializes
-the result, and checks it using a separately organized direct verifier.
-
-Run:
-
-```bash
-python3 attack.py --out transcript.json
-python3 verify_transcript.py
-python3 run_batch.py
-```
-
-The committed transcript records an 18-byte public key and a 23-byte forged
-signature accepted by the direct verifier.  The verifier also rejects a
-mutated signature and a mutated salt.  `batch_results.json` records successful
-forgeries on eight additional deterministic keys.
-
-## Scope
-
-This closes the reduced-parameter composition gap: public-key expansion,
-quotient extraction, target consistency, solving, signature reconstruction,
-serialization, rejection, and verification all execute together.  It is not a
-production-size attack, does not measure `kappa_hom` or `kappa_JG`, and is not a
-compiled invocation of the upstream C implementation.  The verifier and
-key-generation logic are independent Python transcriptions of the pinned C
-formulas, with two differently organized public-map evaluators cross-checked
-on unrestricted and restricted inputs.
+The two transcript scripts accept `--write` to regenerate their committed JSON.
+With `--check` they do not modify files. The shared `snova_v23_reference.py` is a
+local transcription pinned to the commit named in `../official/COMMIT`; it is
+not the unmodified official C verifier.

@@ -1,0 +1,83 @@
+{
+  "abq_uses_pinned_reference_cumulative_improve_semantics": true,
+  "archived_reset_semantics_regression": {
+    "fixed_abq_scalar_differences": 12,
+    "kat_coordinates_matching": 65,
+    "kat_coordinates_total": 80,
+    "kat_mismatch_coordinates": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      60,
+      61,
+      62,
+      63
+    ],
+    "quotient_scalar_differences": 144,
+    "status": "archived reset-on-each-retry helper is verifier-incompatible",
+    "wrong_semantics_rejected": true
+  },
+  "attack_reduction_correspondence": {
+    "affine_constraint_rank": 30,
+    "affine_kernel_dimension": 102,
+    "affine_pivot_count": 30,
+    "forgery_output": false,
+    "format_offset_check": {
+      "alternating_dimension": 6,
+      "deterministic": true,
+      "skew_image_rank": 3
+    },
+    "left_kernel_dimension": 30,
+    "literal_verifier_cross_checks": 32,
+    "public_inputs_only": true,
+    "quotient_rank": 50,
+    "quotient_shape": [
+      80,
+      50
+    ],
+    "relation_rho": [
+      1,
+      8,
+      9,
+      14
+    ],
+    "residual_quadratics": 50,
+    "residual_system_solved": false,
+    "residual_variables": 102,
+    "status": "official-key reduction correspondence; residual MQ not solved; no forgery",
+    "substituted_verifier_random_checks": 32
+  },
+  "kat_file": "PQCsignKAT_SNOVA_28_5_19_4.txt",
+  "kat_public_key_sha256": "d4127a95a84e3506c6b14494c68421996c426c4f0dbebf7f9c85443e872ba1e9",
+  "kat_record": 0,
+  "known_answer_verification": {
+    "accepted": true,
+    "altered_message_rejected": true,
+    "hash_matches_public_map": true,
+    "message_bytes": 33,
+    "rejection_threshold": 0,
+    "signature_bytes": 298,
+    "signature_round_trip": true,
+    "status": "known-answer verification only; supplied signer output",
+    "symmetric_blocks": 0
+  },
+  "parameter": {
+    "l": 4,
+    "name": "I-square-l4",
+    "o": 5,
+    "r": 4,
+    "target": 143,
+    "v": 28
+  },
+  "public_expansion_uses_secret": false,
+  "public_key_bytes": 576,
+  "scope": "public-key/verifier/reduction correspondence only; KAT signature is not a forgery; attack residual system is not solved"
+}

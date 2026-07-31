@@ -93,7 +93,7 @@
         "root_probability_log2": -1.124282335886619,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -95.63871243382994,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 142.60637434627938,
       "fast": {
@@ -143,7 +143,7 @@
         ],
         "root_probability_log2": -42.48038259128509,
         "spectrum_failure_log2": -138.1179875682658,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "I",
       "name": "I-b",
@@ -205,7 +205,7 @@
         "root_probability_log2": -1.1248680962607978,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -95.63871243382994,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 142.60696010665424,
       "fast": {
@@ -255,7 +255,7 @@
         ],
         "root_probability_log2": -42.48074819378871,
         "spectrum_failure_log2": -138.1179875682658,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "I",
       "name": "I-a",
@@ -317,7 +317,7 @@
         "root_probability_log2": -1.1242823358865053,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -178.38596528265407,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 185.4500450070159,
       "fast": {
@@ -367,7 +367,7 @@
         ],
         "root_probability_log2": -59.47253586594144,
         "spectrum_failure_log2": -237.85695047086426,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "III",
       "name": "III-b",
@@ -429,7 +429,7 @@
         "root_probability_log2": -1.125116611125577,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -211.92712590619328,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 185.45087928225485,
       "fast": {
@@ -479,7 +479,7 @@
         ],
         "root_probability_log2": -59.47305673258279,
         "spectrum_failure_log2": -271.3981110944035,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "III",
       "name": "III-a",
@@ -648,7 +648,7 @@
         "root_probability_log2": -1.12532962882824,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -294.6743787550174,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 227.5604061179779,
       "fast": {
@@ -698,7 +698,7 @@
         ],
         "root_probability_log2": -76.4653433317194,
         "spectrum_failure_log2": -371.13707399700183,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "V",
       "name": "V-a",
@@ -760,7 +760,7 @@
         "root_probability_log2": -1.124282335886619,
         "route": "direct complete ordinary square",
         "spectrum_failure_log2": -328.2155393785565,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "direct_complete_square_exponent": 227.55935882503672,
       "fast": {
@@ -810,7 +810,7 @@
         ],
         "root_probability_log2": -76.46468927680496,
         "spectrum_failure_log2": -404.67823462054116,
-        "structural_preflight": "required exact public certificate"
+        "structural_preflight": "required exact public preflight"
       },
       "level": "V",
       "name": "V-b",

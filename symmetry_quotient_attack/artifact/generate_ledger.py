@@ -156,7 +156,7 @@ def l4_profile(name:str,params:tuple[int,int,int,int],ref:int,s:int,a:int,b:int)
     return {'name':name,'level':name.split('-')[0],'parameters':list(params),'profile':[s,a,b],
             'h':h,'K':K,'eta':[eta.numerator,eta.denominator],'root_probability_log2':lg2(root),
             'jacobian_success_lower':float(pjac),'jacobian_failure_upper':float(jacfail),'jacobian_failure_log2':lg2(jacfail),
-            'spectrum_failure_log2':lg2(eps),'structural_preflight':'required exact public certificate',
+            'spectrum_failure_log2':lg2(eps),'structural_preflight':'required exact public preflight',
             'homotopy':hom,'per_good_key_log2_AXN':lg2(W),'fixed_core_normalized_log2_AXN':lg2(norm),
             'headroom':ref-lg2(norm),'B_log2':lg2(B),'Bplus_log2':lg2(Bp)}
 
@@ -188,7 +188,7 @@ def l4_complete_square(name:str,params:tuple[int,int,int,int],ref:int)->dict[str
             'route':'direct complete ordinary square','h':h,'K':K,
             'eta':[eta.numerator,eta.denominator],'root_probability_log2':lg2(root),
             'spectrum_failure_log2':lg2(eps),
-            'structural_preflight':'required exact public certificate',
+            'structural_preflight':'required exact public preflight',
             'homotopy':hom,'per_good_key_log2_AXN':lg2(W),
             'normalized_log2_AXN':lg2(norm),'headroom':ref-lg2(norm),
             'B_log2':lg2(B),'Bplus_log2':lg2(Bp)}

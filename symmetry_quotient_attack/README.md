@@ -1,77 +1,62 @@
-# The Symmetry-Quotient Attack on Odd-Characteristic SNOVA
+# A Symmetry-Quotient Reduction for Odd-Characteristic SNOVA: Exact Structure and Conditional Recovery Ledgers
 
-This package contains the final correctness-audited paper and deterministic
-reproducibility artifact. It contains exactly one LaTeX manuscript source,
-`paper.tex`.
+This directory contains the manuscript, source, and reproducibility artifact.
+The paper specifies exact common-column reductions and conditional recovery
+routes. It does not claim a production-size attack run or a complete-gate
+security crossing.
 
-## Build
+## Requirements
 
-Requirements: Python 3.10 or newer, `latexmk`, Biber, and a TeX distribution
-including `biblatex`, `cleveref`, `mathtools`, and `tabularx`.
+- Python 3.10 or newer
+- NumPy for the verifier-correspondence and reduced-parameter tests
+- `latexmk`, BibTeX, and a TeX distribution with `natbib`, `cleveref`,
+  `mathtools`, and `tabularx`
 
-```sh
-make
-```
-
-## Verify
+## Build and verify
 
 ```sh
 make verify
+make
 ```
 
-The verification target:
+`make verify` runs three separately identified classes of checks:
 
-- independently recomputes all nine direct and adaptive homotopy ledgers,
-  conditional on the exact public structural preflights;
-- checks exact official target-rejection sampling;
-- exhaustively checks the 150-gate F19 multiplier on all 361 canonical pairs;
-- checks the F19^2 and F19^4 tower identities and circuit recurrences;
-- checks dimensions, spectrum tails, separator choices, adaptive mixtures,
-  and both repair-floor tables;
-- exhaustively checks the F19^2 quadratic-root routine;
-- exhaustively enumerates the official ell=2 conditional Frobenius-channel
-  atoms; and
-- recomputes the expected-operation and capped-tree Level-I Just Guess
-  ledgers from the corrected conditional atom bound;
-- verifies and bit-for-bit regenerates a reduced-parameter serialized forgery;
-- cross-checks two differently organized public-map evaluators, canonical
-  signature parsing, rejection, target hashing, and mutation negative controls;
-  and
-- checks the committed eight-key reduced-attack batch record.
+- formula, ledger, target-sampling, dimension, and repair-floor consistency;
+- exhaustive `F_19` scalar-netlist and quadratic-root checks, plus tower
+  identity/recurrence checks;
+- implementation-composition checks: an official Level-I KAT
+  verifier/reduction harness and an unofficial reduced-parameter end-to-end
+  forgery.
 
-The reduced attack uses NumPy.  It is a clean Python transcription of the
-pinned reference formulas, not a compiled invocation of the upstream C code.
+The KAT harness expands the public key from `pk`, validates the supplied KAT
+signature and all 80 hash coordinates, checks the common-column decomposition,
+and obtains a rank-50 residual system in 102 variables. It does not solve that
+system and does not output a forgery.
 
-The checker does not prove the affine reduction, the random-XOF idealization,
-the cited symbolic-homotopy theorem, correspondence with a compiled published-parameter SNOVA
-verifier, realized fixed-key coefficient-rank hypotheses, or upper bounds on
-`kappa_hom`, `kappa_JG`, or `kappa_JG_cap`.
+The reduced test uses `q=19` and the Version 2.3 indexed public XOF, fixed ABQ,
+message prehash, packing, public-map, signature-layout, and rejection
+conventions at the unofficial shape `(v,o,ell,r)=(2,1,2,2)`. It imposes the
+zero-offset relation `X_i=[u_i|0]`, interpolates the complete restricted map,
+checks that its image equals the explicit rank-three quotient image, filters
+one target-consistency coordinate before enumeration, and searches public
+three-dimensional slices. The recomputed main case and eight fresh-key cases
+pass positive and negative checks; a separate stress checker reruns 24 fresh
+forgeries and a 100-key rank census. Verification uses a distinct literal path
+in the shared KAT-anchored Python transcription, not the upstream C verifier.
+This validates composition at reduced size, not independent verifier
+correspondence or production feasibility.
 
-## Regenerate generated ledgers
+## Regenerate deterministic ledgers
 
 ```sh
 make regenerate
 make verify
 ```
 
-`artifact/generate_ledger.py` is self-contained and assigns no random
-probability to SNOVA's fixed outer maps. The ell=4 figures are conditional on
-the exact public structural preflight stated in the paper.
+The formula checkers are internal consistency tools. They do not establish the
+inherited homotopy hypothesis `H_hom`, the idealized XOF-transcript model,
+fixed-key spectrum events, or bounds on `kappa_hom`, `kappa_JG`, or
+`kappa_JG_cap`.
 
-`artifact/research/verify_l2_channel_conditional_atoms.py` regenerates the
-exact weighted conditional-atom ledger used by the Just Guess second moment.
-
-`artifact/reduced_attack/` contains the executable reduced-row attack,
-serialized transcript, independent direct verifier, deterministic checker,
-and an eight-key batch run.  The attack receives only serialized public-key
-bytes after key generation.
-
-## Audit documents
-
-- `FINAL_CORRECTNESS_AUDIT.md` records the adversarial re-derivation, the two
-  additional defects found, and all residual limitations.
-- `EDITOR_PORT_REPORT.md` records which editor corrections were validated and
-  ported.
-- `REFEREE_RESPONSE.md` explains how the paper addresses the Mode-A report.
-- `RESEARCH_AUDIT.md` documents the focused solver research and revised Just
-  Guess sensitivity.
+`REVISION_RESPONSE_2026-07-31.md` is a revision record, not independent
+evidence.

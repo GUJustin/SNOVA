@@ -1,0 +1,443 @@
+{
+  "attack_boundary": "forge(public_key, message, public_rng) receives no secret key or planted witness",
+  "batch_regression": {
+    "records": [
+      {
+        "public_key_sha256": "b938ff23d3c1c6a2322a3789bcb8a5e55fb3bc805161f6efc14644bbe26612e3",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 22,
+        "signature_sha256": "07998f80bf82b097cc78dec0a03fac8bc0129b2060019b24eacabdadbf4044dd",
+        "slices_tested": 1,
+        "trial": 0,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "e2e7ac63640a75080ef543dbc9bfeb93a1c8bef51848936cacedad6657d7388e",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 7,
+        "signature_sha256": "091761ec364d84d77b272fa66e9b2cd08e7811e52cd2a5cc9ff7478be121df9c",
+        "slices_tested": 2,
+        "trial": 1,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "27f231e0809fb83d3d9cdef6b6c08387f68a1244fe379ba86c0f241b529d510f",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 16,
+        "signature_sha256": "c660865675b2ec455ebff8fd6408d84bbd43c92224b7b5c7dad0b2c054a02c20",
+        "slices_tested": 2,
+        "trial": 2,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "296e000a4431a392da4cba1955fc27c3ad0261714b02428a027032984ee60592",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 48,
+        "signature_sha256": "9cce7e828817c46a5349f6a16720e1b25fd52736e001e7ba888e5210760854f7",
+        "slices_tested": 2,
+        "trial": 3,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "fe364e30d38d406bc6d18ef4dd3b99e2a0647d3a1e01d960cee531d63322bb0b",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 39,
+        "signature_sha256": "8a7a230bb77ff603e5967f920181680f2bce805abfc58443975afba7eeb6d8f6",
+        "slices_tested": 2,
+        "trial": 4,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "127396eae8e6ce22f1838d487de8aeda679366e70fab5ca1555b93196fda269b",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 26,
+        "signature_sha256": "3db9736b8607da2cd9e2bfdf5297a5cb6e965a72d77cb026d853eb6411d8ec55",
+        "slices_tested": 2,
+        "trial": 5,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "2bbffd7a8d5e55be2ef21bd820cd288a2a859b1c27c28d8a9d58d98413f37515",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 34,
+        "signature_sha256": "b2965bf46188e94bd1ec44cc10566c7cd45d6a10524856d08b7fff78f6cb8853",
+        "slices_tested": 1,
+        "trial": 6,
+        "verifier_accepts": true
+      },
+      {
+        "public_key_sha256": "d6eb9a014e840ef844dc2c0cb38e94c7ffe668b4e0f113e34104c1ade6a7d428",
+        "restricted_coefficient_rank": 3,
+        "salt_counter": 34,
+        "signature_sha256": "1cf1d3dc919d4a0e76c3ebaa893fb092a57e74a66a4fc1ecf148b401aaded379",
+        "slices_tested": 2,
+        "trial": 7,
+        "verifier_accepts": true
+      }
+    ],
+    "successes": 8,
+    "trials": 8
+  },
+  "implementation_boundary": "KAT-anchored Python Version 2.3 transcription with distinct staged and literal public-map evaluators; not the upstream C verifier",
+  "main_trial": {
+    "digest_hex": "7b4145a89f627344c3449181cf27827410422a724df40fd4b67e0ca9d903c5202757e2eacc75b6d1132a5c8f4704194af2fc5dc383baee748318b97ec939a1d7",
+    "key_generation": {
+      "key_seed_sha256": "6585d3bc99f9ece4568626c1d27d86db1a2c37d0535df913b054267d539ea4c6",
+      "pk_seed_hex": "e74b264b7fadf91c87a567a16396f6da",
+      "public_key_bytes": 18
+    },
+    "message_hex": "63686f73656e206d65737361676520666f72207265647563656420534e4f564120666f7267657279",
+    "negative_tests": {
+      "altered_message_rejected": true,
+      "altered_public_key_rejected": true,
+      "altered_salt_rejected": true,
+      "altered_signature_rejected": true
+    },
+    "public_key_hex": "e74b264b7fadf91c87a567a16396f6daa904",
+    "public_key_sha256": "63db225c241fb589d98361bf4cc1f1e0f885d1d26f6d552d09e9a9a246f8b782",
+    "signature_hex": "c4b76522ef5e0004000000000000000000000000000000",
+    "signature_sha256": "a674cfbf8f2bd0e862c66c892d4da7fceff57fbebdd4c8a475cc0ecca7008cce",
+    "solve": {
+      "common_column_vector_u": [
+        14,
+        3,
+        5,
+        4,
+        9,
+        17
+      ],
+      "explicit_quotient_labels": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ],
+      "explicit_quotient_rank": 3,
+      "monomial_pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "output_row_transform": [
+        [
+          10,
+          3,
+          17,
+          0
+        ],
+        [
+          9,
+          18,
+          1,
+          0
+        ],
+        [
+          5,
+          8,
+          2,
+          0
+        ],
+        [
+          11,
+          2,
+          8,
+          1
+        ]
+      ],
+      "quotient_image_matches_interpolation": true,
+      "reduced_quadratic_coefficients": [
+        [
+          6,
+          17,
+          7,
+          16,
+          15,
+          5,
+          8,
+          17,
+          5,
+          9,
+          7,
+          16,
+          3,
+          2,
+          13,
+          13,
+          18,
+          11,
+          10,
+          8,
+          5
+        ],
+        [
+          4,
+          1,
+          13,
+          4,
+          1,
+          0,
+          2,
+          15,
+          3,
+          6,
+          3,
+          2,
+          8,
+          11,
+          16,
+          5,
+          14,
+          0,
+          9,
+          12,
+          11
+        ],
+        [
+          7,
+          1,
+          7,
+          7,
+          7,
+          4,
+          0,
+          9,
+          18,
+          12,
+          6,
+          3,
+          11,
+          2,
+          18,
+          5,
+          9,
+          2,
+          10,
+          15,
+          6
+        ],
+        [
+          3,
+          12,
+          12,
+          7,
+          5,
+          8,
+          3,
+          15,
+          4,
+          2,
+          2,
+          5,
+          15,
+          16,
+          4,
+          16,
+          6,
+          15,
+          1,
+          15,
+          8
+        ]
+      ],
+      "restricted_coefficient_rank": 3,
+      "salt_counter": 4,
+      "salt_hex": "04000000000000000000000000000000",
+      "signature_matrices": [
+        [
+          [
+            14,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        [
+          [
+            9,
+            0
+          ],
+          [
+            17,
+            0
+          ]
+        ]
+      ],
+      "slice_matrix": [
+        [
+          6,
+          5,
+          9
+        ],
+        [
+          8,
+          1,
+          5
+        ],
+        [
+          11,
+          18,
+          4
+        ],
+        [
+          8,
+          6,
+          11
+        ],
+        [
+          5,
+          17,
+          3
+        ],
+        [
+          17,
+          11,
+          0
+        ]
+      ],
+      "slice_point": [
+        7,
+        8,
+        3
+      ],
+      "slices_tested": 5,
+      "target": [
+        2,
+        15,
+        17,
+        2
+      ],
+      "target_after_output_transform": [
+        12,
+        1,
+        12,
+        0
+      ],
+      "target_consistency_dimension": 1,
+      "verifier_output": [
+        2,
+        15,
+        17,
+        2
+      ]
+    },
+    "verifier_accepts": true
+  },
+  "official_parameter_set": false,
+  "parameters": {
+    "K": 3,
+    "M": 4,
+    "ell": 2,
+    "m1": 1,
+    "n": 3,
+    "o": 1,
+    "q": 19,
+    "r": 2,
+    "v": 2
+  },
+  "production_size_cost_evidence": false,
+  "scope": "non-planted zero-offset end-to-end forgery at a deliberately reduced, unofficial shape; not production-feasibility evidence"
+}
