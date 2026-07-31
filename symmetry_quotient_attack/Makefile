@@ -10,6 +10,7 @@ paper.pdf: paper.tex references.bib
 
 verify:
 	$(PYTHON) artifact/verify_referee_revision.py
+	$(PYTHON) artifact/reduced_attack/verify_transcript.py
 
 regenerate:
 	$(PYTHON) artifact/generate_ledger.py
@@ -17,6 +18,8 @@ regenerate:
 	$(PYTHON) artifact/research/verify_l2_channel_conditional_atoms.py
 	$(PYTHON) artifact/research/jg_revised_ledger.py
 	$(PYTHON) artifact/research/jg_capped_tree_ledger.py
+	$(PYTHON) artifact/reduced_attack/attack.py --out artifact/reduced_attack/transcript.json
+	$(PYTHON) artifact/reduced_attack/run_batch.py
 
 clean:
 	$(LATEXMK) -C paper.tex

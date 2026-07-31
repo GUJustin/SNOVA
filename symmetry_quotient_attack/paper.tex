@@ -68,7 +68,7 @@
   Scott Kominers\thanks{Harvard University and a16z crypto research} \and
   Quang Dao\thanks{Carnegie Mellon University and LayerZero Labs}%
 }
-\date{30 July 2026}
+\date{31 July 2026}
 
 \begin{document}
 \maketitle
@@ -114,8 +114,12 @@ numerically weakest row by a substantially narrower, transcript-checkable
 premise, but it is not presented as an unconditional complete-gate break.
 
 The symmetry quotient, affine reduction, target split, and reconstruction are
-exact.  Key-density and candidate-dispersion statements are separated from
-those identities and are proved in the code-faithful random-XOF model or
+exact.  The artifact also executes an end-to-end forgery on the reduced row
+$(2,1,19,2,2)$, from serialized public key through quotient extraction and
+solving to a serialized signature accepted by a separately organized direct
+verifier; the harness succeeds on eight further deterministic toy keys.  This
+validates composition, not production-scale cost.  Key-density and candidate-
+dispersion statements are proved in the code-faithful random-XOF model or
 replaced by explicit public preflights.  Keeping symmetry and the present
 coupling requires $45.00\%$--$60.71\%$ more outputs merely to restore the
 former feature cap and eliminate the guaranteed full-affine square.
@@ -279,6 +283,22 @@ do not claim a production timing, a low-memory homotopy theorem, an
 unconditional all-nine complete-gate break, or polynomial-time recovery: the
 displayed B\'ezout and guessing quantities remain exponential.
 
+\paragraph{Executable reduced-parameter forgery.}
+The artifact now instantiates the whole public pipeline on the reduced row
+$(v,o,q,\ell,r)=(2,1,19,2,2)$ using the pinned reference implementation's
+$q=19$ algebra, fixed-ABQ expansion, hidden-UOV public-key derivation,
+base-$19$ serialization, target hash, salt, and rejection convention
+\cite{SNOVA23}.  The attack receives an $18$-byte serialized public key and a
+chosen digest, derives a rank-$3$ restricted quotient with one target-
+consistency coordinate, searches public slices, and outputs a canonical
+$23$-byte signature.  A separately organized direct verifier accepts it and
+rejects both a one-byte signature mutation and a salt mutation.  The committed
+transcript reproduces bit for bit, and the same harness succeeds on eight
+additional deterministic toy keys.  This does not extrapolate the running time
+to published parameters, but it checks that the reduction, target filtering,
+reconstruction, serialization, format rule, and verification compose in one
+executable attack.
+
 \paragraph{Design consequence.}
 A repair retaining symmetry cannot be a small rejection tweak.  Under the
 current parameter coupling, simultaneously restoring the former ordered-label
@@ -302,6 +322,9 @@ The paper makes five principal contributions.
       theorems and an all-nine break-even ledger, and it instantiates a
       separate explicit Boolean-ledger Level-I sensitivity using Just Guess and the
       quotient-channel split.
+\item It executes a complete reduced-parameter forgery from serialized public
+      key to serialized, verifier-accepted signature and reproduces the attack
+      on eight additional deterministic toy keys.
 \item It proves combined structural repair floors and retains a complementary
       streamed-XL branch for readers interested in explicit low-state
       arithmetic rather than the selected-degree-free headline.
@@ -315,8 +338,9 @@ exact affine-column and output reductions.  \Cref{sec:stable-rejection}
 constructs fresh slices, handles rejection, and explains exact target
 sampling.  The full-domain root and complete-square theorems begin in
 \Cref{sec:v7-overview}; the explicit Boolean-ledger Level-I route appears in
-\Cref{sec:jg-finite-gate}.  The low-state XL complement, implementation
-evidence, countermeasures, and conclusion follow afterward.
+\Cref{sec:jg-finite-gate}.  The low-state XL complement and the executable
+reduced-parameter forgery appear before the implementation-evidence,
+countermeasure, and conclusion sections.
 
 \section{Background and relation to prior work}\label{sec:background}
 
@@ -2656,30 +2680,76 @@ Random-XOF theorem & Maximum-atom and fresh-coefficient rank calculations & Dens
 Fixed-key certificate & Projective rank histogram and determinant transcript & Exact replacement for the random-XOF spectrum and fast-core density statements on one key.\\
 Homotopy ledger & Exact B\'ezout numbers, companion coefficients, field thresholds, and straight-line-program counts & Unit-leading arithmetic theorem; not a wall-clock or low-memory implementation.\\
 Circuit certificate & Exhaustive scalar truth table and exact tower identities & Correctness and size of the charged multiplication primitives.\\
+Reduced end-to-end forgery & Serialized toy public key, quotient extraction, salt search, slice solve, serialized signature, and direct verification & Executable composition of the claimed attack pipeline at reduced dimensions; not a production-size cost measurement.\\
 Streamed XL & Exact Hilbert coefficients, rows, columns, and operator products & Conditional low-state method; no unreproduced production profile is used in a headline.\\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\subsection{Reduced-parameter end-to-end execution}
+\label{sec:reduced-e2e}
+The release includes an executable attack on
+\[
+  (v,o,q,\ell,r)=(2,1,19,2,2),\qquad n=3,\quad M=4,\quad K=3.
+\]
+The harness follows the odd-prime symmetric $\ell=r=2$ formulas of the
+pinned Version~2.3 reference source~\cite{SNOVA23}.  It retains the official
+matrix $S$, fixed-ABQ SHAKE expansion, hidden-UOV derivation of $P_{22}$,
+base-$19$ public-key and signature packing, target hash, $16$-byte salt, and
+$\ell=2$ rejection rule.  Only the dimensions are reduced.
+
+Key generation produces an $18$-byte serialized public key.  The attack
+function is then called with only those public bytes and a chosen digest.  It
+expands the public key, restricts to $X_i=[u_i\mid0]$, and interpolates the
+complete four-coordinate verifier on the six coordinates of $u$.  Row
+reduction finds rank exactly $3$, leaving one target-consistency coordinate.
+The harness varies the public salt until the hash target passes that equation,
+then enumerates $19^3$ points on public three-dimensional slices.  The
+committed run finds a solution after one slice and serializes it as a
+$23$-byte signature.
+
+Verification is not performed by calling the evaluator used for interpolation.
+A second routine directly evaluates every
+$X_i^\transpose S_a^\transpose P_{ij}S_bX_j$ term, parses the reference-format
+public key and signature bytes, enforces canonical packing and the rejection
+rule, recomputes the target, and accepts the forgery.  The two evaluators are
+cross-checked on unrestricted random signatures and on the restricted
+interpolation points.  One-byte mutations of the signature and salt are
+rejected.  A deterministic checker regenerates the transcript bit for bit;
+an additional batch records successful forgeries on eight of eight further
+deterministic toy keys.
+
+This experiment closes an implementation-composition gap, not the asymptotic
+or concrete-cost gap.  It is an independent Python transcription rather than
+a compiled call into the upstream C implementation, and it neither runs the
+published dimensions nor measures $\kappa_{\rm hom}$ or $\kappa_{\rm JG}$.
+Its evidentiary role is narrower: the public-key expansion, quotient collapse,
+target-consistency filter, solver wrapper, signature reconstruction,
+serialization, format check, and verifier equation have been executed together
+on scheme-faithful reduced instances.
 
 \subsection{Exact checks in the release}
 The release contains machine-readable ledgers and deterministic checkers.
 The main all-nine checker recomputes dimensions, separator choices, adaptive
 mixtures, target-sampling acceptance, and repair floors, while the separate
 field-circuit checker verifies the tower identities and all $19^2=361$
-scalar products.  The new Just Guess checker independently recomputes the
+scalar products.  The Just Guess checker independently recomputes the
 expected-operation Boolean ledger, the capped-tree sensitivity, the
-quadratic-root truth table, the cross-channel
-second moment, and every displayed break-even threshold.  The release does
-not claim that these consistency checks instantiate an official public key or
-run the production verifier; those are distinct fixed-key certificate tasks.
+quadratic-root truth table, the cross-channel second moment, and every
+displayed break-even threshold.  The reduced-attack checker independently
+parses and verifies the committed serialized forgery, checks negative controls,
+and reruns the complete deterministic attack.  This instantiates a reduced
+reference-format public key, but not an official published-parameter key or
+the compiled upstream verifier; those remain distinct fixed-key certificate
+tasks.
 The public leading-Jacobian preflight is deterministic on a fixed key; its
 failure invokes a complete-core fallback.  The separate structural preflight
-is an exact condition for the displayed ell=4 routes and is not assigned a
+is an exact condition for the displayed $\ell=4$ routes and is not assigned a
 random success probability in the ledger.
 
 \subsection{What is not claimed}
-The release does not contain a production-size end-to-end forgery or a
-measured symbolic-homotopy implementation.  In particular, the paper does not
+The release contains a reduced-parameter end-to-end forgery, but not a
+production-size forgery or a measured symbolic-homotopy implementation.  In particular, the paper does not
 claim that $\kappa_{\rm hom}$ is small, that the direct parametrization fits in
 commodity memory, or that the unit-leading exponent is a complete NIST gate
 count.  The $\AXN$ basis prices the multiplication schedule selected by the
@@ -2708,7 +2778,9 @@ A deterministic record for one public key consists of:
 \item the reconstructed signature and the unmodified verifier transcript.
 \end{enumerate}
 Such a record would remove the random-XOF key-density statement for that key
-and directly measure $\kappa_{\rm hom}$ and resident state.
+and directly measure $\kappa_{\rm hom}$ and resident state.  The reduced
+transcript in \Cref{sec:reduced-e2e} realizes the same composition pattern at
+toy dimensions, but it is not a substitute for a published-parameter record.
 
 \section{A combined structural repair barrier}
 \label{sec:upgrade-repair}
@@ -2961,6 +3033,15 @@ when $\log_2\kappa_{\rm JG}<7.575$.  This is a substantially narrower and
 fixed-key-testable premise than $\kappa_{\rm hom}$, but it is still a premise,
 not an unconditional complete-gate break.
 
+The reduced-parameter execution complements these cost theorems with a
+different kind of evidence.  On the scheme-faithful row
+$(2,1,19,2,2)$, the artifact starts from a serialized public key, discovers
+the predicted rank-$3$ quotient and consistency equation, searches a salt and
+public slice, emits a canonical serialized signature, and passes a separately
+organized direct verifier.  This does not establish production-scale cost, but
+it rules out a class of composition and convention errors that formula-only
+artifacts cannot detect.
+
 A repair retaining the architecture cannot be a small rejection patch.
 Restoring the former feature cap and eliminating the guaranteed full-affine
 square already requires $45.00\%$--$60.71\%$ more verifier outputs under the
@@ -3120,9 +3201,11 @@ source, bibliography, compiled PDF, build instructions, and hashes.  The
       all-nine conditional homotopy ledger;
 \item the complete $150$-gate scalar multiplier netlist and tower checks;
 \item the Just Guess expected-operation and capped ledgers, the quadratic-root
-      check, and the exact conditional Frobenius-channel atom enumeration; and
-\item a wrapper checker that runs both the all-nine and referee-revision
-      checks.
+      check, and the exact conditional Frobenius-channel atom enumeration;
+\item the reduced-parameter attack, serialized transcript, independent direct
+      verifier, negative controls, and eight-key batch record; and
+\item a wrapper checker that runs the all-nine, referee-revision, and reduced
+      end-to-end checks.
 \end{itemize}
 
 A clean reproduction is:

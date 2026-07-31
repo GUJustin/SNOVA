@@ -32,10 +32,18 @@ The verification target:
 - exhaustively enumerates the official ell=2 conditional Frobenius-channel
   atoms; and
 - recomputes the expected-operation and capped-tree Level-I Just Guess
-  ledgers from the corrected conditional atom bound.
+  ledgers from the corrected conditional atom bound;
+- verifies and bit-for-bit regenerates a reduced-parameter serialized forgery;
+- cross-checks two differently organized public-map evaluators, canonical
+  signature parsing, rejection, target hashing, and mutation negative controls;
+  and
+- checks the committed eight-key reduced-attack batch record.
+
+The reduced attack uses NumPy.  It is a clean Python transcription of the
+pinned reference formulas, not a compiled invocation of the upstream C code.
 
 The checker does not prove the affine reduction, the random-XOF idealization,
-the cited symbolic-homotopy theorem, correspondence with the pinned SNOVA
+the cited symbolic-homotopy theorem, correspondence with a compiled published-parameter SNOVA
 verifier, realized fixed-key coefficient-rank hypotheses, or upper bounds on
 `kappa_hom`, `kappa_JG`, or `kappa_JG_cap`.
 
@@ -52,6 +60,11 @@ the exact public structural preflight stated in the paper.
 
 `artifact/research/verify_l2_channel_conditional_atoms.py` regenerates the
 exact weighted conditional-atom ledger used by the Just Guess second moment.
+
+`artifact/reduced_attack/` contains the executable reduced-row attack,
+serialized transcript, independent direct verifier, deterministic checker,
+and an eight-key batch run.  The attack receives only serialized public-key
+bytes after key generation.
 
 ## Audit documents
 
