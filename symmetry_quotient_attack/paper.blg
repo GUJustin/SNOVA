@@ -1,15 +1,46 @@
-[0] Config.pm:307> INFO - This is Biber 2.17
-[1] Config.pm:310> INFO - Logfile is 'paper.blg'
-[190] biber-darwin:340> INFO - === Wed Jul 29, 2026, 22:43:40
-[227] Biber.pm:418> INFO - Reading 'paper.bcf'
-[480] Biber.pm:972> INFO - Found 23 citekeys in bib section 0
-[502] Biber.pm:4383> INFO - Processing section 0
-[520] Biber.pm:4574> INFO - Looking for bibtex file 'references.bib' for section 0
-[523] bibtex.pm:1713> INFO - LaTeX decoding ...
-[624] bibtex.pm:1518> INFO - Found BibTeX data source 'references.bib'
-[1148] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[1149] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[1149] Biber.pm:4203> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[1152] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
-[1216] bbl.pm:654> INFO - Writing 'paper.bbl' with encoding 'UTF-8'
-[1257] bbl.pm:757> INFO - Output to paper.bbl
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: paper.aux
+The style file: unsrtnat.bst
+Database file #1: references.bib
+You've used 22 entries,
+            2481 wiz_defined-function locations,
+            722 strings with 9999 characters,
+and the built_in function-call counts, 10365 in all, are:
+= -- 922
+> -- 548
+< -- 28
++ -- 208
+- -- 164
+* -- 830
+:= -- 1594
+add.period$ -- 97
+call.type$ -- 22
+change.case$ -- 44
+chr.to.int$ -- 22
+cite$ -- 22
+duplicate$ -- 496
+empty$ -- 891
+format.name$ -- 196
+if$ -- 2267
+int.to.chr$ -- 1
+int.to.str$ -- 23
+missing$ -- 15
+newline$ -- 140
+num.names$ -- 66
+pop$ -- 190
+preamble$ -- 1
+purify$ -- 22
+quote$ -- 0
+skip$ -- 331
+stack$ -- 0
+substring$ -- 472
+swap$ -- 150
+text.length$ -- 18
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 154
+warning$ -- 0
+while$ -- 83
+width$ -- 0
+write$ -- 348
