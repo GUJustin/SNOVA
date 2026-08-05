@@ -29,10 +29,10 @@
   linkcolor=deepblue,
   citecolor=deepblue,
   urlcolor=deepblue,
-  pdftitle={A Symmetry-Quotient Reduction for Odd-Characteristic SNOVA: Exact Structure and Conditional Recovery Ledgers},
+  pdftitle={Symmetric Public Matrices Create Smaller Forgery Systems in Odd-Characteristic SNOVA},
   pdfauthor={Justin Thaler, Kai Zhang, Scott Kominers, Quang Dao},
   pdfsubject={Cryptanalysis of SNOVA Version 2.3},
-  pdfkeywords={SNOVA, multivariate signatures, symmetry quotient, conditional recovery, NIST PQC}
+  pdfkeywords={SNOVA, multivariate signatures, symmetric public matrices, forgery, NIST PQC}
 }
 
 \newtheorem{theorem}{Theorem}[section]
@@ -51,9 +51,8 @@
 \newcommand{\transpose}{\mathsf T}
 \newcommand{\SNOVA}{\textsf{SNOVA}}
 \newcommand{\AXN}{\mathsf{AXN}}
-\newcommand{\attacktitle}{A Symmetry-Quotient Reduction for
-  Odd-Characteristic \texorpdfstring{\SNOVA}{SNOVA}:\\
-  Exact Structure and Conditional Recovery Ledgers}
+\newcommand{\attacktitle}{Symmetric Public Matrices Create Smaller Forgery
+  Systems in Odd-Characteristic \texorpdfstring{\SNOVA}{SNOVA}}
 
 \title{\attacktitle}
 \author{%
@@ -68,41 +67,33 @@
 \maketitle
 
 \begin{abstract}
-After the attacker-imposed common-column restriction used in affine-column
-attacks, odd-characteristic ($q=19$) \SNOVA{} Version~2.3 loses quadratic
-dimension.  If $A=\F_q[S]$ has dimension $d$, symmetry makes the restricted
-scalar features indexed by $(\xi,\eta)$ and $(\eta,\xi)$ identical, so the
-$d^2$ labels factor through $\Sym^2(A)$ and span at most
-$\binom{d+1}{2}$ dimensions: $16$ becomes $10$ for $\ell=4$, and $4$ becomes
-$3$ for $\ell=2$.  This is not a rank bound on the unrestricted
-matrix-valued verifier.  Conditional on exact public quotient/rank preflights,
-an output split yields square residual systems while retaining every verifier
-equation and the original rejection rule.
+\SNOVA{} is a multivariate signature scheme that compresses the public key of
+Unbalanced Oil and Vinegar by representing variables and coefficients with
+small matrices.  After wedge attacks weakened its characteristic-two design,
+\SNOVA{} adopted odd-prime fields and symmetric public matrices.  This paper
+shows that the symmetry creates a different weakness in the public verifier.
 
-Under the explicitly inherited, unproved hypothesis $\mathsf H_{\rm hom}$, a
-finite-cardinality symbolic-homotopy adaptation gives conditional
-selected-degree-free recovery routes.  Their worst adaptive exponents are
-$132.188$, $183.795$, and $233.844$ in a unit-leading multiplication schedule,
-before an unmeasured multiplier $\kappa_{\rm hom}$; they are break-even ledgers,
-not complete classical-gate bounds.  A separate Level-I $\ell=2$ Boolean
-sensitivity applies the published \emph{Just Guess} transformation.  Exact
-enumeration of the official local channel transform bounds every nonzero
-conditional cross-channel functional atom by $49/829$.  Under the published
-random-system premise, the per-trial ledger is below $2^{132.047}$ gates.  If a
-trial supplies at least $19^{16}/4$ sign-canonical diagonal roots, a second
-moment gives success probability above $0.0961$ and cost below
-$2^{135.425325}\kappa_{\rm JG}$.  Candidate abundance, restarts, and excess
-processing remain inside the unmeasured $\kappa_{\rm JG}$; a sufficient nominal
-crossing condition is $\log_2\kappa_{\rm JG}<7.574675$.
+In this paper, we analyze the common-column relation already used in
+affine-column forgery attacks.  If the public matrix algebra has dimension
+$d$, symmetry reduces the number of distinct restricted quadratic forms from
+$d^2$ to $d(d+1)/2$.  Thus sixteen forms become ten for the official
+$\ell=4$ parameters, and four become three for $\ell=2$.  We then give an
+invertible public change of output coordinates that separates these quadratics
+from the remaining affine constraints and target checks.  For every published
+$q=19$ parameter shape that passes the stated public rank checks, the attack
+reduces forgery to a quadratic system with the same number of equations and
+variables.  It preserves every verifier equation, rejection rule, and final
+verification check.
 
-The release checks formulas and circuits, instantiates the public reduction on
-one official KAT, and produces a non-planted zero-offset forgery only at an
-unofficial toy shape.  That test interpolates the complete restricted verifier
-and exercises its rank-three quotient, target filter, reconstruction, and
-rejection paths.  It neither runs a production-size solver nor demonstrates an
-EUF-CMA forgery at a published set.  The accompanying output-increase
-percentages are necessary dimension floors within the common-column model, not
-security sufficiency claims.
+The algebraic reduction is exact.  The estimates for solving the resulting
+systems are conditional.  Under an explicit unproved hypothesis inherited
+from symbolic homotopy, we obtain arithmetic exponents $132.188$, $183.795$,
+and $233.844$ before unmeasured implementation multipliers.  A separate
+Level-I analysis based on Just Guess gives a cost below
+$2^{135.425325}\kappa_{\rm JG}$ when its stated root-count condition holds.
+These are conditional estimates, not production-size forgeries.  The artifact
+checks the public reduction on one official test key and completes the attack
+only for toy parameters.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -147,19 +138,23 @@ parameter shapes.  The algebraic design choice under study is the
 odd-characteristic symmetrization inherited from Version~2.1.
 
 Odd characteristic alone is not an unexplored cryptanalytic regime.  Jin et
-al. generalized the exterior-algebra attack to arbitrary characteristic by
-introducing a reduced symmetric algebra~\cite{JinEtAl2026}.  Their attack is a
-generic UOV key-recovery method, and their concrete odd-characteristic study
-concerns QR-UOV.  It neither analyzes the symmetric public matrices of the
-current \SNOVA{} specification nor composes their effect with an
-affine-column forgery relation.
+al. give a UOV key-recovery attack in arbitrary characteristic using a reduced
+symmetric algebra~\cite{JinEtAl2026}.  Ran's latest analysis gives a different
+odd-characteristic generalization using symmetric forms, but explains that
+SNOVA's added structure requires a separate treatment~\cite{Ran2026}.  Ding,
+Li, and Tao formulate a multihomogeneous wedge attack on SNOVA that is valid in
+any characteristic, although their concrete SNOVA estimates cover only the
+even-characteristic Round~2 parameters~\cite{DingLiTao2026}.  None of these
+works analyzes the symmetric public matrices in the current $q=19$
+construction together with the affine-column forgery relation.
 
-The question is therefore what the public symmetrization does after the
-common-column restriction used in affine-column attacks.  Under this public
-restriction, the Version~2.3 verifier factors through a symmetric-square
-quotient.  An exact public output split then converts its equations into
-square residual systems for every published $q=19$ parameter shape that
-passes the stated public rank preflights.
+The question is therefore what happens when an affine-column attacker imposes
+the same common-column relation on the new symmetric verifier.  We prove that
+symmetry makes pairs of restricted quadratic forms identical.  An invertible
+public change of output coordinates then separates these quadratics from the
+remaining affine constraints and target checks.  For every published $q=19$
+parameter shape that passes the stated public rank checks, this leaves a
+quadratic system with the same number of equations and variables.
 
 This statement concerns the restricted verifier, not the unrestricted
 matrix-valued map.  Let $A=\F_q[S]$ have dimension $d$, and let
@@ -181,7 +176,7 @@ restriction (\Cref{thm:symmetry-quotient}).
 
 \subsection{Our results}
 
-\paragraph{An exact symmetry quotient.}
+\paragraph{How symmetry reduces the restricted verifier.}
 We prove that every symmetric public base form factors through
 $\Sym^2(A)$ after the common-column restriction.  The proof occurs before the
 outer public mixing, so later linear combinations cannot recover the
@@ -189,98 +184,102 @@ alternating directions that have vanished.  For the published choices
 $d=\ell$, the resulting caps are exactly those in
 \eqref{eq:intro-duplication} (\Cref{thm:symmetry-quotient,tab:parameters}).
 
-\paragraph{A verifier-preserving square reduction.}
+\paragraph{Reducing forgery to equally many equations and variables.}
 We compose the quotient with the affine-column relation of
 Beullens~\cite{Beullens2024SNOVA}.  Public row reduction separates output
 coordinates reached by the quotient quadratics from affine equations and
 target-consistency checks.  The remaining nonlinear coordinates form a
-square residual system on a public slice.  Reconstruction, rejection, and the
-final unmodified verifier check remain part of the wrapper
+quadratic system with equally many equations and variables on a public slice.
+Reconstruction, rejection, and the final unmodified verifier check remain part
+of the attack
 (\Cref{prop:exact-affine,thm:structural-preflight,thm:sq-all-nine-simple}).
 
-\paragraph{Conditional recovery ledgers.}
-We give a selected-degree-free Las Vegas recovery theorem for all published
-parameter shapes and an adaptive version that uses exact public determinant
-tests to select smaller cores.  The corresponding worst levelwise arithmetic
+\paragraph{Conditional cost estimates.}
+We give a randomized recovery algorithm that never returns an incorrect
+candidate and does not require choosing a solving degree.  It covers every
+published parameter shape.  A second version uses exact public determinant
+tests to select smaller systems.  The corresponding worst levelwise arithmetic
 exponents are $142.607$, $185.451$, and $233.844$ for the uniform square
 route, and $132.188$, $183.795$, and $233.844$ for the adaptive route
 (\Cref{thm:sq-all-nine-simple,thm:sq-all-nine}).  These values assume the
 explicit hypothesis $\mathsf H_{\rm hom}$ and omit the unmeasured multiplier
 $\kappa_{\rm hom}$.  A separate Level-I sensitivity instantiates the
 published Just Guess schedule but retains its own unmeasured
-$\kappa_{\rm JG}$ (\Cref{prop:jg-level1-gates}).  The ledgers are conditional
+$\kappa_{\rm JG}$ (\Cref{prop:jg-level1-gates}).  These are conditional
 break-even calculations, not complete classical-gate breaks.
 
 \paragraph{Evidence and design implications.}
-The artifact checks the algebra and ledgers, instantiates the public reduction
-on one official known-answer-test key, and exercises the full forgery wrapper
+The artifact checks the algebra and cost calculations, instantiates the public
+reduction on one official known-answer-test key, and exercises the full attack
 only at an unofficial toy shape.  It contains no production-size solve or
-forgery (\Cref{tab:evidence-hierarchy}).  We also derive necessary output
-floors for repairs that retain the current common-column architecture.  The
-combined floor requires increases between $45.00\%$ and $60.71\%$, while the
-narrower zero-offset condition requires increases between $101.5625\%$ and
-$144.00\%$ (\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).
-These are necessary dimension conditions for the stated repair goals, not
-sufficient conditions for security.
+forgery (\Cref{tab:evidence-hierarchy}).  We also derive the minimum output
+increases required to remove the dimension guarantee while retaining the
+current common-column architecture.  The general condition requires increases
+between $45.00\%$ and $60.71\%$.  The stronger condition for a column relation
+with zero constants requires increases between $101.5625\%$ and $144.00\%$
+(\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).  These are
+necessary dimension conditions for the stated repair goals, not sufficient
+conditions for security.
 
-The claim hierarchy is intentional.  The quotient, output split,
+The distinction between exact and conditional claims is intentional.  The
+quotient, output change,
 reconstruction, and verifier check are exact public computations once their
-displayed rank checks pass.  The fixed-layout and realized-rank conditions
-are deterministic preflights, but this paper does not estimate their pass
-rate over official keys.  Root-abundance statements use either an idealized
-transcript model or a fixed-key certificate.  Recovery costs additionally
-depend on $\mathsf H_{\rm hom}$ and the unmeasured implementation multipliers.
-Nothing in the paper establishes an unconditional production-size forgery.
+displayed rank checks pass.  The required matrix layouts and ranks are
+deterministic public checks, but this paper does not estimate how often
+official keys pass them.  Claims about the number of acceptable roots use
+either an idealized transcript model or a certificate for one fixed key.
+Recovery costs additionally depend on $\mathsf H_{\rm hom}$ and the unmeasured
+implementation multipliers.  Nothing in the paper establishes an
+unconditional production-size forgery.
 
 \subsection{Technical overview}
 
 The attack begins with the affine-column relation introduced in earlier
 forgery attacks.  For each matrix-valued signature block, the attacker writes
-all columns as public affine functions of one stacked column $u$.  Substituting
-this relation into the public verifier leaves $N_0=n\ell$ scalar variables and
-turns every ordered power-pair feature into a scalar quadratic polynomial
-$q_{i,\xi,\eta}(u)$.  This restriction is chosen by the attacker and does not
-assert an identity on the unrestricted matrix-valued map.
+all columns as public affine functions of one stacked column $u$.  After this
+substitution, the verifier has $N_0=n\ell$ scalar variables.  Each ordered pair
+of public matrix powers now defines a scalar quadratic polynomial
+$q_{i,\xi,\eta}(u)$.  The attacker chooses this restriction.  It is not an
+identity for the unrestricted matrix-valued map.
 
-The new observation occurs before the outer public mixing.  Because the
-Version~2.3 base matrices are symmetric, the restricted scalar polynomials
-satisfy $q_{i,\xi,\eta}=q_{i,\eta,\xi}$.  The ordered $A\otimes A$ feature
-space therefore factors through $\Sym^2(A)$.  For $\ell=4$, each group of
-sixteen ordered labels contributes at most ten distinct quadratics; for
-$\ell=2$, four labels contribute at most three.  Later public linear maps
-cannot recover the alternating directions removed by this quotient.
+The new observation occurs before the public map combines these polynomials.
+Because the Version~2.3 base matrices are symmetric, reversing the two matrix
+powers does not change the restricted polynomial.  In symbols,
+$q_{i,\xi,\eta}=q_{i,\eta,\xi}$.  This is the symmetric-square quotient.  For
+$\ell=4$, each group of sixteen ordered pairs contributes at most ten distinct
+quadratics.  For $\ell=2$, four pairs contribute at most three.  Later public
+linear combinations cannot recover the distinctions that symmetry removed.
 
-For a fixed public column relation $R$, the attack computes the linear map
-$Q_R$ from quotient features to verifier outputs.  A left inverse $G_R$
-extracts the coordinates reached by the quotient quadratics, while a basis
-$W_R$ of the left kernel extracts the remaining affine constraints and target
-consistency conditions.  This is an invertible public change of output
-coordinates.  It does not discard equations or replace the verifier with a
-surrogate.
+For a fixed public column relation $R$, the attack computes how the remaining
+quadratics contribute to the verifier outputs.  Standard linear algebra gives
+an invertible public change of output coordinates.  Some new coordinates
+contain the quadratic forms.  The others contain the remaining affine
+constraints and checks that the target is reachable.  No verifier equation is
+discarded or replaced.
 
-The affine constraints define a public solution space.  The attack chooses a
-slice $L$ whose dimension equals the number of surviving quotient
-quadratics, so the nonlinear part becomes a square residual system.  The
-structural preflight checks the ranks needed for this split and for the fresh
-coefficient blocks used by the slice.  The target filter and rejection
-analysis separately ensure that a recovered point corresponds to the exact
-official target distribution and satisfies the signature-format rules.
+The affine constraints define a public space of possible solutions.  The
+attack chooses a subspace $L$ with one variable for each remaining quadratic
+equation.  The nonlinear part therefore has equally many equations and
+variables.  Public rank tests check that the output change and this choice of
+$L$ are valid.  Separate target and rejection checks ensure that a recovered
+point corresponds to the official target distribution and satisfies the
+signature-format rules.
 
-What remains is a root-recovery problem, and this is where the conditional
-analysis begins.  The spectrum bounds state conditions under which a slice
-contains an accepted nonsingular root.  Under $\mathsf H_{\rm hom}$, a
-finite-cardinality symbolic-homotopy algorithm recovers such roots with the
-reported arithmetic ledgers.  Exact determinant tests may select smaller
-cores, but the complete square system remains the fallback.  These steps do
-not turn the conditional solver estimate into an unconditional break.
+What remains is to solve the quadratic system, and this is where the
+conditional analysis begins.  The paper states conditions under which the
+chosen subspace contains an acceptable solution with a full-rank Jacobian.
+Under $\mathsf H_{\rm hom}$, a symbolic-homotopy algorithm recovers such
+solutions with the reported arithmetic costs.  Exact determinant tests may
+identify smaller systems, but the complete system remains the fallback.  The
+solver assumptions prevent these estimates from being unconditional breaks.
 
-Finally, every recovered root is lifted from the slice, reconstructed into a
-signature candidate, subjected to the public rejection rules, and checked by
-the unmodified verifier.  A failed target filter, preflight, solve, or final
-verification causes a restart.  Thus the quotient, output split,
-reconstruction, and verifier check are exact public computations; root
-abundance and production-size recovery costs retain the explicit conditions
-stated in the theorems.
+Finally, the attack reconstructs a signature candidate from each recovered
+solution, applies the public rejection rules, and runs the unmodified verifier.
+A failed target check, rank check, solve, or final verification causes a
+restart.  The restriction, output change, reconstruction, and verifier check
+are exact public computations.  The number of acceptable solutions and the
+cost of finding them at full size retain the conditions stated in the
+theorems.
 
 \paragraph{Roadmap.}
 \Cref{sec:background} gives the MQ background and situates the result among
@@ -493,21 +492,32 @@ the restricted power-pair polynomials before the outer map sees them.
 Cabarcas et al. and Furue et al. improve the algebraic solving of the systems
 arising in the earlier attacks~\cite{Cabarcas2025SNOVA,FurueEtAl2025}.  The
 former exploits stability under a commutative group action and adapts the
-result to reconciliation and direct forgery.  The latter transforms the
-systems over an extension field and uses their multihomogeneous structure.
-These works reduce the cost of solving an already identified SNOVA system.
-They do not derive an output-dimension loss from odd-characteristic public
-symmetrization.
+result to reconciliation and direct forgery.  The latter writes the
+extension-field transformation explicitly and applies the resulting
+multihomogeneous systems to intersection and rectangular-MinRank key recovery.
+Their estimate for the old Round~2 $(q,v,o,\ell)=(16,29,6,5)$ set is below the
+claimed Level-V threshold, subject to their stated solving-degree heuristic.
+Both papers study the characteristic-two construction.  Neither derives a
+loss of independent verifier equations from the later symmetric public
+matrices.
 
-Ran's wedge attack is a key-recovery attack on characteristic-two UOV.  It
-uses the fact that polar forms are alternating and recovers the hidden oil
-space through exterior-algebra linearization~\cite{Ran2026}.  Bros et al.
-specialize this method to \SNOVA{} by exploiting its block-ring structure and
-give conjectural estimates below the claimed security levels for every
-Round~2 parameter set~\cite{BrosEtAl2026SNOVAWedge}.  The \SNOVA{} team's
-subsequent wedge-map analysis computes the relevant kernel dimensions for the
-Round~2 construction~\cite{TsengEtAl2026Wedge}.  All three analyses concern
-the characteristic-two geometry that motivated the odd-prime revision.
+Ran's wedge attack begins from the alternating polar forms of
+characteristic-two UOV and recovers the hidden oil space through exterior
+algebra~\cite{Ran2026}.  His latest version also gives a different construction
+for odd characteristic, but states that SNOVA's added structure prevents the
+analysis from carrying over directly.  Bros et al. specialize the
+characteristic-two method to \SNOVA{} and give conjectural estimates below the
+claimed security levels for every Round~2 parameter set
+~\cite{BrosEtAl2026SNOVAWedge}.  The \SNOVA{} team's later analysis replaces
+the conjectural kernel formula with a generating function and finds six
+Round~2 sets below target~\cite{TsengEtAl2026Wedge}.
+
+Ding, Li, and Tao place these attacks in a common Macaulay-matrix framework and
+extend it to multihomogeneous systems in any characteristic
+~\cite{DingLiTao2026}.  Their formulation applies to SNOVA's hidden oil-space
+problem, but their concrete SNOVA analysis is expressly limited to the
+even-characteristic Round~2 parameters.  It does not analyze the symmetric
+public matrices or the nine $q=19$ Version~2.3 shapes.
 
 Jin et al. give the main prior attack that genuinely crosses the
 characteristic boundary~\cite{JinEtAl2026}.  Their $p$-reduced symmetric
@@ -522,8 +532,9 @@ the verifier-preserving direct-preimage reduction used here.
 The distinction between these attacks is summarized in
 \Cref{tab:prior-attacks}.  The exact new statement in this paper is the
 $\Sym^2(A)$ factorization after the public common-column restriction and the
-resulting output split.  The direct forgery ledgers built on that reduction
-remain conditional on their stated root-spectrum and solver hypotheses.
+resulting invertible change of verifier outputs.  The direct-forgery cost
+estimates built on that reduction remain conditional on their stated
+root-count and solver hypotheses.
 
 \begin{table}[H]
 \centering
@@ -544,10 +555,10 @@ Beullens; Cabarcas et al.; Furue et al.
 & Original and Round~2 $q=16$
 & Affine-column rank drop, group action, and multihomogeneous solving
 & Direct forgery or key recovery; supplies the public restriction that this paper composes with symmetry.\\
-Ran; Bros et al.; Tseng et al.
-& Characteristic two, including Round~2 SNOVA
-& Exterior algebra and the wedge-map kernel
-& Oil-space recovery; motivates the odd-prime revision but does not apply the present quotient.\\
+Ran; Bros et al.; Tseng et al.; Ding--Li--Tao
+& Arbitrary-characteristic UOV frameworks; concrete SNOVA estimates for Round~2 $q=16$
+& Exterior or symmetric forms, Macaulay matrices, and the wedge-map kernel
+& Oil-space recovery; no concrete analysis of the symmetric $q=19$ SNOVA verifier.\\
 Jin et al.
 & UOV families in arbitrary characteristic; concrete odd-$q$ QR-UOV instances
 & $p$-reduced symmetric-algebra XL
