@@ -107,218 +107,147 @@ security sufficiency claims.
 
 \section{Introduction}\label{sec:intro}
 
-A multivariate signature scheme publishes a polynomial map
-\[
-   P:\F_q^N\longrightarrow \F_q^M
-\]
-of total degree at most two.  Given a hash-derived target $t\in\F_q^M$, the
-algebraic core of a forgery is to find $x$ with $P(x)=t$, while also passing
-any format and rejection checks.  Equation and variable counts are only a
-first approximation to the difficulty: public dependencies among quadratic
-features can expose linear constraints, remove entire output directions, or
-split the remaining system into algebraically useful blocks.
+NIST's Additional Digital Signatures process seeks signature schemes with
+security and performance profiles that complement the standards selected in
+its first post-quantum process.  \SNOVA{} is one of the nine candidates
+advanced to the third round in May 2026~\cite{NISTRound3,NISTIR8610}.  It
+belongs to the Unbalanced Oil and Vinegar line of multivariate signatures,
+where verification evaluates a public quadratic map and signing uses a
+hidden central map with an oil-and-vinegar structure
+~\cite{KipnisPatarinGoubin1999,SNOVA23}.
 
-\SNOVA{} is one of the nine digital-signature candidates that NIST advanced
-to the third round of its additional post-quantum signature process in May
-2026~\cite{NISTRound3,NISTIR8610}.  The characteristic-two construction was
-subsequently attacked through its wedge structure~\cite{BrosEtAl2026SNOVAWedge,TsengEtAl2026Wedge}.
-The public odd-characteristic Version~2.3 design studied here is a proposed
-response: it moves to $q=19$ and symmetrizes the scalar-expanded public base
-matrices~\cite{SNOVA23}.  Our target is exactly that public construction, not
-the earlier $q=16$ submission and not an unspecified future revision.
+\SNOVA{} obtains compact public keys by representing variables and
+coefficients with small matrices and generating many public forms from a
+smaller structured family.  That structure is also the main object of its
+cryptanalysis.  Prior work has studied rank defects, invariant subspaces,
+group actions, lifting, and multihomogeneous solving in different versions
+and parameter regimes
+~\cite{IkematsuAkiyama2024,LiDing2024,Beullens2024SNOVA,Cabarcas2025SNOVA,FurueEtAl2025,NakamuraEtAl2025}.
+The present paper differs from these attacks in one point: it isolates what
+the public symmetrization does after the common-column restriction used in
+affine-column attacks.
 
-\paragraph{The hidden duplication after a common-column restriction.}
-Let $P_i$ be a symmetric public base matrix, let $A=\F_q[S]$, and write
-$\Sigma_\xi=I_n\otimes\xi$ for $\xi\in A$.  The quadratic feature with left
-label $\xi$ and right label $\eta$, after all signature columns have been
-expressed through one stacked column $u$, is
-\[
-  q_{i,\xi,\eta}(u)=u^\transpose\Sigma_\xi P_i\Sigma_\eta u.
-\]
-Because the matrices are symmetric and the output is now a scalar,
-\begin{equation}
-  q_{i,\xi,\eta}(u)=q_{i,\eta,\xi}(u).              \label{eq:intro-duplication}
-\end{equation}
-The restricted verifier assigns two ordered names to the same polynomial.
-The unrestricted matrix-valued verifier instead relates the two features by
-matrix transposition; it does not identify them entry by entry.  Thus, only
-after the public common-column relation, the $d^2$ ordered labels per base
-form factor through the symmetric square and
-leave at most
-\[
-  \dim_{\F_q}\Sym^2(A)=\binom{d+1}{2}
-\]
-independent features.  In the published rows, $d=\ell$, so $16$ labels become
-$10$ for $\ell=4$ and $4$ become $3$ for $\ell=2$.  This identification
-occurs before the public outer map.  Later mixing cannot reconstruct the
-alternating directions that have already vanished.
+The distinction matters because Version~2.3 changes the algebra that earlier
+attacks see.  Wedge attacks exploit the characteristic-two structure of the
+earlier submission~\cite{BrosEtAl2026SNOVAWedge,TsengEtAl2026Wedge}.  The
+revised construction instead works over $\F_{19}$ and symmetrizes its
+scalar-expanded public base matrices~\cite{SNOVA23}.  This removes the earlier
+characteristic-two decomposition, but it also imposes a new equality on the
+restricted quadratic features.  Existing analyses do not isolate this
+equality or follow it through the complete verifier.
 
-\paragraph{From an identity to a square residual system.}
-Beullens showed that an attacker can impose an affine relation among the
-signature columns~\cite{Beullens2024SNOVA}.  We apply the symmetry quotient
-inside that framework and then split the output coordinates exactly.  Output
-directions unreachable by the quotient quadratics become ordinary affine or
-target-consistency equations.  The remaining coordinates form a canonical
-$K$-equation quadratic map.  Every transformation is public, invertible on
-its image, and retains every verifier equation.  A recovered root is mapped
-back to a full signature candidate and checked by the unmodified verifier.
+The question is therefore whether odd-characteristic symmetrization removes
+the structural weakness exposed by affine-column attacks.  Our answer is
+precise.
 
-The mathematically specified data flow is
-\begin{align*}
- \text{public verifier}&\longrightarrow
- \text{affine column relation}\longrightarrow
- \text{symmetry quotient}\longrightarrow{}\\[-2pt]
- &\text{exact output split}\longrightarrow
- \text{square residual system}\longrightarrow
- \text{verifier check}.
-\end{align*}
-The nonlinear solver can fail and restart, but it can never make the wrapper
-accept an invalid signature.  This composition is a proved algorithmic
-wrapper; it is not a claim that the released artifact has executed the
-production-size solver.
-
-\paragraph{The direct all-nine conditional theorem.}
-After the exact public rank preflights, every published parameter row leaves
-all $K$ quotient equations on a public $K$-dimensional slice.  Solving this
-square residual system removes the logical premises that complicated earlier
-versions of the analysis: no selected Macaulay degree, exact-corank
-prediction, preferred Jacobian core, or family-count enumeration is needed.
-The direct theorem gives the following unit-leading $\AXN$
- multiplication-ledger exponents.  They are useful break-even values, not
- complete gate counts.
-
-\begin{table}[H]
+\begin{quote}
 \centering
-\caption{Conditional, selected-degree-free recovery ledgers for all nine parameter shapes.  Every row conditions on its exact public quotient/rank preflights; the $\ell=4$ entries additionally condition on the fixed-layout structural preflight.  All entries normalize the stated spectrum and solver-restart events and assume $\mathsf H_{\rm hom}$.  Values are base-two unit-leading $\AXN$ pointwise-multiplication-schedule exponents, excluding $\kappa_{\rm hom}$.}
-\label{tab:intro-all-nine}
-\small
-\renewcommand{\arraystretch}{1.12}
-\begin{tabular}{@{}c l r r r@{}}
-\toprule
-Level & Parameters $(v,o,\ell,r)$ & Direct square & Adaptive & Reference\\
-\midrule
-I   & $(28,5,4,4)$  & $142.607$ & $128.246$ & $143$\\
-I   & $(48,16,2,2)$ & $132.971$ & $132.188$ & $143$\\
-I   & $(28,4,4,5)$  & $142.606$ & $128.246$ & $143$\\
-\midrule
-III & $(40,7,4,4)$  & $185.451$ & $171.617$ & $207$\\
-III & $(72,24,2,2)$ & $183.795$ & $183.795$ & $207$\\
-III & $(38,5,4,5)$  & $185.450$ & $171.616$ & $207$\\
-\midrule
-V   & $(50,9,4,4)$  & $227.560$ & $214.558$ & $272$\\
-V   & $(96,32,2,2)$ & $233.844$ & $233.844$ & $272$\\
-V   & $(52,6,4,6)$  & $227.559$ & $214.557$ & $272$\\
-\bottomrule
-\end{tabular}
-\end{table}
+\textbf{Under the public common-column restriction, the Version~2.3
+symmetrization forces the restricted verifier through a symmetric-square
+quotient.  An exact public output split then converts the verifier equations
+into square residual systems for every published parameter shape that passes
+the stated public rank preflights.}
+\end{quote}
 
-The levelwise direct-square maxima are $142.607$, $185.451$, and $233.844$.
-Exact public leading-Jacobian tests optionally select smaller cores; failure
-invokes the complete square.  Mixing the branches before taking logarithms
-gives levelwise adaptive maxima
-\[
-   \boxed{132.188,\qquad183.795,\qquad233.844}.
-\]
-These have nominal arithmetic headroom $10.812$, $23.205$, and $38.156$ bits
-below NIST's numerical references $143$, $207$, and $272$~\cite{NISTSecurityCriteria2026}.
-For a uniform levelwise statement, let
-$\kappa_{\rm hom}^{(L)}$ be the maximum end-to-end/ledger ratio over the
-adaptive rows and branches used at level $L$.  Sufficient break-even
-conditions, rounded downward from the machine-readable values, are
-\[
- \log_2\kappa_{\rm hom}^{(I)}<10.811927,\qquad
- \log_2\kappa_{\rm hom}^{(III)}<23.205374,\qquad
- \log_2\kappa_{\rm hom}^{(V)}<38.156013
-\]
-at Levels I, III, and V.  We do not assign a preferred value to any
-$\kappa_{\rm hom}^{(L)}$.  The explicit Boolean-ledger Level-I route in
-\Cref{sec:jg-finite-gate} replaces this multiplier only for the Level-I
-$\ell=2$ row; every homotopy row retains its displayed $\kappa_{\rm hom}$.
+This statement concerns the restricted verifier, not the unrestricted
+matrix-valued map.  Let $A=\F_q[S]$ have dimension $d$, and let
+$\Sigma_\xi=I_n\otimes\xi$ for $\xi\in A$.  After all signature columns are
+expressed through one stacked column $u$, symmetry gives
+$q_{i,\xi,\eta}(u)=q_{i,\eta,\xi}(u)$.  The $d^2$ ordered labels therefore
+factor through $\Sym^2(A)$, with the exact dimension change
+\begin{equation}
+ d^2\ \longrightarrow\ \binom{d+1}{2},
+ \qquad 16\ \longrightarrow\ 10\ \text{ for }d=4,
+ \qquad 4\ \longrightarrow\ 3\ \text{ for }d=2.
+ \label{eq:intro-duplication}
+\end{equation}
+The full verifier relates the two ordered features by matrix transposition;
+only the common-column restriction makes them the same scalar polynomial.
+The identification summarized in \Cref{eq:intro-duplication} is exact and
+basis-independent, but deliberately local to the attacker-imposed
+restriction (\Cref{thm:symmetry-quotient}).
 
-\paragraph{Why useful roots exist.}
-For a slice direction $y$, let $T_y$ be the polar derivative on the complete
-pre-elimination domain $U$, and define
-\[
-  \bar\eta_L^U=\sum_{0\ne y\in L}19^{-\rank T_y}.
-\]
-The root experiment averages over the affine right-hand side as well as the
-slice coset, so the full domain $U$ is the correct domain.  If the verifier
-accepts density $\alpha$ and $\bar\eta_L^U\le\eta$, then an accepted root at
-which the full restricted Jacobian has rank $h$ occurs with probability at
-least
-\[
-  19^{h-K}\frac{a^2}{a+\eta},
-  \qquad a=\alpha-\eta/18.
-\]
-A reserved public vinegar line separates slice selection from fresh internal
-public coefficients.  In the idealized XOF-transcript model of the official byte
-expansion, the aggregate spectrum lies within $2^{-128}$ of the exact
-full-rank baseline except with explicitly bounded probability.  For a fixed
-key, a finite projective rank histogram certifies the same quantity exactly.
+\subsection{Our results}
 
-\paragraph{What is exact, modeled, conditional, and unclaimed.}
-For a supplied public key and a chosen common-column relation, the quotient,
-output split, target filtering, rejection handling, reconstruction,
-determinant preflights, and final verifier check are exact public
-computations.  Applicability of the displayed route remains conditional on
-the stated fixed-layout coefficient-map and realized-rank preflights.  The
-paper does not assign a pass probability for those preflights on official
-keys.  The transcript-probability statements use an idealized model in which
-the relevant XOF output bytes are independent and uniform; an exact fixed-key
-certificate can replace only the modeled
-events it actually records.
-The symbolic-homotopy complexity follows from the cited algorithm only under
-$\mathsf H_{\rm hom}$, and
-$\kappa_{\rm hom}$ contains soft-$O$ factors, evaluation and interpolation,
-basis transforms, inversion, factorization, filtering, memory traffic,
-control, and implementation constants.  The Just Guess section replaces that multiplier by a Boolean-ledger
-instantiation of the published expected-operation schedule and a separate
-$\kappa_{\rm JG}$ recording candidate-generation regularity, restarts, and excess processing beyond the declared reserve.  We
-do not claim a production timing, a low-memory homotopy theorem, an
-unconditional all-nine complete-gate break, a demonstrated EUF-CMA forgery,
-or polynomial-time recovery: the
-displayed B\'ezout and guessing quantities remain exponential.
+\paragraph{An exact symmetry quotient.}
+We prove that every symmetric public base form factors through
+$\Sym^2(A)$ after the common-column restriction.  The proof occurs before the
+outer public mixing, so later linear combinations cannot recover the
+alternating directions that have vanished.  For the published choices
+$d=\ell$, the resulting caps are exactly those in
+\eqref{eq:intro-duplication} (\Cref{thm:symmetry-quotient,tab:parameters}).
 
-\paragraph{Design consequence.}
-Under the current parameter coupling, simultaneously restoring the
-pre-symmetrization common-column ordered-label cap and eliminating the
-fresh-slice dimension guarantee requires $45.00\%$--$60.71\%$ more verifier
-outputs.  Eliminating the zero-offset common-column dimension guarantee gives
-the stronger but narrower $101.5625\%$--$144.00\%$ floor.  These are necessary
-dimensions for those specific redesign goals, not sufficient security
-conditions.
-\paragraph{Contributions.}
-The paper makes five principal contributions.
-\begin{enumerate}[label=\textbf{\arabic*.}]
-\item It proves the basis-independent symmetric-square factorization and the
-      exact quadratic-image cap for the scalar common-column restriction of
-      every symmetric public key.
-\item It gives a verifier-preserving affine and target-consistency split for
-      all nine public Version~2.3 shapes, conditional on explicit public rank
-      checks and including constructive rejection handling.
-\item It proves a full-domain root-spectrum theorem and an accepted
-      full-Jacobian-root bound that require no independence between the
-      verifier's rejection rule and the polynomial system.
-\item It gives square-residual and adaptive certified-core Las Vegas recovery
-      theorems and an all-nine conditional break-even ledger, and it
-      instantiates a
-      separate explicit Boolean-ledger Level-I sensitivity using Just Guess and the
-      quotient-channel split.
-\item It proves combined structural repair floors and retains a complementary
-      streamed-XL branch for readers interested in explicit low-state
-      arithmetic rather than the selected-degree-free headline.
-\end{enumerate}
+\paragraph{A verifier-preserving square reduction.}
+We compose the quotient with the affine-column relation of
+Beullens~\cite{Beullens2024SNOVA}.  Public row reduction separates output
+coordinates reached by the quotient quadratics from affine equations and
+target-consistency checks.  The remaining nonlinear coordinates form a
+square residual system on a public slice.  Reconstruction, rejection, and the
+final unmodified verifier check remain part of the wrapper
+(\Cref{prop:exact-affine,thm:structural-preflight,thm:sq-all-nine-simple}).
+
+\paragraph{Conditional recovery ledgers.}
+We give a selected-degree-free Las Vegas recovery theorem for all published
+parameter shapes and an adaptive version that uses exact public determinant
+tests to select smaller cores.  The corresponding worst levelwise arithmetic
+exponents are $142.607$, $185.451$, and $233.844$ for the uniform square
+route, and $132.188$, $183.795$, and $233.844$ for the adaptive route
+(\Cref{thm:sq-all-nine-simple,thm:sq-all-nine}).  These values assume the
+explicit hypothesis $\mathsf H_{\rm hom}$ and omit the unmeasured multiplier
+$\kappa_{\rm hom}$.  A separate Level-I sensitivity instantiates the
+published Just Guess schedule but retains its own unmeasured
+$\kappa_{\rm JG}$ (\Cref{prop:jg-level1-gates}).  The ledgers are conditional
+break-even calculations, not complete classical-gate breaks.
+
+\paragraph{Evidence and design implications.}
+The artifact checks the algebra and ledgers, instantiates the public reduction
+on one official known-answer-test key, and exercises the full forgery wrapper
+only at an unofficial toy shape.  It contains no production-size solve or
+forgery (\Cref{tab:evidence-hierarchy}).  We also derive necessary output
+floors for repairs that retain the current common-column architecture.  The
+combined floor requires increases between $45.00\%$ and $60.71\%$, while the
+narrower zero-offset condition requires increases between $101.5625\%$ and
+$144.00\%$ (\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).
+These are necessary dimension conditions for the stated repair goals, not
+sufficient conditions for security.
+
+The claim hierarchy is intentional.  The quotient, output split,
+reconstruction, and verifier check are exact public computations once their
+displayed rank checks pass.  The fixed-layout and realized-rank conditions
+are deterministic preflights, but this paper does not estimate their pass
+rate over official keys.  Root-abundance statements use either an idealized
+transcript model or a fixed-key certificate.  Recovery costs additionally
+depend on $\mathsf H_{\rm hom}$ and the unmeasured implementation multipliers.
+Nothing in the paper establishes an unconditional production-size forgery.
+
+\subsection{Technical overview}
+
+The reduction starts with a public affine relation that writes every matrix
+column in terms of one common column.  Substitution turns each matrix-valued
+quadratic feature into a scalar quadratic polynomial.  Symmetry then identifies
+the labels $(\xi,\eta)$ and $(\eta,\xi)$ before the outer public map is
+applied.  A basis computation exposes the resulting quadratic image and an
+invertible change of output coordinates separates that image from the affine
+and target-consistency coordinates.  No verifier equation is discarded.
+
+Once a target passes the consistency coordinates, the remaining equations
+are restricted to a public slice with as many variables as quotient
+quadratics.  Root-spectrum bounds control whether such a slice contains an
+accepted nonsingular root.  The recovery theorem then applies a
+finite-cardinality symbolic-homotopy algorithm under
+$\mathsf H_{\rm hom}$.  A failed nonlinear solve triggers a restart; any
+candidate that is recovered is reconstructed and checked by the original
+verifier.  This separation keeps the algebraic reduction exact even where the
+solver analysis remains conditional.
 
 \paragraph{Roadmap.}
-\Cref{sec:background} supplies the MQ, rank-spectrum, symbolic-homotopy, and
-underdetermined-MQ background.  \Cref{sec:public-symmetry} states the public
-construction and symmetry quotient.  \Cref{sec:affine-reduction} gives the
-exact affine-column and output reductions.  \Cref{sec:stable-rejection}
-constructs fresh slices, handles rejection, and explains exact target
-sampling.  The full-domain root and complete-square theorems begin in
-\Cref{sec:sq-overview}; the explicit Boolean-ledger Level-I route appears in
-\Cref{sec:jg-finite-gate}.  The low-state XL complement, implementation
-evidence, countermeasures, and conclusion follow afterward.
+\Cref{sec:background} gives the MQ background and situates the result among
+earlier SNOVA attacks.  \Cref{sec:public-symmetry,sec:affine-reduction} prove
+the symmetry quotient and exact output split.  \Cref{sec:stable-rejection}
+handles public slices, targets, and rejection.  The root and square-recovery
+theorems begin in \Cref{sec:sq-overview}; the Just Guess sensitivity appears
+in \Cref{sec:jg-finite-gate}.  The remaining sections give the low-state XL
+complement, artifact evidence, repair bounds, and conclusions.
 
 \section{Background and relation to prior work}\label{sec:background}
 

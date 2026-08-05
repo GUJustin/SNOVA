@@ -549,13 +549,17 @@ def paper_table_checks(recomputed: dict[str, dict[str, float]]) -> None:
     for _level, params in ROWS:
         values = recomputed[str(params)]
         parameter_token = f"$({','.join(map(str, params))})$"
-        rounded = (
-            f"& ${values['direct']:.3f}$ & ${values['adaptive']:.3f}$ &"
-        )
+        rounded_direct = f"& ${values['direct']:.3f}$ &"
+        rounded_adaptive = f"& ${values['adaptive']:.3f}$ &"
         exact = (
             f"& ${values['direct']:.6f}$ & ${values['adaptive']:.6f}$ &"
         )
-        assert any(parameter_token in line and rounded in line for line in paper_lines)
+        assert any(
+            parameter_token in line and rounded_direct in line for line in paper_lines
+        )
+        assert any(
+            parameter_token in line and rounded_adaptive in line for line in paper_lines
+        )
         assert any(parameter_token in line and exact in line for line in paper_lines)
     paper = "\n".join(paper_lines)
     assert r"\boxed{142.60696,\qquad185.45088,\qquad233.84399}" in paper
