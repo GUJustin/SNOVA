@@ -286,9 +286,9 @@ theorems.
 earlier SNOVA attacks.  \Cref{sec:public-symmetry,sec:affine-reduction} prove
 the symmetry quotient and exact output split.  \Cref{sec:stable-rejection}
 handles public slices, targets, and rejection.  The root and square-recovery
-theorems begin in \Cref{sec:sq-overview}; the Just Guess sensitivity appears
-in \Cref{sec:jg-finite-gate}.  The remaining sections give the low-state XL
-complement, artifact evidence, repair bounds, and conclusions.
+theorems begin in \Cref{sec:sq-overview}.  The remaining main sections give
+the artifact evidence, repair bounds, and conclusion.  The appendices record
+the Just Guess sensitivity and the low-state XL complement.
 
 \section{Background and relation to prior work}\label{sec:background}
 
@@ -340,7 +340,7 @@ A one-dimensional right kernel is the easiest extraction case, but it is not
 the only sound one.  If row reduction supplies a commuting border basis, the
 resulting multiplication matrices describe a finite quotient algebra; FGLM
 and finite-field factorization then enumerate its roots~\cite{FGLM1993,KehreinKreuzer2005}.
-The streamed-XL section later makes the additional production-degree premise
+The streamed-XL appendix makes the additional production-degree premise
 fully explicit.
 
 \subsection{Finite-cardinality symbolic homotopy}
@@ -2182,242 +2182,9 @@ the common spectrum normalization is charged once and the exact branch
 mixture is performed before taking logarithms.  At Levels III and V, the
 complete core is already faster.
 
+The separate Just Guess sensitivity for the Level-I $\ell=2$ row appears in
+\Cref{sec:jg-finite-gate}.  It is not used by either all-nine theorem.
 
-\section{An explicit Boolean-ledger Level-I route via Just Guess}
-\label{sec:jg-finite-gate}
-
-The homotopy ledger deliberately leaves $\kappa_{\rm hom}$ explicit.  This
-section asks whether the row that determines the adaptive Level-I maximum,
-$(v,o,\ell,r)=(48,16,2,2)$, admits a more concrete estimate.  We combine the
-exact zero-offset target split of \Cref{prop:sq-zero-split} with the
-underdetermined-MQ transformation of May, Ostuzzi, and
-Ressler~\cite{MayOstuzziRessler2026}.  Their analysis reduces a random
-underdetermined MQ system to guessed variables, a short tree of univariate
-quadratics, a linear solve, and check equations.  It explicitly uses a
-random-system regularity model for the linearization step.  We retain that
-premise rather than turning it into an unconditional statement.
-
-Write the quotient map in its two Frobenius channels as
-\[
-  D:A^{64}\longrightarrow A^{16},\qquad
-  H:A^{64}\longrightarrow\F_{19}^{16},
-  \qquad A=\F_{19^2}.
-\]
-Here $D$ is the diagonal channel and $H$ is the Hermitian cross channel.  The
-retained consistent target is $(t_D,t_H)$.  We additionally reject the event
-$t_D=0$, of probability $19^{-32}$ under the exact uniform target sampler.
-Conditioned on consistency and $t_D\ne0$, the pair $(t_D,t_H)$ remains exactly
-uniform over the retained target set.
-
-The two channel families are distinct linear images of the same native
-byte-reduced public coefficients.  They are therefore \emph{not independent}.
-The argument below uses an exact conditional atom bound for the official
-$\ell=2$ channel transform instead.
-
-\subsection{The streamed diagonal solver}
-Apply Just Guess to the $m=16$ equations $D(x)=t_D$ in $n=64$ variables over
-$A$, with
-\[
-  k=5,\qquad p=6,\qquad m-k-p=5.
-\]
-The published structural inequalities hold:
-\[
-  2k+p=m,\qquad
-  2(n-m)=96\ge6(2m-2k-p-1)=90,
-\]
-\[
-  n-1=63\ge(m-k-p-1)(m-k+2)=52.
-\]
-The public transformation gives coordinates $(u,z)\in A^{16}\times A^{48}$.
-Fixing $z$ changes only linear and constant terms in the transformed square
-system.  We stream an $A^8$ family of $z$ assignments.  For each assignment,
-the solver enumerates all $|A|^5$ guesses, follows every returned quadratic
-branch, solves the remaining $5\times5$ linear system, and checks the five
-withheld equations.  Surviving points are tested against $H(x)=t_H$, the
-format rule, affine reconstruction, and the unmodified verifier.
-
-Let $\mathcal R$ denote the event that this computation supplies at least
-$19^{16}/4$ distinct sign-canonical diagonal roots.  This is a concrete,
-transcript-checkable candidate-abundance premise motivated by, but not proved
-by, the published Just Guess random-system analysis.  No reduced-size or
-production transcript in the release establishes $\mathcal R$.  We write
-$\kappa_{\rm JG}$ for the expected multiplier
-needed to obtain $\mathcal R$.  It includes transformation and linearization
-retries, candidate-abundance failures, the negligible format and $t_D=0$
-losses, and any candidate-processing cost beyond the explicit reserve below.
-Unlike $\kappa_{\rm hom}$, it does not hide a generic soft-$O$ algebraic
-solver, but it remains an unmeasured premise.
-If $\mathcal R$ is unreachable for a fixed system and transformation family,
-then $\kappa_{\rm JG}=\infty$ and the comparison gives no crossing.
-
-\subsection{Conditional cross-channel filtering}
-For $x\in A^{64}$ put $\Psi(x)=xx^{19\,\transpose}$.  If
-$\Psi(x)=\Psi(y)$ for nonzero $x,y$, then $y=\lambda x$ with
-$\lambda\lambda^{19}=1$.  If also $D(x)=D(y)=t_D\ne0$, then
-$\lambda^2=1$, so $y=\pm x$.  Retaining one representative of each sign pair
-therefore makes the cross tensors distinct.
-
-\begin{lemma}[Exact conditional channel atom]
-\label{lem:jg-conditional-atom}
-Use the native-coordinate idealized XOF-transcript model, in which one field symbol has raw
-integer weight $14$ for residues $0,\ldots,8$ and $13$ for residues
-$9,\ldots,18$.  Condition on the complete diagonal-channel coefficient
-family $D$.  For every native coefficient block and every nonzero
-$\F_{19}$-linear functional of its remaining Hermitian coefficient, every
-conditional atom has probability at most
-\begin{equation}
-  \rho_{\rm cond}=\frac{49}{829}<0.059108.             \label{eq:jg-rho-cond}
-\end{equation}
-Conditioned on $D$, different native blocks and different base forms remain
-independent.
-\end{lemma}
-
-\begin{proof}
-Diagonalize the official matrix
-$S=\left(\begin{smallmatrix}1&2\\2&15\end{smallmatrix}\right)$ over
-$A=\F_{19}[u]/(u^2+1)$.  Its eigenvalues are $8\pm2u$, with eigenvectors
-$(1,13\pm u)$.  For a native symmetric diagonal block
-$\left(\begin{smallmatrix}a&b\\b&c\end{smallmatrix}\right)$, the diagonal
-coefficient and Hermitian coefficient are
-\[
- D=(a+7b+16c)+(2b+7c)u,\qquad H=a+7b+18c.
-\]
-For an off-diagonal native block
-$\left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)$, they are
-\[
- D=(a+13b+13c+16d)+(b+c+7d)u,
-\]
-\[
- H=(a+13b+13c+18d)+(18b+c)u.
-\]
-These maps act separately on disjoint native blocks.  Exact enumeration of
-all $19^3$ diagonal tuples with their product weights gives maximum
-conditional atom $49/829$.  Exact enumeration of all $19^4$ off-diagonal
-tuples and all $20$ projective nonzero linear functionals on the $A$-valued
-Hermitian coefficient gives the smaller maximum
-$169246/2971565$.  The artifact reproduces both rational values directly
-from the displayed formulae.  Conditioning separately on the $D$-image of
-each independent native block preserves blockwise and base-form independence.
-\end{proof}
-
-\begin{lemma}[Conditional cross-channel second moment]
-\label{lem:jg-cross-moment}
-Let $C$ be any set of $T=c\,19^{16}$ sign-canonical solutions of
-$D(x)=t_D$, where $t_D\ne0$ and $0<c\le1$.  Condition on the entire diagonal
-channel and on any solver transcript determined by it.  For a uniform
-independent target $t_H$,
-\begin{equation}
- \Pr[\exists x\in C:H(x)=t_H\mid D]
- \ge \frac{c}{1+c(19\rho_{\rm cond})^{16}}.           \label{eq:jg-cross-success}
-\end{equation}
-For $c=1/4$, this lower bound is
-$0.0961344407\ldots$.
-\end{lemma}
-
-\begin{proof}
-Let $N=|\{x\in C:H(x)=t_H\}|$.  Uniformity of $t_H$ gives
-$\mathbb EN=c$.  For distinct $x,y\in C$, the Hermitian tensors differ.
-For each of the sixteen independent base forms, the equality
-$H_i(x)=H_i(y)$ is a nonzero linear equation in the Hermitian block
-coefficients.  Condition on all blocks except one on which this functional is
-nonzero.  By \Cref{lem:jg-conditional-atom}, its conditional probability is
-at most $\rho_{\rm cond}$.  Independence across the sixteen base forms gives
-\[
- \Pr[H(x)=H(y)\mid D]\le \rho_{\rm cond}^{16}.
-\]
-Consequently
-\[
- \mathbb E N(N-1)
- \le T(T-1)19^{-16}\rho_{\rm cond}^{16}
- <c^2(19\rho_{\rm cond})^{16}.
-\]
-Cauchy--Schwarz gives
-$\Pr[N>0]\ge(\mathbb EN)^2/\mathbb E[N^2]$, proving the claim.
-\end{proof}
-
-\subsection{Finite Boolean-gate instantiation}
-We use the constructive $692$-gate multiplication recurrence and $84$-gate
-adder count over $A$.  A
-monic quadratic over $A$ is solved by a fixed Tonelli--Shanks schedule.  The
-artifact checks all $361$ possible discriminants and obtains
-\begin{equation}
-  C_{\rm root}=16{,}886\quad\AXN\text{ gates}.        \label{eq:jg-root-gates}
-\end{equation}
-Instantiating the published expected Just Guess operation formulas at
-$(n,m,k,p)=(64,16,5,6)$ gives, per guess,
-\[
-  2684.089\text{ extension multiplications},\qquad
-  2621.087\text{ extension additions},\qquad
-  6\text{ quadratic-root calls}.
-\]
-Rounding upward and adding one million gates for comparisons, address logic,
-and branch control gives
-\begin{equation}
- C_{\rm guess}=3{,}179{,}584\quad\AXN\text{ gates}.  \label{eq:jg-guess-gates}
-\end{equation}
-We declare a reserve of $2^{40}$ gates per $z$ assignment for candidate
-filtering and verifier calls.  This is a ledger allowance, not a theorem that
-it dominates every possible candidate population; any excess is included in
-$\kappa_{\rm JG}$.  Target sampling, the public transformation, and all rank
-preflights are polynomial-sized additive terms.
-
-\begin{proposition}[Conditional finite-gate Level-I sensitivity]
-\label{prop:jg-level1-gates}
-Under the published Just Guess expected-operation model, the Boolean ledger
-for one $A^8$-streaming trial is
-\begin{equation}
- W_{\rm JG}^{\rm trial}
- =|A|^{8+5}C_{\rm guess}+|A|^8 2^{40}
- <2^{132.046523}.                                    \label{eq:jg-expected-work}
-\end{equation}
-On event $\mathcal R$, \Cref{lem:jg-cross-moment} with $c=1/4$ gives an
-expected cross-channel restart multiplier below $10.403$.  Consequently the
-success-adjusted Boolean-gate ledger is
-\begin{equation}
-  \log_2 W_{\rm JG}
-  <135.425325+\log_2\kappa_{\rm JG}.                 \label{eq:jg-final}
-\end{equation}
-It is below the Level-I reference $143$ whenever
-\begin{equation}
-  \log_2\kappa_{\rm JG}<7.574675.                    \label{eq:jg-break-even}
-\end{equation}
-For orientation only, a factor-$16$ regularity reserve gives an exponent below
-$139.425325$ and more than $3.574675$ bits of remaining margin.
-A separate capped-tree schedule follows at most $63$ quadratic nodes and
-$64$ leaves per guess and aborts any branch whose residual linear system is
-not unique.  Its trial exponent is below $137.713504$; after the same
-cross-channel restart it is below
-$141.092307+\log_2\kappa_{\rm JG}^{\rm cap}$.  Thus this
-strictly bounded-work sensitivity remains below $143$ when
-$\log_2\kappa_{\rm JG}^{\rm cap}<1.907693$.  It is reported as a sensitivity
-check, not as a proof of the capped candidate event.
-\end{proposition}
-
-\begin{proof}
-There are $|A|^8$ streamed assignments and $|A|^5$ guesses per assignment.
-Substituting the scalar circuit, tower recurrence counts, and quadratic-root
-schedule into the
-published expected-operation formulas gives \eqref{eq:jg-expected-work}; the
-artifact recomputes the integer ledger before taking logarithms.  On
-$\mathcal R$, take any $19^{16}/4$ sign-canonical candidates.  The reciprocal
-of \eqref{eq:jg-cross-success} is
-$10.4020993\ldots$, adding $3.378803$ bits.  The remaining regularity,
-transformation, candidate-collection, and excess filtering multipliers are,
-by definition, included in $\kappa_{\rm JG}$.  Every candidate is checked by
-the original verifier, so all failure modes are one-sided.
-\end{proof}
-
-\paragraph{Interpretation.}
-This proposition replaces the homotopy soft-$O$ multiplier on the row setting
-the adaptive Level-I maximum by (i) an explicit Boolean ledger for the published
-expected-operation schedule and (ii) the specific, unestablished but
-transcript-checkable event
-that the Just Guess run yields enough diagonal roots.  It does not provide a
-complete circuit for every control path or prove candidate abundance.  A
-complete, instrumented fixed-key implementation would estimate
-$\kappa_{\rm JG}$.
-The two $\ell=4$ Level-I rows still retain $\kappa_{\rm hom}$ in their
-homotopy ledgers.
 
 \section{Certified smaller systems and optimized costs}
 \label{sec:sq-l4}
@@ -2611,176 +2378,6 @@ the work of the two branches before taking logarithms and charges the union of
 their spectrum events.  It conditions on the exact structural rank checks and
 normalizes only by the probability of the common spectrum event.
 \end{proof}
-
-\section{Complementary streamed-XL and low-state frontiers}
-\label{sec:low-state-xl}
-
-The complete-square homotopy route supplies a conditional time bound under
-$\mathsf H_{\rm hom}$, but it does not supply a low-memory implementation.
-This section records a complementary
-branch whose matrices can be streamed with linear vector state.  Its
-correctness is exact once a finite quotient certificate is produced; its
-numerical exponent retains a production selected-degree premise.  The two
-branches therefore answer different questions rather than competing for one
-headline.
-
-\subsection{Four-block special XL}
-For an $A$-linear $\ell=4$ slice of $A$-dimension $s$, scalar extension gives
-four blocks of $s$ variables.  Each unordered pair of blocks carries $m_1$
-independent quadratic equations.  After adding one homogenizer per block, the
-Hilbert series used by the published special-XL model is
-\begin{equation}
- H_{m_1,s}(\mathbf t)=
- \frac{\prod_{a=1}^4(1-t_a^2)^{m_1}
-       \prod_{1\le a<b\le4}(1-t_at_b)^{m_1}}
-      {\prod_{a=1}^4(1-t_a)^{s+1}}.                 \label{eq:xl-hilbert}
-\end{equation}
-For a multidegree $\mathbf d=(d_1,\ldots,d_4)$, the monomial-column count is
-\begin{equation}
-  M_s(\mathbf d)=\prod_{a=1}^4\binom{s+d_a}{d_a}.    \label{eq:xl-columns}
-\end{equation}
-A negative coefficient of \eqref{eq:xl-hilbert} is the selected-degree trigger
-in the cited model~\cite{Cabarcas2025SNOVA}.  It predicts that a planted
-instance has the finite quotient needed for extraction; the theorem below
-makes the operator and state accounting exact but does not prove that
-production instances reach such a quotient at that degree.
-
-The exact row count is
-\begin{align}
- R_s(\mathbf d)
-={}&m_1\sum_{a=1}^4
- \binom{s+d_a-2}{d_a-2}\prod_{c\ne a}\binom{s+d_c}{d_c}
- \notag\\
- &+m_1\sum_{1\le a<b\le4}
- \binom{s+d_a-1}{d_a-1}
- \binom{s+d_b-1}{d_b-1}
- \prod_{c\notin\{a,b\}}\binom{s+d_c}{d_c},          \label{eq:xl-rows}
-\end{align}
-where a binomial coefficient with a negative lower argument is zero.
-
-\begin{proposition}[Streaming the special-XL operator]
-\label{prop:streamed-xl}
-Let $A_{\mathbf d}$ be the Macaulay matrix at multidegree $\mathbf d$, with
-$M=M_s(\mathbf d)$ columns and $R=R_s(\mathbf d)$ rows.  Every row and
-transpose-row product can be generated from the public quadratic coefficients
-using $O(s^2)$ scratch space.
-
-Over an extension $E/\F_{19^4}$, choose a random diagonal
-$\Delta\in E^{R\times R}$ and put
-\[
-  B=A_{\mathbf d}^\transpose\Delta A_{\mathbf d}.
-\]
-Then
-\[
-  \Pr[\ker B\ne\ker A_{\mathbf d}]\le M/|E|.
-\]
-A product by $B$ is evaluated by one pass over the streamed rows and uses
-$O(M)$ resident field-vector state.  Scalar Wiedemann over $E=\F_{19^8}$
-requires fewer than
-\begin{equation}
-  16R(s+1)^2M                                      \label{eq:xl-stream-work}
-\end{equation}
-signed $\F_{19^4}$ multiply--accumulates per trial.  A conservative cubic
-preconditioner over $\F_{19^{12}}$ gives the Level-I bound
-$32R(s+1)^2M$.
-\end{proposition}
-
-\begin{proof}
-The two sums in \eqref{eq:xl-rows} count multipliers of the diagonal and
-off-diagonal equation families.  A homogenized quadratic row has at most
-$(s+1)^2$ terms, so rows and transpose products are generated on demand.
-
-Factor $A_{\mathbf d}=UV$ at rank $r$.  If
-$U^\transpose\Delta U$ is nonsingular, then
-$\ker(A_{\mathbf d}^\transpose\Delta A_{\mathbf d})=\ker V=\ker A_{\mathbf d}$.
-By Cauchy--Binet, $\det(U^\transpose\Delta U)$ is a nonzero multilinear
-polynomial of total degree $r$ in the diagonal entries.  Schwartz--Zippel
-gives failure at most $r/|E|\le M/|E|$.
-
-Streaming first computes the row inner product and then accumulates the
-scaled row.  In the quadratic extension, the sparse dot product and
-accumulation use at most four base-extension products per row term and the
-diagonal multiplication uses three more.  Fewer than $3M$ normal-operator
-products generate the scalar Wiedemann sequence and reconstruct one null
-vector.  Rounding the resulting constant gives
-\eqref{eq:xl-stream-work}; the cubic-extension calculation is analogous.
-\end{proof}
-
-\subsection{Certified extraction beyond exact corank one}
-A one-dimensional Macaulay kernel is convenient but is not required for
-soundness.
-
-\begin{theorem}[Recovery from a finite commuting border quotient]
-\label{thm:border-recovery}
-Fix a target and slice over a finite field $\Omega$, and let
-$I\subseteq\Omega[x_1,\ldots,x_h]$ be the ideal of the residual equations.
-Let $\mathcal B$ be a finite divisor-closed monomial set containing $1$.
-Suppose the Macaulay row space supplies, for every border monomial
-$\beta\in\partial\mathcal B$, a certified relation
-\[
-  g_\beta=\beta-\sum_{b\in\mathcal B}c_{\beta,b}b\in I.
-\]
-Construct the formal multiplication matrices $M_1,\ldots,M_h$ on
-$\Omega\mathcal B$.  If they commute, then the border relations generate a
-zero-dimensional ideal $J\subseteq I$, $\mathcal B$ is a basis of
-$\Omega[x]/J$, and every root of $I$ occurs among the roots enumerated from
-the multiplication tables.  FGLM conversion costs $O(h|\mathcal B|^3)$ field
-operations once the tables are available.  Complete residual and public
-verification removes every extra point.
-\end{theorem}
-
-\begin{proof}
-Commutativity makes $x_i\mapsto M_i$ an algebra homomorphism.  Divisor closure
-identifies each basis monomial with its coordinate vector, and every border
-relation acts as zero.  The border-division theorem therefore gives unique
-normal forms in $\Span_\Omega\mathcal B$, so the relations form a border basis
-of a zero-dimensional ideal $J$.  Because every relation is a Macaulay row
-combination from $I$, we have $J\subseteq I$ and hence
-$V(I)\subseteq V(J)$.  Standard FGLM conversion and finite-field
-factorization enumerate the geometric points of $J$~\cite{FGLM1993,KehreinKreuzer2005}.
-\end{proof}
-
-A quotient of dimension larger than one is therefore a correctness fallback,
-not a free extension of the scalar-Wiedemann exponent.  Obtaining all border
-relations, block-nullspace work, and resident multiplication-table state must
-fit the displayed ledger or be charged separately.
-
-\subsection{Three-plus-one completion}
-The fourth eigenblock can be completed linearly after solving the first three.
-Let $E_{ab}$ be the $m_1$ equations supported on blocks $a,b$.
-
-\begin{theorem}[Exact three-plus-one completion]
-\label{thm:three-plus-one}
-Suppose a certified first-stage solver returns a finite set containing every
-root of the six families $E_{ab}$ with $1\le a\le b\le3$.  For each partial
-root $p=(x_1,x_2,x_3)$, substitute into $E_{14},E_{24},E_{34}$ and obtain
-\[
-  A_px_4=b_p,
-  \qquad A_p\in\Omega^{3m_1\times s}.
-\]
-Discard inconsistent systems.  If $\rank A_p=s$, solve for the unique fourth
-block and retain it exactly when $E_{44}=0$.  If a consistent system has rank
-below $s$, declare the trial incomplete unless a separately priced procedure
-enumerates all completions.  Whenever no incomplete case occurs, the retained
-set contains every root of the complete four-block system.  Final descent and
-verification make the procedure Las Vegas.
-\end{theorem}
-
-\begin{proof}
-Any complete root restricts to a first-stage root.  At that partial root its
-true fourth block satisfies the displayed linear system.  On a trial that declares no incomplete case, every consistent system
-encountered has full column rank.  Hence the true fourth block is the unique
-completion, and the remaining diagonal family checks it.  Conversely every
-retained point satisfies all ten families.
-\end{proof}
-
-\subsection{Status of the low-state branch}
-The streamed operator, row count, and correctness fallbacks above remain
-useful complementary machinery.  No production numerical profile is reported
-because the artifact does not regenerate a selected multidegree,
-success-probability bound, and state figure from one checker.  A numerical frontier would
-require both that profile generator and a production border-basis or solve
-transcript.
 
 \section{Implementation, evidence, and reproducibility}
 \label{sec:implementation}
@@ -3139,18 +2736,9 @@ $10.811927$, $23.205374$, and $38.156013$ bits of allowable overhead at Levels
 I, III, and V; the paper does not identify those values with complete
 classical-gate bounds.
 
-The Just Guess route gives a more explicit sensitivity for the Level-I
-$\ell=2$ shape.  It replaces symbolic homotopy by a
-Boolean-ledger instantiation of the published expected schedule of guesses,
-quadratic roots, linear solves, quotient checks, and verifier calls.  The
-expected trial ledger is below $2^{132.047}$;
-an exact conditional-channel atom calculation and a cross-channel second
-moment give a success-adjusted exponent below
-$135.425325+\log_2\kappa_{\rm JG}$.  Thus the Level-I comparison is below
-$2^{143}$ under the sufficient condition
-$\log_2\kappa_{\rm JG}<7.574675$.  The candidate event is transcript-checkable,
-but its multiplier is unmeasured and can be infinite.  This is therefore still
-a premise, not an unconditional complete-gate break.
+\Cref{sec:jg-finite-gate} records a separate Boolean-ledger sensitivity for the
+Level-I $\ell=2$ shape.  It remains conditional on an unmeasured Just Guess
+multiplier and does not give an unconditional complete-gate break.
 
 The release is therefore evidence for an exact structural reduction and
 conditional attack architecture, not an empirical demonstration of a
@@ -3166,7 +2754,424 @@ the same coupling requires $101.5625\%$--$144.00\%$ more.  These are necessary
 dimension floors for those specific goals, not general lower bounds on every
 secure repair.
 
+\clearpage
+\bibliographystyle{unsrtnat}
+\begingroup
+\footnotesize
+\setlength{\bibsep}{0pt}
+\Urlmuskip=0mu plus 1mu\relax
+\sloppy
+\bibliography{references}
+\endgroup
+
+\clearpage
 \appendix
+\section{A Boolean-ledger Level-I sensitivity via Just Guess}
+\label{sec:jg-finite-gate}
+
+The homotopy ledger deliberately leaves $\kappa_{\rm hom}$ explicit.  This
+section asks whether the row that determines the adaptive Level-I maximum,
+$(v,o,\ell,r)=(48,16,2,2)$, admits a more concrete estimate.  We combine the
+exact zero-offset target split of \Cref{prop:sq-zero-split} with the
+underdetermined-MQ transformation of May, Ostuzzi, and
+Ressler~\cite{MayOstuzziRessler2026}.  Their analysis reduces a random
+underdetermined MQ system to guessed variables, a short tree of univariate
+quadratics, a linear solve, and check equations.  It explicitly uses a
+random-system regularity model for the linearization step.  We retain that
+premise rather than turning it into an unconditional statement.
+
+Write the quotient map in its two Frobenius channels as
+\[
+  D:A^{64}\longrightarrow A^{16},\qquad
+  H:A^{64}\longrightarrow\F_{19}^{16},
+  \qquad A=\F_{19^2}.
+\]
+Here $D$ is the diagonal channel and $H$ is the Hermitian cross channel.  The
+retained consistent target is $(t_D,t_H)$.  We additionally reject the event
+$t_D=0$, of probability $19^{-32}$ under the exact uniform target sampler.
+Conditioned on consistency and $t_D\ne0$, the pair $(t_D,t_H)$ remains exactly
+uniform over the retained target set.
+
+The two channel families are distinct linear images of the same native
+byte-reduced public coefficients.  They are therefore \emph{not independent}.
+The argument below uses an exact conditional atom bound for the official
+$\ell=2$ channel transform instead.
+
+\subsection{The streamed diagonal solver}
+Apply Just Guess to the $m=16$ equations $D(x)=t_D$ in $n=64$ variables over
+$A$, with
+\[
+  k=5,\qquad p=6,\qquad m-k-p=5.
+\]
+The published structural inequalities hold:
+\[
+  2k+p=m,\qquad
+  2(n-m)=96\ge6(2m-2k-p-1)=90,
+\]
+\[
+  n-1=63\ge(m-k-p-1)(m-k+2)=52.
+\]
+The public transformation gives coordinates $(u,z)\in A^{16}\times A^{48}$.
+Fixing $z$ changes only linear and constant terms in the transformed square
+system.  We stream an $A^8$ family of $z$ assignments.  For each assignment,
+the solver enumerates all $|A|^5$ guesses, follows every returned quadratic
+branch, solves the remaining $5\times5$ linear system, and checks the five
+withheld equations.  Surviving points are tested against $H(x)=t_H$, the
+format rule, affine reconstruction, and the unmodified verifier.
+
+Let $\mathcal R$ denote the event that this computation supplies at least
+$19^{16}/4$ distinct sign-canonical diagonal roots.  This is a concrete,
+transcript-checkable candidate-abundance premise motivated by, but not proved
+by, the published Just Guess random-system analysis.  No reduced-size or
+production transcript in the release establishes $\mathcal R$.  We write
+$\kappa_{\rm JG}$ for the expected multiplier
+needed to obtain $\mathcal R$.  It includes transformation and linearization
+retries, candidate-abundance failures, the negligible format and $t_D=0$
+losses, and any candidate-processing cost beyond the explicit reserve below.
+Unlike $\kappa_{\rm hom}$, it does not hide a generic soft-$O$ algebraic
+solver, but it remains an unmeasured premise.
+If $\mathcal R$ is unreachable for a fixed system and transformation family,
+then $\kappa_{\rm JG}=\infty$ and the comparison gives no crossing.
+
+\subsection{Conditional cross-channel filtering}
+For $x\in A^{64}$ put $\Psi(x)=xx^{19\,\transpose}$.  If
+$\Psi(x)=\Psi(y)$ for nonzero $x,y$, then $y=\lambda x$ with
+$\lambda\lambda^{19}=1$.  If also $D(x)=D(y)=t_D\ne0$, then
+$\lambda^2=1$, so $y=\pm x$.  Retaining one representative of each sign pair
+therefore makes the cross tensors distinct.
+
+\begin{lemma}[Exact conditional channel atom]
+\label{lem:jg-conditional-atom}
+Use the native-coordinate idealized XOF-transcript model, in which one field symbol has raw
+integer weight $14$ for residues $0,\ldots,8$ and $13$ for residues
+$9,\ldots,18$.  Condition on the complete diagonal-channel coefficient
+family $D$.  For every native coefficient block and every nonzero
+$\F_{19}$-linear functional of its remaining Hermitian coefficient, every
+conditional atom has probability at most
+\begin{equation}
+  \rho_{\rm cond}=\frac{49}{829}<0.059108.             \label{eq:jg-rho-cond}
+\end{equation}
+Conditioned on $D$, different native blocks and different base forms remain
+independent.
+\end{lemma}
+
+\begin{proof}
+Diagonalize the official matrix
+$S=\left(\begin{smallmatrix}1&2\\2&15\end{smallmatrix}\right)$ over
+$A=\F_{19}[u]/(u^2+1)$.  Its eigenvalues are $8\pm2u$, with eigenvectors
+$(1,13\pm u)$.  For a native symmetric diagonal block
+$\left(\begin{smallmatrix}a&b\\b&c\end{smallmatrix}\right)$, the diagonal
+coefficient and Hermitian coefficient are
+\[
+ D=(a+7b+16c)+(2b+7c)u,\qquad H=a+7b+18c.
+\]
+For an off-diagonal native block
+$\left(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right)$, they are
+\[
+ D=(a+13b+13c+16d)+(b+c+7d)u,
+\]
+\[
+ H=(a+13b+13c+18d)+(18b+c)u.
+\]
+These maps act separately on disjoint native blocks.  Exact enumeration of
+all $19^3$ diagonal tuples with their product weights gives maximum
+conditional atom $49/829$.  Exact enumeration of all $19^4$ off-diagonal
+tuples and all $20$ projective nonzero linear functionals on the $A$-valued
+Hermitian coefficient gives the smaller maximum
+$169246/2971565$.  The artifact reproduces both rational values directly
+from the displayed formulae.  Conditioning separately on the $D$-image of
+each independent native block preserves blockwise and base-form independence.
+\end{proof}
+
+\begin{lemma}[Conditional cross-channel second moment]
+\label{lem:jg-cross-moment}
+Let $C$ be any set of $T=c\,19^{16}$ sign-canonical solutions of
+$D(x)=t_D$, where $t_D\ne0$ and $0<c\le1$.  Condition on the entire diagonal
+channel and on any solver transcript determined by it.  For a uniform
+independent target $t_H$,
+\begin{equation}
+ \Pr[\exists x\in C:H(x)=t_H\mid D]
+ \ge \frac{c}{1+c(19\rho_{\rm cond})^{16}}.           \label{eq:jg-cross-success}
+\end{equation}
+For $c=1/4$, this lower bound is
+$0.0961344407\ldots$.
+\end{lemma}
+
+\begin{proof}
+Let $N=|\{x\in C:H(x)=t_H\}|$.  Uniformity of $t_H$ gives
+$\mathbb EN=c$.  For distinct $x,y\in C$, the Hermitian tensors differ.
+For each of the sixteen independent base forms, the equality
+$H_i(x)=H_i(y)$ is a nonzero linear equation in the Hermitian block
+coefficients.  Condition on all blocks except one on which this functional is
+nonzero.  By \Cref{lem:jg-conditional-atom}, its conditional probability is
+at most $\rho_{\rm cond}$.  Independence across the sixteen base forms gives
+\[
+ \Pr[H(x)=H(y)\mid D]\le \rho_{\rm cond}^{16}.
+\]
+Consequently
+\[
+ \mathbb E N(N-1)
+ \le T(T-1)19^{-16}\rho_{\rm cond}^{16}
+ <c^2(19\rho_{\rm cond})^{16}.
+\]
+Cauchy--Schwarz gives
+$\Pr[N>0]\ge(\mathbb EN)^2/\mathbb E[N^2]$, proving the claim.
+\end{proof}
+
+\subsection{Finite Boolean-gate instantiation}
+We use the constructive $692$-gate multiplication recurrence and $84$-gate
+adder count over $A$.  A
+monic quadratic over $A$ is solved by a fixed Tonelli--Shanks schedule.  The
+artifact checks all $361$ possible discriminants and obtains
+\begin{equation}
+  C_{\rm root}=16{,}886\quad\AXN\text{ gates}.        \label{eq:jg-root-gates}
+\end{equation}
+Instantiating the published expected Just Guess operation formulas at
+$(n,m,k,p)=(64,16,5,6)$ gives, per guess,
+\[
+  2684.089\text{ extension multiplications},\qquad
+  2621.087\text{ extension additions},\qquad
+  6\text{ quadratic-root calls}.
+\]
+Rounding upward and adding one million gates for comparisons, address logic,
+and branch control gives
+\begin{equation}
+ C_{\rm guess}=3{,}179{,}584\quad\AXN\text{ gates}.  \label{eq:jg-guess-gates}
+\end{equation}
+We declare a reserve of $2^{40}$ gates per $z$ assignment for candidate
+filtering and verifier calls.  This is a ledger allowance, not a theorem that
+it dominates every possible candidate population; any excess is included in
+$\kappa_{\rm JG}$.  Target sampling, the public transformation, and all rank
+preflights are polynomial-sized additive terms.
+
+\begin{proposition}[Conditional finite-gate Level-I sensitivity]
+\label{prop:jg-level1-gates}
+Under the published Just Guess expected-operation model, the Boolean ledger
+for one $A^8$-streaming trial is
+\begin{equation}
+ W_{\rm JG}^{\rm trial}
+ =|A|^{8+5}C_{\rm guess}+|A|^8 2^{40}
+ <2^{132.046523}.                                    \label{eq:jg-expected-work}
+\end{equation}
+On event $\mathcal R$, \Cref{lem:jg-cross-moment} with $c=1/4$ gives an
+expected cross-channel restart multiplier below $10.403$.  Consequently the
+success-adjusted Boolean-gate ledger is
+\begin{equation}
+  \log_2 W_{\rm JG}
+  <135.425325+\log_2\kappa_{\rm JG}.                 \label{eq:jg-final}
+\end{equation}
+It is below the Level-I reference $143$ whenever
+\begin{equation}
+  \log_2\kappa_{\rm JG}<7.574675.                    \label{eq:jg-break-even}
+\end{equation}
+For orientation only, a factor-$16$ regularity reserve gives an exponent below
+$139.425325$ and more than $3.574675$ bits of remaining margin.
+A separate capped-tree schedule follows at most $63$ quadratic nodes and
+$64$ leaves per guess and aborts any branch whose residual linear system is
+not unique.  Its trial exponent is below $137.713504$; after the same
+cross-channel restart it is below
+$141.092307+\log_2\kappa_{\rm JG}^{\rm cap}$.  Thus this
+strictly bounded-work sensitivity remains below $143$ when
+$\log_2\kappa_{\rm JG}^{\rm cap}<1.907693$.  It is reported as a sensitivity
+check, not as a proof of the capped candidate event.
+\end{proposition}
+
+\begin{proof}
+There are $|A|^8$ streamed assignments and $|A|^5$ guesses per assignment.
+Substituting the scalar circuit, tower recurrence counts, and quadratic-root
+schedule into the
+published expected-operation formulas gives \eqref{eq:jg-expected-work}; the
+artifact recomputes the integer ledger before taking logarithms.  On
+$\mathcal R$, take any $19^{16}/4$ sign-canonical candidates.  The reciprocal
+of \eqref{eq:jg-cross-success} is
+$10.4020993\ldots$, adding $3.378803$ bits.  The remaining regularity,
+transformation, candidate-collection, and excess filtering multipliers are,
+by definition, included in $\kappa_{\rm JG}$.  Every candidate is checked by
+the original verifier, so all failure modes are one-sided.
+\end{proof}
+
+\paragraph{Interpretation.}
+This proposition replaces the homotopy soft-$O$ multiplier on the row setting
+the adaptive Level-I maximum by (i) an explicit Boolean ledger for the published
+expected-operation schedule and (ii) the specific, unestablished but
+transcript-checkable event
+that the Just Guess run yields enough diagonal roots.  It does not provide a
+complete circuit for every control path or prove candidate abundance.  A
+complete, instrumented fixed-key implementation would estimate
+$\kappa_{\rm JG}$.
+The two $\ell=4$ Level-I rows still retain $\kappa_{\rm hom}$ in their
+homotopy ledgers.
+
+\section{Streamed-XL and low-state analyses}
+\label{sec:low-state-xl}
+
+The complete-square homotopy route supplies a conditional time bound under
+$\mathsf H_{\rm hom}$, but it does not supply a low-memory implementation.
+This section records a complementary
+branch whose matrices can be streamed with linear vector state.  Its
+correctness is exact once a finite quotient certificate is produced; its
+numerical exponent retains a production selected-degree premise.  The two
+branches therefore answer different questions rather than competing for one
+headline.
+
+\subsection{Four-block special XL}
+For an $A$-linear $\ell=4$ slice of $A$-dimension $s$, scalar extension gives
+four blocks of $s$ variables.  Each unordered pair of blocks carries $m_1$
+independent quadratic equations.  After adding one homogenizer per block, the
+Hilbert series used by the published special-XL model is
+\begin{equation}
+ H_{m_1,s}(\mathbf t)=
+ \frac{\prod_{a=1}^4(1-t_a^2)^{m_1}
+       \prod_{1\le a<b\le4}(1-t_at_b)^{m_1}}
+      {\prod_{a=1}^4(1-t_a)^{s+1}}.                 \label{eq:xl-hilbert}
+\end{equation}
+For a multidegree $\mathbf d=(d_1,\ldots,d_4)$, the monomial-column count is
+\begin{equation}
+  M_s(\mathbf d)=\prod_{a=1}^4\binom{s+d_a}{d_a}.    \label{eq:xl-columns}
+\end{equation}
+A negative coefficient of \eqref{eq:xl-hilbert} is the selected-degree trigger
+in the cited model~\cite{Cabarcas2025SNOVA}.  It predicts that a planted
+instance has the finite quotient needed for extraction; the theorem below
+makes the operator and state accounting exact but does not prove that
+production instances reach such a quotient at that degree.
+
+The exact row count is
+\begin{align}
+ R_s(\mathbf d)
+={}&m_1\sum_{a=1}^4
+ \binom{s+d_a-2}{d_a-2}\prod_{c\ne a}\binom{s+d_c}{d_c}
+ \notag\\
+ &+m_1\sum_{1\le a<b\le4}
+ \binom{s+d_a-1}{d_a-1}
+ \binom{s+d_b-1}{d_b-1}
+ \prod_{c\notin\{a,b\}}\binom{s+d_c}{d_c},          \label{eq:xl-rows}
+\end{align}
+where a binomial coefficient with a negative lower argument is zero.
+
+\begin{proposition}[Streaming the special-XL operator]
+\label{prop:streamed-xl}
+Let $A_{\mathbf d}$ be the Macaulay matrix at multidegree $\mathbf d$, with
+$M=M_s(\mathbf d)$ columns and $R=R_s(\mathbf d)$ rows.  Every row and
+transpose-row product can be generated from the public quadratic coefficients
+using $O(s^2)$ scratch space.
+
+Over an extension $E/\F_{19^4}$, choose a random diagonal
+$\Delta\in E^{R\times R}$ and put
+\[
+  B=A_{\mathbf d}^\transpose\Delta A_{\mathbf d}.
+\]
+Then
+\[
+  \Pr[\ker B\ne\ker A_{\mathbf d}]\le M/|E|.
+\]
+A product by $B$ is evaluated by one pass over the streamed rows and uses
+$O(M)$ resident field-vector state.  Scalar Wiedemann over $E=\F_{19^8}$
+requires fewer than
+\begin{equation}
+  16R(s+1)^2M                                      \label{eq:xl-stream-work}
+\end{equation}
+signed $\F_{19^4}$ multiply--accumulates per trial.  A conservative cubic
+preconditioner over $\F_{19^{12}}$ gives the Level-I bound
+$32R(s+1)^2M$.
+\end{proposition}
+
+\begin{proof}
+The two sums in \eqref{eq:xl-rows} count multipliers of the diagonal and
+off-diagonal equation families.  A homogenized quadratic row has at most
+$(s+1)^2$ terms, so rows and transpose products are generated on demand.
+
+Factor $A_{\mathbf d}=UV$ at rank $r$.  If
+$U^\transpose\Delta U$ is nonsingular, then
+$\ker(A_{\mathbf d}^\transpose\Delta A_{\mathbf d})=\ker V=\ker A_{\mathbf d}$.
+By Cauchy--Binet, $\det(U^\transpose\Delta U)$ is a nonzero multilinear
+polynomial of total degree $r$ in the diagonal entries.  Schwartz--Zippel
+gives failure at most $r/|E|\le M/|E|$.
+
+Streaming first computes the row inner product and then accumulates the
+scaled row.  In the quadratic extension, the sparse dot product and
+accumulation use at most four base-extension products per row term and the
+diagonal multiplication uses three more.  Fewer than $3M$ normal-operator
+products generate the scalar Wiedemann sequence and reconstruct one null
+vector.  Rounding the resulting constant gives
+\eqref{eq:xl-stream-work}; the cubic-extension calculation is analogous.
+\end{proof}
+
+\subsection{Certified extraction beyond exact corank one}
+A one-dimensional Macaulay kernel is convenient but is not required for
+soundness.
+
+\begin{theorem}[Recovery from a finite commuting border quotient]
+\label{thm:border-recovery}
+Fix a target and slice over a finite field $\Omega$, and let
+$I\subseteq\Omega[x_1,\ldots,x_h]$ be the ideal of the residual equations.
+Let $\mathcal B$ be a finite divisor-closed monomial set containing $1$.
+Suppose the Macaulay row space supplies, for every border monomial
+$\beta\in\partial\mathcal B$, a certified relation
+\[
+  g_\beta=\beta-\sum_{b\in\mathcal B}c_{\beta,b}b\in I.
+\]
+Construct the formal multiplication matrices $M_1,\ldots,M_h$ on
+$\Omega\mathcal B$.  If they commute, then the border relations generate a
+zero-dimensional ideal $J\subseteq I$, $\mathcal B$ is a basis of
+$\Omega[x]/J$, and every root of $I$ occurs among the roots enumerated from
+the multiplication tables.  FGLM conversion costs $O(h|\mathcal B|^3)$ field
+operations once the tables are available.  Complete residual and public
+verification removes every extra point.
+\end{theorem}
+
+\begin{proof}
+Commutativity makes $x_i\mapsto M_i$ an algebra homomorphism.  Divisor closure
+identifies each basis monomial with its coordinate vector, and every border
+relation acts as zero.  The border-division theorem therefore gives unique
+normal forms in $\Span_\Omega\mathcal B$, so the relations form a border basis
+of a zero-dimensional ideal $J$.  Because every relation is a Macaulay row
+combination from $I$, we have $J\subseteq I$ and hence
+$V(I)\subseteq V(J)$.  Standard FGLM conversion and finite-field
+factorization enumerate the geometric points of $J$~\cite{FGLM1993,KehreinKreuzer2005}.
+\end{proof}
+
+A quotient of dimension larger than one is therefore a correctness fallback,
+not a free extension of the scalar-Wiedemann exponent.  Obtaining all border
+relations, block-nullspace work, and resident multiplication-table state must
+fit the displayed ledger or be charged separately.
+
+\subsection{Three-plus-one completion}
+The fourth eigenblock can be completed linearly after solving the first three.
+Let $E_{ab}$ be the $m_1$ equations supported on blocks $a,b$.
+
+\begin{theorem}[Exact three-plus-one completion]
+\label{thm:three-plus-one}
+Suppose a certified first-stage solver returns a finite set containing every
+root of the six families $E_{ab}$ with $1\le a\le b\le3$.  For each partial
+root $p=(x_1,x_2,x_3)$, substitute into $E_{14},E_{24},E_{34}$ and obtain
+\[
+  A_px_4=b_p,
+  \qquad A_p\in\Omega^{3m_1\times s}.
+\]
+Discard inconsistent systems.  If $\rank A_p=s$, solve for the unique fourth
+block and retain it exactly when $E_{44}=0$.  If a consistent system has rank
+below $s$, declare the trial incomplete unless a separately priced procedure
+enumerates all completions.  Whenever no incomplete case occurs, the retained
+set contains every root of the complete four-block system.  Final descent and
+verification make the procedure Las Vegas.
+\end{theorem}
+
+\begin{proof}
+Any complete root restricts to a first-stage root.  At that partial root its
+true fourth block satisfies the displayed linear system.  On a trial that declares no incomplete case, every consistent system
+encountered has full column rank.  Hence the true fourth block is the unique
+completion, and the remaining diagonal family checks it.  Conversely every
+retained point satisfies all ten families.
+\end{proof}
+
+\subsection{Status of the low-state branch}
+The streamed operator, row count, and correctness fallbacks above remain
+useful complementary machinery.  No production numerical profile is reported
+because the artifact does not regenerate a selected multidegree,
+success-probability bound, and state figure from one checker.  A numerical frontier would
+require both that profile generator and a production border-basis or solve
+transcript.
+
 
 \section{A finite fixed-key spectrum-certificate format}\label{app:fixed-key-spectrum}
 The idealized XOF-transcript theorem is not required for a statement about a concrete key.
@@ -3345,14 +3350,5 @@ checkers are deterministic, require Python~3.10 or newer plus NumPy for the two
 correspondence tests, and do not require network access.  The paper build uses
 only the files in the package.  The supplied \texttt{SHA256SUMS} records every
 distributed source and pinned input; generated TeX build files are excluded.
-
-\bibliographystyle{unsrtnat}
-\begingroup
-\footnotesize
-\setlength{\bibsep}{0pt}
-\Urlmuskip=0mu plus 1mu\relax
-\sloppy
-\bibliography{references}
-\endgroup
 
 \end{document}
