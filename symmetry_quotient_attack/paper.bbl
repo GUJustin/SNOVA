@@ -128,28 +128,6 @@ Jintai Ding, Peigen Li, and Siyong Tao.
 \newblock Cryptology ePrint Archive, Paper 2026/1548, 2026.
 \newblock URL \url{https://eprint.iacr.org/2026/1548}.
 
-\bibitem[Faug\`ere et~al.(1993)Faug\`ere, Gianni, Lazard, and Mora]{FGLM1993}
-Jean-Charles Faug\`ere, Patrizia Gianni, Daniel Lazard, and Teo Mora.
-\newblock Efficient computation of zero-dimensional gr\"obner bases by change
-  of ordering.
-\newblock \emph{Journal of Symbolic Computation}, 16\penalty0 (4):\penalty0
-  329--344, 1993.
-\newblock \doi{10.1006/jsco.1993.1051}.
-
-\bibitem[Kehrein and Kreuzer(2005)]{KehreinKreuzer2005}
-Achim Kehrein and Martin Kreuzer.
-\newblock Characterizations of border bases.
-\newblock \emph{Journal of Pure and Applied Algebra}, 196\penalty0
-  (2--3):\penalty0 251--270, 2005.
-\newblock \doi{10.1016/j.jpaa.2004.08.028}.
-
-\bibitem[Din and Schost(2018)]{SafeyElDinSchost2018}
-Mohab Safey~El Din and {\'E}ric Schost.
-\newblock Bit complexity for multi-homogeneous polynomial system solving:
-  Application to polynomial minimization.
-\newblock \emph{Journal of Symbolic Computation}, 87:\penalty0 176--206, 2018.
-\newblock \doi{10.1016/j.jsc.2017.08.001}.
-
 \bibitem[Tseng et~al.(2026)Tseng, Wang, Li, and Kuan]{TsengEtAl2026Wedge}
 Po-En Tseng, Lih-Chung Wang, Peigen Li, and Yen-Liang Kuan.
 \newblock Investigating the wedge map on {SNOVA}.
@@ -185,5 +163,27 @@ Kosuke Sakata and Tsuyoshi Takagi.
 \newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded
   Systems}, 2026\penalty0 (3):\penalty0 1284--1309, 2026.
 \newblock \doi{10.46586/tches.v2026.i3.1284-1309}.
+
+\bibitem[Din and Schost(2018)]{SafeyElDinSchost2018}
+Mohab Safey~El Din and {\'E}ric Schost.
+\newblock Bit complexity for multi-homogeneous polynomial system solving:
+  Application to polynomial minimization.
+\newblock \emph{Journal of Symbolic Computation}, 87:\penalty0 176--206, 2018.
+\newblock \doi{10.1016/j.jsc.2017.08.001}.
+
+\bibitem[Faug\`ere et~al.(1993)Faug\`ere, Gianni, Lazard, and Mora]{FGLM1993}
+Jean-Charles Faug\`ere, Patrizia Gianni, Daniel Lazard, and Teo Mora.
+\newblock Efficient computation of zero-dimensional gr\"obner bases by change
+  of ordering.
+\newblock \emph{Journal of Symbolic Computation}, 16\penalty0 (4):\penalty0
+  329--344, 1993.
+\newblock \doi{10.1006/jsco.1993.1051}.
+
+\bibitem[Kehrein and Kreuzer(2005)]{KehreinKreuzer2005}
+Achim Kehrein and Martin Kreuzer.
+\newblock Characterizations of border bases.
+\newblock \emph{Journal of Pure and Applied Algebra}, 196\penalty0
+  (2--3):\penalty0 251--270, 2005.
+\newblock \doi{10.1016/j.jpaa.2004.08.028}.
 
 \end{thebibliography}
