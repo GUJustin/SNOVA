@@ -1393,61 +1393,87 @@ $q^{\dim U-h}q^K$ of target--coset pairs to obtain
 \eqref{eq:moment-second}.
 \end{proof}
 
-\section{Full-domain spectrum and conditional square-system recovery}
+\section{A conditional recovery theorem for every parameter set}
 \label{sec:sq-overview}
 
-The conditional recovery route has a deliberately simple primary theorem.
-For a key of any published parameter shape that passes the stated exact
-preflights, the symmetry quotient and affine split leave a square residual
-system: $K$ equations on a $K$-dimensional public slice.  The full-domain
-spectrum theorem supplies accepted nonsingular roots,
-and the conditional finite-cardinality homotopy adaptation recovers them only
-under $\mathsf H_{\rm hom}$.  No selected degree,
-chosen Jacobian core, family-count sweep, or exact-corank prediction appears
-in this direct route.
+The exact reduction in \Cref{cor:exact-square-restriction} constructs a square
+system but does not show that the system has an acceptable root or that a
+solver can find one.  The following theorem states the additional conditions
+used by the paper and gives one recovery route for all nine published
+parameter shapes.
 
+\begin{theorem}[Conditional recovery for all published parameter shapes]
+\label{thm:sq-all-nine-simple}
+Consider any published $q=19$ Version~2.3 parameter shape.  Suppose the public
+key and chosen column relation pass the stated exact rank checks.  Suppose the
+applicable bound $\bar\eta_L^U\le\eta_{128}$ holds, either through the
+idealized public-key model used below or through an exact certificate for the
+fixed key.  Finally, assume $\mathsf H_{\rm hom}$ for the square system that
+the attack invokes.
+
+Under these conditions, a randomized recovery algorithm solves a square
+system and checks every candidate against the affine reconstruction, the
+signature rejection rule, and the original verifier.  It never returns an
+invalid signature.  The algorithm does not choose a Macaulay degree or assume
+a unique root, a predicted corank, or a predetermined Jacobian minor.  Its
+unit-leading arithmetic costs, before the unmeasured multiplier
+$\kappa_{\rm hom}$, are as follows.
 \begin{center}
 \small
-\renewcommand{\arraystretch}{1.18}
-\begin{tabularx}{0.97\textwidth}{@{}>{\bfseries\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.27\textwidth}@{}}
+\begin{tabularx}{\textwidth}{@{}c l >{\raggedright\arraybackslash}X r r@{}}
 \toprule
-Layer & Mathematical statement & Status \\
+Level & parameters & square system & exponent & headroom\\
 \midrule
-Exact algebra & Public-matrix symmetry factors the ordered feature map
-through $\operatorname{Sym}^2(A)$; the output split retains every verifier
-equation and reconstructs every candidate. & Exact for the scalar
-common-column map of a fixed key and relation passing the stated public
-ranks. \\
-Root density & A full-domain directional-rank spectrum bounds both collisions
-and the singular locus of the restricted Jacobian. & Theorem in the
-idealized XOF-transcript model, or an exact projective-rank certificate
-for a fixed key. \\
-Complete-square recovery & Restrict the full $K$-coordinate residual map to
-a public $K$-dimensional slice and solve all $K$ equations together.  Every
-candidate is checked by the original verifier. & Conditional on
-$\mathsf H_{\rm hom}$ as well as the stated public and spectrum events; no
-production-size solver execution is supplied. \\
-Certified optimization & An exact determinant preflight may replace the
-complete square by a smaller channel core; failure invokes the complete
-square or a lower-work orbit fallback. & A certified branch optimization,
-not an assumption about the public key. \\
+I   & $(28,5,4,4)$  & ordinary $50\times50$ square & $142.607$ & $0.393$\\
+I   & $(48,16,2,2)$ & complete two-block square & $132.971$ & $10.029$\\
+I   & $(28,4,4,5)$  & ordinary $50\times50$ square & $142.606$ & $0.394$\\
+III & $(40,7,4,4)$  & ordinary $70\times70$ square & $185.451$ & $21.549$\\
+III & $(72,24,2,2)$ & complete two-block square & $183.795$ & $23.205$\\
+III & $(38,5,4,5)$  & ordinary $70\times70$ square & $185.450$ & $21.550$\\
+V   & $(50,9,4,4)$  & ordinary $90\times90$ square & $227.560$ & $44.440$\\
+V   & $(96,32,2,2)$ & complete two-block square & $233.844$ & $38.156$\\
+V   & $(52,6,4,6)$  & ordinary $90\times90$ square & $227.559$ & $44.441$\\
 \bottomrule
 \end{tabularx}
 \end{center}
+The worst costs at Levels I, III, and V are
+\begin{equation}
+ \boxed{142.60696,\qquad185.45088,\qquad233.84399}.   \label{eq:sq-simple-headline}
+\end{equation}
+These are multiplication-schedule estimates rather than complete gate counts.
+The theorem does not assert that its conditions hold for every official key,
+and the artifact does not run the solver at production size.
+\end{theorem}
 
-The direct conditional theorem is the conceptual headline.  The adaptive cores improve
-its arithmetic margins, but they are not needed to state the recovery route
-for the nine parameter shapes under the common hypotheses, including
-$\mathsf H_{\rm hom}$.
-This separation makes the logical claim independent of the optimization
-machinery; it does not convert the nominal ledger into a demonstrated break.
+\begin{proof}
+For the $\ell=4$ rows, the fresh-slice construction and
+\Cref{cor:sq-l4-direct-square} give the ordinary square systems.  For the
+$\ell=2$ rows, \Cref{thm:sq-l2-complete} gives the complete two-block systems.
+Both cases use \Cref{thm:sq-accepted-root}, the finite-field separation bound,
+the same conditional homotopy hypothesis, and complete public filtering.  The
+table reports the levelwise costs and their maxima.
+\end{proof}
 
-The numerical statements below are unit-leading AXN operation ledgers.  They
-are not wall-clock timings, low-memory theorems, or complete attack circuits.
-They make no polynomial-time claim: the displayed multihomogeneous B\'ezout
-quantities are exponential, and $\kappa_{\rm hom}$ remains visible.
+The target-generation interpretation also uses the idealized transcript model
+stated below.  None of the displayed exponents is a wall-clock estimate or a
+low-memory theorem.  The B\'ezout quantities are exponential, and
+$\kappa_{\rm hom}$ remains visible.
 
-\subsection{The spectrum required by the accepted-root theorem}
+\paragraph{Root existence.}
+\Cref{sec:sq-full-domain-spectrum} bounds collisions and singular roots on a
+chosen square slice.  It gives an accepted nonsingular root under the stated
+spectrum condition.
+
+\paragraph{Recovery cost.}
+\Cref{sec:sq-arithmetic,sec:sq-complete-square,sec:sq-l2} state the conditional
+homotopy cost and instantiate it for the two public parameter families.
+
+\paragraph{Certified optimizations.}
+Later sections test smaller systems using exact public determinants.  A failed
+test returns to the complete square system.  These branches improve the cost
+estimates but are not needed for the theorem above.
+
+\subsection{When does the square system contain an acceptable root?}
 \label{sec:sq-full-domain-spectrum}
 
 Let $U$ be a finite-dimensional $\F_q$-space, let
@@ -1636,8 +1662,15 @@ A fixed key can instead publish its exact projective rank histogram, which
 certifies \eqref{eq:sq-eta128} without the idealized XOF-transcript model.
 \end{corollary}
 
-\subsection{Core-complete recovery and the adaptive theorem}
+\subsection{Optional certified reductions to smaller systems}
 \label{sec:sq-adaptive}
+
+The main theorem solves every equation in the square system.  The lower cost
+estimates later in the paper instead select fewer linear combinations of those
+equations.  To avoid assuming that a fixed selection works, the algorithm
+tests the selection using public data and returns to the complete square when
+the test fails.  This subsection gives the generic statements behind that
+optional branch.
 
 After scalar extension, partition the residual equations into multidegree
 families $\mathcal F_1,\ldots,\mathcal F_r$.  A count vector
@@ -1730,27 +1763,26 @@ invalid output.
 
 
 
-A \emph{fast-core preflight} is an exact public test proving that the highest
-homogeneous part of the selected core's Jacobian determinant is not the zero
-polynomial.  In the applications below, evaluating that highest part at one
-fixed public point suffices.
+The public test checks that the highest homogeneous part of the selected
+system's Jacobian determinant is not the zero polynomial.  In the applications
+below, evaluating that polynomial at one fixed public point suffices.
 
-\begin{theorem}[Adaptive certified-core fallback]
+\begin{theorem}[Certified smaller system with complete-square fallback]
 \label{thm:sq-adaptive}
 Fix a public construction for which a common structural and spectrum event
 $\mathcal S$ makes a core-complete fallback valid.  Suppose:
 \begin{enumerate}
-\item on passing an exact public fast-core preflight, the fast route has
+\item when the exact public determinant test passes, the smaller system has
 expected unit-leading work at most $W_f$;
-\item on failing it, the core-complete fallback has expected work at most
+\item when the test fails, the complete fallback has expected work at most
 $W_F$;
-\item under the idealized XOF-transcript distribution, the preflight fails with
+\item under the idealized XOF-transcript distribution, the test fails with
 probability at most $\delta$, while
 $\Pr[\mathcal S^c]\le\varepsilon$.
 \end{enumerate}
-For every fixed key in $\mathcal S$, the algorithm ``test, then choose fast or
-fallback'' is selected-degree-free and fixed-core-free.  Under the idealized
-transcript distribution, its conditional expected work obeys
+For every fixed key in $\mathcal S$, the algorithm tests the smaller system
+and otherwise uses the complete fallback.  Under the idealized transcript
+distribution, its conditional expected work obeys
 \begin{equation}
  \mathbb E[W\mid\mathcal S]
  \le W_f+
@@ -2532,81 +2564,37 @@ Only the direct and adaptive routes
 whose complete numerical inputs are regenerated by the artifact are reported.
 No sixteen-orbit or output-size-optimized numerical branch is asserted.
 
-\section{All-nine consequences}
+\section{Conditional costs with certified smaller systems}
 \label{sec:sq-all-nine}
 
-\begin{theorem}[One conditional recovery theorem for every published shape]
-\label{thm:sq-all-nine-simple}
-For every published $q=19$ Version~2.3 parameter shape, a public key passing
-the stated exact rank preflights, satisfying the applicable spectrum
-inequality (whether established by the idealized model event or by a fixed-key
-certificate), and satisfying $\mathsf H_{\rm hom}$ has a
-selected-degree-free Las Vegas recovery route obtained by solving a square
-residual system.  Its expected target-generation interpretation additionally
-uses the stated idealized transcript model.  The theorem specifies a
-conditional forgery wrapper under these conditions; it does not assert that
-they hold for every official key or that the released artifact has executed
-the production-size solver.
-It uses no selected Macaulay degree, exact-corank prediction, unique-root
-assumption, predetermined Jacobian core, family-count pattern, or orbit
-enumeration.  The unit-leading homotopy ledgers are:
-\begin{center}
-\small
-\begin{tabular}{@{}c l l r r@{}}
-\toprule
-Level & parameters & complete square & exponent & headroom\\
-\midrule
-I   & $(28,5,4,4)$  & ordinary $50\times50$ square & $142.607$ & $0.393$\\
-I   & $(48,16,2,2)$ & complete two-block square & $132.971$ & $10.029$\\
-I   & $(28,4,4,5)$  & ordinary $50\times50$ square & $142.606$ & $0.394$\\
-III & $(40,7,4,4)$  & ordinary $70\times70$ square & $185.451$ & $21.549$\\
-III & $(72,24,2,2)$ & complete two-block square & $183.795$ & $23.205$\\
-III & $(38,5,4,5)$  & ordinary $70\times70$ square & $185.450$ & $21.550$\\
-V   & $(50,9,4,4)$  & ordinary $90\times90$ square & $227.560$ & $44.440$\\
-V   & $(96,32,2,2)$ & complete two-block square & $233.844$ & $38.156$\\
-V   & $(52,6,4,6)$  & ordinary $90\times90$ square & $227.559$ & $44.441$\\
-\bottomrule
-\end{tabular}
-\end{center}
-The worst rows at Levels I, III, and V have exponents
-\begin{equation}
- \boxed{142.60696,\qquad185.45088,\qquad233.84399}.   \label{eq:sq-simple-headline}
-\end{equation}
-Thus even this deliberately uniform multiplication-schedule ledger is
-nominally below the $143,207,272$ references at all three levels before
-$\kappa_{\rm hom}$.  This numerical comparison is not a complete-gate break.
-\end{theorem}
+The main theorem solves every equation in the square system.  The exact public
+determinant tests developed above can sometimes certify a smaller system.  A
+failed test returns to the complete square, so the smaller systems change the
+cost estimate but not the assumptions on the public key.
 
-\begin{proof}
-The $\ell=2$ rows are \Cref{thm:sq-l2-complete}; the $\ell=4$ rows are
-\Cref{cor:sq-l4-direct-square}.  Both routes use the same accepted-root
-theorem, exact separator ledger, and complete public filtering.  The displayed
-worst values are the levelwise maxima.
-\end{proof}
-
-\begin{theorem}[Optimized adaptive conditional ledger]
+\begin{theorem}[Lower conditional costs from certified smaller systems]
 \label{thm:sq-all-nine}
 Under the same structural, spectrum, transcript, and $\mathsf H_{\rm hom}$
-conditions, an exact public determinant
-preflight can replace the direct square by a smaller core without introducing
-a preferred-core premise: failure invokes the direct complete square.  The resulting all-nine table is
+conditions as \Cref{thm:sq-all-nine-simple}, an exact public determinant test
+can replace the complete square by a smaller system.  If the test fails, the
+algorithm solves the complete square instead.  The resulting costs are
 \begin{center}
 \small
-\begin{tabular}{@{}c l l r r@{}}
+\begin{tabularx}{\textwidth}{@{}c l >{\raggedright\arraybackslash}X r r@{}}
 \toprule
-Level & parameters & adaptive selected-degree-free route & exponent & headroom\\
+Level & parameters & certified route & exponent & headroom\\
 \midrule
-I   & $(28,5,4,4)$  & channel core, then ordinary square & $128.246$ & $14.754$\\
-I   & $(48,16,2,2)$ & one eigenblock, then two-block square & $132.188$ & $10.812$\\
-I   & $(28,4,4,5)$  & channel core, then ordinary square & $128.246$ & $14.754$\\
-III & $(40,7,4,4)$  & channel core, then ordinary square & $171.617$ & $35.383$\\
+I   & $(28,5,4,4)$  & smaller channel system, else full square & $128.246$ & $14.754$\\
+I   & $(48,16,2,2)$ & one eigenblock, else two-block square & $132.188$ & $10.812$\\
+I   & $(28,4,4,5)$  & smaller channel system, else full square & $128.246$ & $14.754$\\
+III & $(40,7,4,4)$  & smaller channel system, else full square & $171.617$ & $35.383$\\
 III & $(72,24,2,2)$ & complete two-block square & $183.795$ & $23.205$\\
-III & $(38,5,4,5)$  & channel core, then ordinary square & $171.616$ & $35.384$\\
-V   & $(50,9,4,4)$  & channel core, then ordinary square & $214.558$ & $57.442$\\
+III & $(38,5,4,5)$  & smaller channel system, else full square & $171.616$ & $35.384$\\
+V   & $(50,9,4,4)$  & smaller channel system, else full square & $214.558$ & $57.442$\\
 V   & $(96,32,2,2)$ & complete two-block square & $233.844$ & $38.156$\\
-V   & $(52,6,4,6)$  & channel core, then ordinary square & $214.557$ & $57.443$\\
+V   & $(52,6,4,6)$  & smaller channel system, else full square & $214.557$ & $57.443$\\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{center}
 Taking the worst row at each level gives
 \begin{equation}
@@ -2627,14 +2615,15 @@ asserted.
 \end{theorem}
 
 \begin{proof}
-Use the exact branch rule of \Cref{thm:sq-adaptive}.  For $\ell=2$, the
-Level-I fast branch is the certified one-eigenblock core and the fallback is
-the complete two-block square; the complete square is already faster at
-Levels III and V.  For $\ell=4$, use
-\Cref{lem:sq-l4-projective-jacobian} and fall back to
-\Cref{cor:sq-l4-direct-square}.  The machine-readable ledger mixes branch
-work before taking logarithms, charges the union of the relevant spectrum
-tails, and is conditional on the exact structural preflight; only the common spectrum-event density is normalized probabilistically.\end{proof}
+Apply \Cref{thm:sq-adaptive}.  For $\ell=2$, the Level-I test selects one
+eigenblock when its determinant certificate passes and otherwise uses the
+complete two-block square.  The complete square is already cheaper at Levels
+III and V.  For $\ell=4$, use \Cref{lem:sq-l4-projective-jacobian} and return
+to \Cref{cor:sq-l4-direct-square} when the test fails.  The artifact combines
+the work of the two branches before taking logarithms and charges the union of
+their spectrum events.  It conditions on the exact structural rank checks and
+normalizes only by the probability of the common spectrum event.
+\end{proof}
 
 \paragraph{Scope of the arithmetic unit.}
 The primary tables charge the emitted, exhaustively validated $\F_{19}$
@@ -3294,7 +3283,7 @@ row conditions on its exact public quotient/rank preflights, the applicable
 spectrum/model events, and $\mathsf H_{\rm hom}$; the $\ell=4$ rows additionally
 condition on the fixed-layout structural preflight.  The values exclude
 $\log_2\kappa_{\rm hom}$.  ``Direct'' solves the complete square; ``adaptive''
-is the conditional mixture of an exact fast-core preflight and the
+is the conditional mixture of an exact smaller-system determinant test and the
 complete-square fallback.}
 \label{tab:exact-ledger}
 \small
