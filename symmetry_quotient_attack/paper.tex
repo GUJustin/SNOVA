@@ -2431,10 +2431,10 @@ that records the omitted work could measure total work and memory.
 \section{Necessary dimension floors within the common-column model}
 \label{sec:upgrade-repair}
 
-The common-column feature-count floor and the fresh-slice floor are independent
-necessary conditions for eliminating two dimension guarantees while retaining
-the stated architecture.  Neither condition is sufficient for security or
-insecurity.
+We give two necessary output floors for redesigns that retain the
+common-column architecture.  The first removes a square slice from every
+target fiber.  The stronger second floor removes the corresponding
+zero-offset chosen-message slice.  Neither floor is sufficient for security.
 
 \begin{proposition}[Dimensionally square common-column slice bound]
 \label{prop:upgrade-fresh-square-floor}
@@ -2488,46 +2488,24 @@ must satisfy
  \right\},
  \qquad M'=dx'.                                      \label{eq:upgrade-combined-floor}
 \end{equation}
-For the nine official rows:
-\begin{center}
-\begin{tabular}{@{}c l r r r@{}}
-\toprule
-Level & parameters & current $M$ & necessary $M'$ & increase\\
-\midrule
-I   & $(28,5,4,4)$  & $80$  & $116$ & $45.00\%$\\
-I   & $(48,16,2,2)$ & $64$  & $96$  & $50.00\%$\\
-I   & $(28,4,4,5)$  & $80$  & $116$ & $45.00\%$\\
-III & $(40,7,4,4)$  & $112$ & $180$ & $60.71\%$\\
-III & $(72,24,2,2)$ & $96$  & $144$ & $50.00\%$\\
-III & $(38,5,4,5)$  & $100$ & $152$ & $52.00\%$\\
-V   & $(50,9,4,4)$  & $144$ & $228$ & $58.33\%$\\
-V   & $(96,32,2,2)$ & $128$ & $192$ & $50.00\%$\\
-V   & $(52,6,4,6)$  & $144$ & $228$ & $58.33\%$\\
-\bottomrule
-\end{tabular}
-\end{center}
-Thus a parameter-only redesign that insists on both dimension goals while
-retaining these hypotheses needs at least $45.00\%$ more verifier outputs,
-and the largest necessary increase is $60.71\%$.  These are necessary, not
-sufficient, dimensions; they do not prove any enlarged shape secure.
+Across the nine official rows, this requires $45.00\%$--$60.71\%$ more
+outputs (\Cref{thm:upgrade-zero-offset-floor}).
 \end{theorem}
 
 \begin{proof}
 The second and third terms in \eqref{eq:upgrade-combined-floor} are the two
 ordered-cap requirements under $m_1'=\lceil x'/d\rceil$.  The term $v$ is
 \Cref{prop:upgrade-fresh-square-floor}.  Their maximum is therefore necessary.
-Substitution gives the table.
+Substitution gives the affine-fiber column in the comparison below.
 \end{proof}
 
-\subsection{A stronger zero-offset common-column dimension floor}
+\paragraph{Zero-offset targets.}
 \label{sec:upgrade-zero-offset-repair}
 
-The preceding floor assumes a full-rank affine lift and asks dimensions to
-remove a square slice from every target fiber.  A zero-offset attacker has a
-second option: give up affine consistency for all targets, filter
-chosen-message targets through the quadratic image, and recover the entire
-common-column domain.  Eliminating that dimensional configuration alone is much
-more expensive.
+The preceding floor assumes a full-rank affine lift.  A zero-offset attacker
+can instead filter chosen-message targets through the quadratic image and use
+the full common-column domain.  Removing this square slice requires a stronger
+floor.
 
 \begin{proposition}[Zero-offset dimensionally square restriction]
 \label{prop:upgrade-zero-offset-square-persistence}
@@ -2612,28 +2590,29 @@ maximized with
  \qquad
   d\left(\left\lceil\frac{K_{\rm cc,ord}}{C_d}\right\rceil-1\right)+1.
 \]
-For the nine official rows, the zero-offset condition already dominates the
-ordered-cap terms:
+For the nine official rows, the zero-offset condition dominates the ordered-cap
+terms.  The two repair floors compare as follows.
 \begin{center}
 \small
 \begin{tabular}{@{}c l r r r@{}}
 \toprule
-Level & parameters & current $M$ & dimension-only $M'$ & increase\\
+&&& \multicolumn{2}{c}{necessary outputs $M'$}\\
+\cmidrule(l){4-5}
+Level & parameters & current $M$ & affine fiber & zero offset\\
 \midrule
-I   & $(28,5,4,4)$  & $80$  & $180$ & $125.00\%$\\
-I   & $(48,16,2,2)$ & $64$  & $130$ & $103.125\%$\\
-I   & $(28,4,4,5)$  & $80$  & $180$ & $125.00\%$\\
-III & $(40,7,4,4)$  & $112$ & $260$ & $132.14\%$\\
-III & $(72,24,2,2)$ & $96$  & $194$ & $102.08\%$\\
-III & $(38,5,4,5)$  & $100$ & $244$ & $144.00\%$\\
-V   & $(50,9,4,4)$  & $144$ & $324$ & $125.00\%$\\
-V   & $(96,32,2,2)$ & $128$ & $258$ & $101.5625\%$\\
-V   & $(52,6,4,6)$  & $144$ & $324$ & $125.00\%$\\
+I   & $(28,5,4,4)$  & $80$  & $116\;(45.00\%)$ & $180\;(125.00\%)$\\
+I   & $(48,16,2,2)$ & $64$  & $96\;(50.00\%)$ & $130\;(103.125\%)$\\
+I   & $(28,4,4,5)$  & $80$  & $116\;(45.00\%)$ & $180\;(125.00\%)$\\
+III & $(40,7,4,4)$  & $112$ & $180\;(60.71\%)$ & $260\;(132.14\%)$\\
+III & $(72,24,2,2)$ & $96$  & $144\;(50.00\%)$ & $194\;(102.08\%)$\\
+III & $(38,5,4,5)$  & $100$ & $152\;(52.00\%)$ & $244\;(144.00\%)$\\
+V   & $(50,9,4,4)$  & $144$ & $228\;(58.33\%)$ & $324\;(125.00\%)$\\
+V   & $(96,32,2,2)$ & $128$ & $192\;(50.00\%)$ & $258\;(101.5625\%)$\\
+V   & $(52,6,4,6)$  & $144$ & $228\;(58.33\%)$ & $324\;(125.00\%)$\\
 \bottomrule
 \end{tabular}
 \end{center}
-Thus eliminating this dimension guarantee under the stated coupling requires
-$101.5625\%$--$144.00\%$ more outputs across the published rows.
+The zero-offset floor requires $101.5625\%$--$144.00\%$ more outputs.
 \end{theorem}
 
 \begin{proof}
@@ -2648,15 +2627,11 @@ the same feature and output necessities used in
 \Cref{thm:upgrade-combined-floor}.  Direct substitution gives the table.
 \end{proof}
 
-\paragraph{How to interpret the stronger floor.}
-This is deliberately a dimension-only theorem, not a claim that every secure
-repair must literally double its outputs.  A redesign below the table can
-instead leave the square system present and try to obtain security from the
-chosen-message consistency factor $q^{M'-\rho_Q}$, from the cost of solving the
-square system, or from a changed target interface.  It must then publish and
-price those ingredients explicitly.  The displayed floor applies only to a
-redesign that insists on removing this dimension guarantee while preserving
-the stated common-column architecture and parameter coupling.
+The stronger result is a dimension-only theorem.  A redesign below the table
+can retain the square system and rely on the consistency factor
+$q^{M'-\rho_Q}$, its solving cost, or a changed target interface.  The floor
+applies only if the redesign instead removes the square slice while preserving
+the common-column architecture and parameter coupling.
 
 \section{Conclusion}\label{sec:conclusion}
 After the public common-column relation, the $q=19$ Version~2.3 construction
