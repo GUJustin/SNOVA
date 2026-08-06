@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -819,9 +819,6 @@ File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 [25]
 
 [26]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 2006.
-
 
 [27]
 
@@ -859,7 +856,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 [44]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-319.
+294.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -870,14 +867,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 [45] (./paper.bbl
-
-[46]
 Underfull \hbox (badness 2310) in paragraph at lines 37--43
 []\T1/lmr/m/n/9 (+20) SNOVA Team.  SNOVA ver-sion 2.3 ref-er-ence im-ple-men-ta
 -tion and doc-u-men-ta-tion.  Git com-mit
  []
 
-)
+
+
+[46])
 
 [47] (./paper.aux)
  ***********
@@ -885,16 +882,16 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 818619CDEF5B8D1CD3E3FD92446BD9C1;14165.
+(rerunfilecheck)             Checksum: 05A0049C5108581397AED125E423F760;14348.
  ) 
 Here is how much of TeX's memory you used:
- 18098 strings out of 473190
- 296354 string characters out of 5715801
+ 18071 strings out of 473190
+ 295965 string characters out of 5715801
  750409 words of memory out of 5000000
- 40194 multiletter control sequences out of 15000+600000
- 739552 words of font info for 431 fonts, out of 8000000 for 9000
+ 40182 multiletter control sequences out of 15000+600000
+ 734868 words of font info for 419 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,1002b,663s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,1002b,654s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.
 pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/
 local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texl
@@ -927,10 +924,10 @@ live/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on paper.pdf (47 pages, 822484 bytes).
+Output written on paper.pdf (47 pages, 821322 bytes).
 PDF statistics:
  1046 PDF objects out of 1200 (max. 8388607)
  905 compressed objects within 10 object streams
- 273 named destinations out of 1000 (max. 500000)
- 100297 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 272 named destinations out of 1000 (max. 500000)
+ 98249 words of extra memory for PDF output out of 106986 (max. 10000000)
 
