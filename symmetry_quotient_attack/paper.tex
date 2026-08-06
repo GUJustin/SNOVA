@@ -608,13 +608,17 @@ $\kappa_{\rm JG}$ & Multiplier for candidate regularity, restarts, and work outs
 \end{tabularx}
 \end{table}
 
-\section{Public forms and the symmetry quotient}\label{sec:public-symmetry}
+\section{From the public verifier to a square system}
+\label{sec:public-symmetry}\label{sec:affine-reduction}
 
-This section records the scalar quotient used after the common-column
-relation in \Cref{sec:affine-reduction}.  It is placed first to isolate the
-algebraic identity.  Before that restriction, the verifier feature
-$U^\transpose\Sigma_\xi P_i\Sigma_\eta U$ is $r\times r$ and swapping
-$(\xi,\eta)$ transposes this matrix; no entrywise equality is asserted.
+This section gives the exact part of the attack as one sequence of public
+operations.  The attacker first expresses every signature column in terms of
+one common column.  Symmetry then identifies quadratic forms that the
+unrestricted verifier treats as different.  An invertible change of output
+coordinates separates the remaining quadratic equations from the affine
+ones.  Once two public rank checks pass, the attacker can restrict the
+remaining variables to obtain equally many quadratic equations and variables.
+This section makes no assumption about finding a root of that system.
 
 \subsection{Parameters and public forms}
 The public parameter tuple is $(v,o,\ell,r)$.  There are $n=v+o$
@@ -624,10 +628,12 @@ $N_0=n\ell$.  The verifier has
 \begin{equation}
  m_1=\left\lceil\frac{or}{\ell}\right\rceil,
  \qquad M=or\ell,
- \qquad N_0=n\ell.                                  \label{eq:parameters}
+ \qquad N_0=n\ell,
+ \qquad K=m_1\binom{\ell+1}{2}.                    \label{eq:parameters}
 \end{equation}
 The ceiling is the convention used by the pinned Version~2.3 reference
-implementation~\cite{SNOVA23}.
+implementation~\cite{SNOVA23}.  The quantity $K$ is the maximum number of
+distinct quadratic forms left by symmetry, as proved below.
 
 Let $S\in\Mat_\ell(\F_q)$ be the public symmetric matrix with irreducible
 characteristic polynomial.  Its powers generate
@@ -665,9 +671,46 @@ V   & $(52,6,4,6)$  & $9$  & $144$ & $90$ & $232$\\
 \end{tabular}
 \end{table}
 
-\subsection{The basis-independent quotient}
-For one base form in the restricted scalar map, the ordered label space is
-$A\otimes_{\F_q}A$.  The following theorem identifies its universal kernel.
+\subsection{The common-column restriction}
+Write the stacked signature columns as
+\[
+  U=[u_0\mid\cdots\mid u_{r-1}],\qquad u_j\in\F_q^{N_0}.
+\]
+The attacker chooses public multipliers $R_j\in A$ and offsets
+$v_j\in\F_q^{N_0}$, with $R_0=1$, and imposes
+\begin{equation}
+  u_j=\Sigma_{R_j}u+v_j,
+  \qquad 0\le j<r.                                  \label{eq:column-relation}
+\end{equation}
+This relation selects a public subset of possible signatures.  It makes no
+assumption about the honest signer and does not change the public verifier.
+
+Before substitution, the verifier feature vector has
+$N_{\rm raw}=m_1\ell^2r^2$ labeled coordinates.  Let $z_{\rm ord}(u)$ list
+the remaining scalar quadratic forms indexed by ordered pairs of powers of
+$S$.  Let $E$ be the public outer map after the fixed permutation that
+reconciles the official flattening order with the block-transposed order used
+here.  For a fixed relation $R$, let $R_R$ expand $z_{\rm ord}(u)$ into the
+raw feature vector, and let $F_{R,v}$ collect the coefficients of the terms
+that are linear in $u$.  The substituted verifier is
+\begin{equation}
+  E\bigl(R_R z_{\rm ord}(u)+F_{R,v}u\bigr)+c_{R,v}=t.
+  \label{eq:substituted-verifier}
+\end{equation}
+Put
+\[
+ E_R=ER_R,
+ \qquad
+ \Lambda_{R,v}=EF_{R,v}.
+\]
+Products of two variable terms give $z_{\rm ord}(u)$.  Products of one
+variable term and one offset give the linear term, and products of two offsets
+give the constant.
+
+\subsection{How symmetry removes quadratic forms}
+For one base form in this restricted scalar map, the ordered label space is
+$A\otimes_{\F_q}A$.  The following theorem identifies the pairs that always
+give the same polynomial.
 
 \begin{theorem}[Symmetric-square factorization]\label{thm:symmetry-quotient}
 Let $A=\F_q[S]$ have dimension $d$, and assume $S^\transpose=S$ and
@@ -712,113 +755,36 @@ The theorem is an upper bound on the common-column scalar image: extra public
 dependencies can only reduce that image further.  Every concrete route checks
 the exact public rank before solving.  The outer map cannot repair the loss
 because, after the relation, it sees only the already-equal polynomial values.
+Before the common-column restriction, swapping $(\xi,\eta)$ only transposes
+the matrix $U^\transpose\Sigma_\xi P_i\Sigma_\eta U$; it does not make the
+matrix entries equal.  The theorem therefore concerns the restricted scalar
+verifier, not the unrestricted matrix-valued map.
 The factorization itself uses only transposition symmetry.  Odd
 characteristic is needed later for the familiar decomposition into symmetric
 and alternating tensors and for the polar-form analysis.  The submitted
 nonsymmetrized $q=16$ construction is not covered.
 
-\subsection{Frobenius-distance normal form}
-The symmetric square has a canonical coordinate system that will be useful for
-the smaller adaptive cores.  For $A=\F_{q^d}$ and $j>0$, define
-\[
- \phi_j([x\otimes y]_{\rm sym})=xy^{q^j}+x^{q^j}y,
- \qquad
- \phi_0([x\otimes y]_{\rm sym})=xy.
-\]
-If $d$ is even and $j=d/2$, the value lies in $\F_{q^{d/2}}$.
-
-\begin{theorem}[Frobenius-distance normal form]\label{thm:frobenius-normal}
-There is an $\F_q$-linear isomorphism
-\[
- \Sym^2_{\F_q}(\F_{q^d})\cong
- \begin{cases}
-   A^{(d+1)/2},& d\text{ odd},\\
-   A^{d/2}\oplus\F_{q^{d/2}},& d\text{ even},
- \end{cases}
-\]
-given by the maps $\phi_j$ for the distinct Frobenius distances.  In
-particular,
-\begin{align}
- \Sym^2_{\F_q}(\F_{q^4})&\cong
-    \F_{q^4}\oplus\F_{q^4}\oplus\F_{q^2},            \label{eq:l4-channels}\\
- \Sym^2_{\F_q}(\F_{q^2})&\cong
-    \F_{q^2}\oplus\F_q.                              \label{eq:l2-channels}
-\end{align}
-\end{theorem}
-
-\begin{proof}
-Extend scalars to an algebraic closure and identify
-$A\otimes_{\F_q}\overline{\F}_q$ with a product of $d$ copies indexed by
-$\mathbb Z/d\mathbb Z$.  Frobenius cyclically shifts the primitive
-idempotents.  The map $\phi_0$ records the $d$ diagonal unordered pairs.
-For $0<j<d/2$, the conjugates of $\phi_j$ record the orbit of unordered pairs
-$\{i,i+j\}$, an orbit of size $d$.  If $d$ is even and $j=d/2$, the pair is
-repeated after a half-turn, leaving an orbit of size $d/2$.  These orbits
-partition all unordered pairs.  The displayed map is therefore a coordinate
-permutation after scalar extension and hence an isomorphism over $\F_q$.
-\end{proof}
-
-For $\ell=4$, the three channel types have highest homogeneous forms of
-ordinary degrees $2$, $q+1=20$, and $q^2+1=362$ over $A=\F_{19^4}$.
-For $\ell=2$, the complete quotient becomes two eigenblocks with bidegree
-families $(2,0)$, $(1,1)$, and $(0,2)$ after scalar extension.
-
-\section{The exact affine-column reduction}\label{sec:affine-reduction}
-
-\subsection{Imposing one common column variable}
-Write the stacked signature columns as
-\[
-  U=[u_0\mid\cdots\mid u_{r-1}],\qquad u_j\in\F_q^{N_0}.
-\]
-The attacker chooses multipliers $R_j\in A$ and offsets
-$v_j\in\F_q^{N_0}$, with $R_0=1$, and imposes
-\begin{equation}
-  u_j=\Sigma_{R_j}u+v_j,
-  \qquad 0\le j<r.                                  \label{eq:column-relation}
-\end{equation}
-This is a publicly checkable subset of possible signatures and makes no
-assumption about the honest signer.
-
-Before substitution, the verifier feature vector has
-$N_{\rm raw}=m_1\ell^2r^2$ labeled coordinates.  Let $E$ be the public outer
-map after the fixed permutation that reconciles the official flattening order
-with the block-transposed order used here.  For a fixed relation $R$, let
-$R_R$ expand the remaining ordered power-pair features into the raw feature
-vector, and let $F_{R,v}$ collect the offset-linear coefficients.  The
-complete substituted verifier has the form
-\begin{equation}
-  E\bigl(R_R z_{\rm ord}(u)+F_{R,v}u\bigr)+c_{R,v}=t. \label{eq:substituted-verifier}
-\end{equation}
-Put
-\[
- E_R=ER_R,
- \qquad
- \Lambda_{R,v}=EF_{R,v}.
-\]
-Products of two variable parts give the quadratics, products of one variable
-and one offset give the linear term, and products of two offsets give the
-constant.
-
+\subsection{Mapping the remaining forms to verifier outputs}
 Let $z_{\rm sym}(u)$ contain one coordinate for each unordered pair
 $0\le a\le b<\ell$ in every base form, and let $D$ duplicate its off-diagonal
 coordinates.  By \Cref{thm:symmetry-quotient},
 $z_{\rm ord}(u)=Dz_{\rm sym}(u)$.  Define
 \begin{equation}
-  Q_R=E_RD\in\F_q^{M\times K},
-  \qquad K=m_1\binom{\ell+1}{2}.                    \label{eq:QR}
+  Q_R=E_RD\in\F_q^{M\times K}.                     \label{eq:QR}
 \end{equation}
 The columns of $Q_R$ span every output direction reachable by the quotient
 quadratics.
 
-\subsection{Canonical output coordinates}
+\subsection{Separating the quadratic and affine equations}
 Choose $W_R$ whose rows form a basis of the left kernel of $Q_R$, and put
 \begin{equation}
   C_{R,v}=W_R\Lambda_{R,v}.                          \label{eq:CRv}
 \end{equation}
-Multiplication by $W_R$ kills every quadratic feature and exposes ordinary
-affine constraints.
+Multiplication by $W_R$ removes every quadratic term and exposes the affine
+constraints.  A complementary map $G_R$ keeps the quadratic coordinates.
+The two maps together are an invertible change of verifier outputs.
 
-\begin{lemma}[Canonical residual coordinates]\label{lem:canonical-residual}
+\begin{lemma}[Invertible output split]\label{lem:canonical-residual}
 Assume $\rank Q_R=K$.  Choose a public left inverse
 $G_R\in\F_q^{K\times M}$ satisfying $G_RQ_R=I_K$.  Then
 \[
@@ -882,16 +848,68 @@ invertible row reduction or exact affine elimination, so the solution set is
 unchanged.  In the full-rank case, $C_{R,v}$ is surjective and $\delta=0$.
 \end{proof}
 
+\subsection{Restricting the remaining equations to a square system}
+The preceding proposition preserves the full solution set inside the
+common-column relation.  The attack now chooses a smaller affine space on
+which the number of variables equals the number of remaining equations.  This
+second restriction preserves every verifier equation, but it need not contain
+a solution.  Root existence is handled separately in
+\Cref{sec:sq-full-domain-spectrum}.
+
+\begin{corollary}[Exact square restriction]
+\label{cor:exact-square-restriction}
+Assume
+\[
+  \rank Q_R=K,
+  \qquad
+  \rank C_{R,v}=M-K,
+  \qquad
+  N_0\ge M.
+\]
+Then, for every target $t$, choose one solution $u_\star$ to
+$C_{R,v}u=W_R(t-c_{R,v})$, a $K$-dimensional subspace
+$L\subseteq\ker C_{R,v}$, and an isomorphism
+$T:\F_q^K\to L$.  On the affine space $u_\star+L$, the complete substituted
+verifier is equivalent to the square system
+\begin{equation}
+  g_{R,v}(u_\star+Tx)=G_R(t-c_{R,v}),
+  \qquad x\in\F_q^K.                               \label{eq:exact-square-restriction}
+\end{equation}
+Every root reconstructs, through \eqref{eq:column-relation}, a candidate that
+satisfies the original verifier equations.  Conversely, every verifier
+preimage that satisfies both public restrictions gives a root of
+\eqref{eq:exact-square-restriction}.  The corollary does not assert that a root
+exists or that it passes the signature-format rejection rule.
+\end{corollary}
+
+\begin{proof}
+The rank assumption on $C_{R,v}$ makes it surjective, so $u_\star$ exists for
+every target.  Its kernel has dimension
+\[
+  N_0-(M-K)=N_0-M+K\ge K,
+\]
+so it contains a $K$-dimensional subspace $L$.  The affine equations in
+\eqref{eq:canonical-split} hold throughout $u_\star+L$.  The invertible output
+change in \Cref{lem:canonical-residual} therefore leaves exactly the $K$
+quadratic equations in \eqref{eq:exact-square-restriction}.  That lemma also
+gives both directions of the claimed equivalence.
+\end{proof}
+
+All nine published parameter shapes satisfy $N_0\ge M$ by
+\Cref{tab:parameters}.  Thus, for these shapes, the two displayed rank checks
+are enough to construct the exact square system.  They are not enough to show
+that this system contains an acceptable root.
+
 \paragraph{Operational meaning.}
-The attacker computes $Q_R,G_R,W_R,C_{R,v}$ and the canonical residual map
-from the supplied public key.  The attacker may search public relations and
-offsets before an expensive solve, but may not replace an unfavorable supplied
-key.  This release neither proves a success probability for that search nor
-charges it separately; any such search belongs in $\kappa_{\rm hom}$ or
-$\kappa_{\rm JG}$ for the selected route.  If no tested relation passes, the
-conditional route has not been shown to apply to that key.  Once the ranks
-pass, every solver root maps back through \eqref{eq:column-relation} to a
-candidate for the full original verifier.  No equation has been dropped.
+The attacker computes every matrix in this section from the supplied public
+key.  The attacker may test several public relations and offsets before
+solving, but may not replace an unfavorable key.  This paper does not prove
+how often that search succeeds or measure its cost separately.  Those costs
+belong to $\kappa_{\rm hom}$ or $\kappa_{\rm JG}$ for the chosen recovery
+method.  If no tested relation passes the two rank checks, the conditional
+recovery results do not apply to that key.  Once the checks pass, the steps in
+this section are exact public computations and no verifier equation is
+dropped.
 
 \subsection{A Level-I dimension walkthrough}
 For $(v,o,\ell,r)=(28,5,4,4)$, we have $n=33$, $N_0=132$, $M=80$,
@@ -899,9 +917,58 @@ $m_1=5$, and $K=50$.  The common-column relation leaves $80$ ordered
 quadratic labels, but the symmetry quotient leaves only $50$ distinct
 quadratics.  In the full-rank affine case, the other $30$ output directions
 become linear equations and the full affine residual domain has dimension
-$132-30=102$.  The complete-square theorem later chooses a fresh ordinary
-$50$-dimensional slice inside that domain and solves all $50$ residual
-equations together.
+$132-30=102$.  The attacker can therefore choose a $50$-dimensional affine
+space and obtain $50$ quadratic equations in $50$ variables.  This is the
+exact reduction.  Whether the chosen space contains an acceptable root, and
+how much work is needed to find one, are the subjects of the conditional
+analysis later in the paper.
+
+\subsection{Coordinates used by the conditional solvers}
+The exact reduction needs only the dimension of the symmetric square.  The
+later recovery algorithms use a more structured coordinate system.  For
+$A=\F_{q^d}$ and $j>0$, define
+\[
+ \phi_j([x\otimes y]_{\rm sym})=xy^{q^j}+x^{q^j}y,
+ \qquad
+ \phi_0([x\otimes y]_{\rm sym})=xy.
+\]
+If $d$ is even and $j=d/2$, the value lies in $\F_{q^{d/2}}$.
+
+\begin{theorem}[Frobenius-distance normal form]\label{thm:frobenius-normal}
+There is an $\F_q$-linear isomorphism
+\[
+ \Sym^2_{\F_q}(\F_{q^d})\cong
+ \begin{cases}
+   A^{(d+1)/2},& d\text{ odd},\\
+   A^{d/2}\oplus\F_{q^{d/2}},& d\text{ even},
+ \end{cases}
+\]
+given by the maps $\phi_j$ for the distinct Frobenius distances.  In
+particular,
+\begin{align}
+ \Sym^2_{\F_q}(\F_{q^4})&\cong
+    \F_{q^4}\oplus\F_{q^4}\oplus\F_{q^2},            \label{eq:l4-channels}\\
+ \Sym^2_{\F_q}(\F_{q^2})&\cong
+    \F_{q^2}\oplus\F_q.                              \label{eq:l2-channels}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Extend scalars to an algebraic closure and identify
+$A\otimes_{\F_q}\overline{\F}_q$ with a product of $d$ copies indexed by
+$\mathbb Z/d\mathbb Z$.  Frobenius cyclically shifts the primitive
+idempotents.  The map $\phi_0$ records the $d$ diagonal unordered pairs.
+For $0<j<d/2$, the conjugates of $\phi_j$ record the orbit of unordered pairs
+$\{i,i+j\}$, an orbit of size $d$.  If $d$ is even and $j=d/2$, the pair is
+repeated after a half-turn, leaving an orbit of size $d/2$.  These orbits
+partition all unordered pairs.  The displayed map is therefore a coordinate
+permutation after scalar extension and hence an isomorphism over $\F_q$.
+\end{proof}
+
+For $\ell=4$, the three coordinate groups have highest homogeneous forms of
+ordinary degrees $2$, $q+1=20$, and $q^2+1=362$ over $A=\F_{19^4}$.
+For $\ell=2$, the quotient becomes two groups with bidegrees $(2,0)$,
+$(1,1)$, and $(0,2)$ after scalar extension.
 
 \section{Stable slices, fresh coefficients, rejection, and targets}
 \label{sec:stable-rejection}

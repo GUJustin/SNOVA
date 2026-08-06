@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  5 AUG 2026 12:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 15:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -786,8 +786,10 @@ Underfull \hbox (badness 2653) in paragraph at lines 608--608
 [13]
 
 [14]
-LaTeX Font Info:    Trying to load font information for U+euf on input line 109
-2.
+
+[15]
+LaTeX Font Info:    Trying to load font information for U+euf on input line 115
+9.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
@@ -795,8 +797,6 @@ File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 
 )
-
-[15]
 
 [16]
 
@@ -817,11 +817,11 @@ File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 [24]
 
 [25]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 1907.
-
 
 [26]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 1974.
+
 
 [27]
 
@@ -859,7 +859,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 [44]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-263.
+330.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -870,14 +870,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 [45] (./paper.bbl
+
+[46]
 Underfull \hbox (badness 2310) in paragraph at lines 37--43
 []\T1/lmr/m/n/9 (+20) SNOVA Team.  SNOVA ver-sion 2.3 ref-er-ence im-ple-men-ta
 -tion and doc-u-men-ta-tion.  Git com-mit
  []
 
-
-
-[46])
+)
 
 [47] (./paper.aux)
  ***********
@@ -885,16 +885,16 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 5B3EA717A98E19244994AEA89AB2B319;13367.
+(rerunfilecheck)             Checksum: 0A8F616A545BD6F756CA27DC19E81B31;14001.
  ) 
 Here is how much of TeX's memory you used:
- 18091 strings out of 473190
- 296179 string characters out of 5715801
- 749409 words of memory out of 5000000
- 40189 multiletter control sequences out of 15000+600000
- 739707 words of font info for 433 fonts, out of 8000000 for 9000
+ 18101 strings out of 473190
+ 296384 string characters out of 5715801
+ 750409 words of memory out of 5000000
+ 40194 multiletter control sequences out of 15000+600000
+ 739801 words of font info for 434 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,1002b,737s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,1002b,663s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.
 pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/
 local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texl
@@ -927,10 +927,10 @@ live/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on paper.pdf (47 pages, 818789 bytes).
+Output written on paper.pdf (47 pages, 823333 bytes).
 PDF statistics:
- 1025 PDF objects out of 1200 (max. 8388607)
- 885 compressed objects within 9 object streams
- 267 named destinations out of 1000 (max. 500000)
- 100289 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 1035 PDF objects out of 1200 (max. 8388607)
+ 895 compressed objects within 9 object streams
+ 270 named destinations out of 1000 (max. 500000)
+ 100297 words of extra memory for PDF output out of 106986 (max. 10000000)
 
