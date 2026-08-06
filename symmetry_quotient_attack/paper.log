@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -840,9 +840,7 @@ File: mt-euf.cfg 2006/07/03 v1.1 microtype config. file: AMS Euler Fraktur (RS)
 
 [36]
 
-[37]
-
-[38] (./paper.bbl
+[37] (./paper.bbl
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
 4.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
@@ -860,15 +858,17 @@ Underfull \hbox (badness 2310) in paragraph at lines 37--43
 
 
 
-[39
+[38
 
 ])
 
-[40]
+[39]
 
-[41
+[40
 
 ]
+
+[41]
 
 [42]
 
@@ -882,21 +882,19 @@ Underfull \hbox (badness 2310) in paragraph at lines 37--43
 
 [47]
 
-[48]
-
-[49] (./paper.aux)
+[48] (./paper.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: EEAA387E949E1D43DAEE06153812C580;14246.
+(rerunfilecheck)             Checksum: 4243674A33011432673A18E950EC5579;13632.
  ) 
 Here is how much of TeX's memory you used:
- 18063 strings out of 473190
- 295853 string characters out of 5715801
+ 18051 strings out of 473190
+ 295721 string characters out of 5715801
  750409 words of memory out of 5000000
- 40182 multiletter control sequences out of 15000+600000
+ 40179 multiletter control sequences out of 15000+600000
  734383 words of font info for 414 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,18n,79p,1002b,676s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -932,10 +930,10 @@ live/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on paper.pdf (49 pages, 821489 bytes).
+Output written on paper.pdf (48 pages, 817531 bytes).
 PDF statistics:
- 1056 PDF objects out of 1200 (max. 8388607)
- 913 compressed objects within 10 object streams
- 274 named destinations out of 1000 (max. 500000)
- 98249 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 1033 PDF objects out of 1200 (max. 8388607)
+ 892 compressed objects within 9 object streams
+ 265 named destinations out of 1000 (max. 500000)
+ 98225 words of extra memory for PDF output out of 106986 (max. 10000000)
 

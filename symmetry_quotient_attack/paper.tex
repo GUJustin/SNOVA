@@ -2382,13 +2382,10 @@ normalizes only by the probability of the common spectrum event.
 \section{Implementation, evidence, and reproducibility}
 \label{sec:implementation}
 
-The companion artifact separates theorem checks from experimental evidence.
-The primary selected-degree-free conclusions do not rely on sampled
-production ranks or small-profile Macaulay behavior.  Formula checkers verify
-the numerical consequences of the stated hypotheses; they do not verify those
-hypotheses on an official key.  Two separate correspondence tests exercise the
-reduction on one official key and the complete zero-offset wrapper at an
-unofficial toy shape.  Neither executes the production-size nonlinear solver.
+The companion artifact provides formula checkers, one official-key reduction
+test, and one toy end-to-end forgery test.  \Cref{tab:evidence-hierarchy}
+states what each establishes.  None executes a production-size nonlinear
+solver.
 
 \begin{table}[H]
 \centering
@@ -2412,76 +2409,24 @@ Production-size solver or forgery & Not included or claimed & No empirical evide
 \end{tabularx}
 \end{table}
 
-\subsection{Exact checks in the release}
-The release contains machine-readable ledgers and deterministic checkers.
-The main all-nine checker recomputes dimensions, separator choices, adaptive
-mixtures, target-sampling acceptance, and repair floors, while the separate
-field-circuit checker verifies the tower identities and all $19^2=361$
-scalar products.  The Just Guess checker recomputes the
-expected-operation Boolean ledger, the capped-tree sensitivity, the
-quadratic-root truth table, the cross-channel
-second moment, and every displayed break-even threshold.  These are
-consistency checks, not independent evidence for their input assumptions.
+Both correspondence tests use a KAT-anchored Python transcription.  The
+official-key test compares the substituted map with a separate literal
+evaluator but stops before the nonlinear solve.  The toy forger reconstructs
+and serializes a signature and checks the rejection rule, but its forger and
+verifier share scheme helpers and do not call the official C verifier.  It is
+therefore composition evidence rather than an independent implementation.
 
-The official-key harness uses only the compressed public key for the attack
-reduction.  On the first published Level-I KAT it verifies the supplied
-signature, checks the substituted public map against a separate literal
-evaluator, and obtains the $50/30$ quotient/affine ranks.  It does not solve the
-residual $50$-in-$102$ MQ instance or output a forgery.  A second script uses
-the same Version~2.3 conventions at the deliberately unofficial shape
-$(v,o,\ell,r)=(2,1,2,2)$.  It imposes $X_i=[u_i\mid 0]$, interpolates the
-complete restricted verifier, checks that its output image equals the explicit
-rank-three symmetric quotient image, and leaves one target-consistency
-coordinate.  It fixes the SHAKE target before enumerating public
-three-dimensional slices, reconstructs and serializes a signature, and checks
-the rejection rule.  The main case and eight fresh-key regressions are
-recomputed; a separate executable test passes 24 further forgeries and obtains
-rank three on 100 further reduced keys.  Positive and negative checks use a
-distinct literal evaluator in the shared KAT-anchored Python transcription.
-The forger and verifier paths still share scheme helpers, so this is a
-composition regression rather than independent verifier evidence.  It does
-not call the unmodified official C verifier and it is not evidence about a
-production-size solver.
-The public leading-Jacobian preflight is deterministic on a fixed key; its
-failure invokes a complete-core fallback.  The separate structural preflight
-is an exact condition for the displayed $\ell=4$ routes and is not assigned a
-random success probability in the ledger.
+The release neither tests $\mathsf H_{\rm hom}$ nor measures
+$\kappa_{\rm hom}$, memory, or full gate cost.  The $\AXN$ ledger charges the
+stated multiplication schedule; control, data movement, indexing,
+factorization, communication, and peak state remain outside it.  Appendix~A
+also leaves $\kappa_{\rm JG}$ unmeasured, while Appendix~B does not prove its
+production solving degree.
 
-\subsection{What is not claimed}
-The release does not contain a production-size end-to-end forgery, a test of
-$\mathsf H_{\rm hom}$ on a published residual ideal, or a measured
-symbolic-homotopy implementation.  In particular, the paper does not
-claim that $\kappa_{\rm hom}$ is small, that the direct parametrization fits in
-commodity memory, or that the unit-leading exponent is a complete NIST gate
-count.  The $\AXN$ basis prices the multiplication schedule selected by the
-arithmetic theorem.  Control, data movement, indexing, factorization,
-communication, and peak state remain outside that leading schedule and inside
-$\kappa_{\rm hom}$.  In the Just Guess branch, all field operations in the published expected
-schedule are converted to explicit Boolean-circuit costs and separate
-control/filtering reserves are displayed, but the candidate-generation
-regularity multiplier $\kappa_{\rm JG}$ remains to be measured or certified
-on a production key.
-
-The low-state XL branch has the opposite profile: its streamed operator and
-state are explicit, but its production selected degree is not proved.  A
-production border-basis transcript or a full-size solve would settle that
-remaining branch-specific question without changing the exact quotient or
-the selected-degree-free theorem.
-
-\subsection{Proposed production fixed-key record}
-The release does not supply the following production record.  A deterministic
-record for one public key would consist of:
-\begin{enumerate}[label=\textbf{\arabic*.}]
-\item the public relation, output split, and all exact rank preflights;
-\item the selected slice and either its exact projective rank histogram or a
-      stronger unit-ideal certificate;
-\item the fast-core leading-Jacobian witness, if the fast branch is taken;
-\item the homotopy random coins, parametrization, and all candidate filters;
-\item the reconstructed signature and the unmodified verifier transcript.
-\end{enumerate}
-Such a record would replace the idealized transcript statement for that key.
-Only an instrumented implementation carrying all omitted work could measure
-$\kappa_{\rm hom}$ and resident state.
+A production fixed-key record would need the exact preflights, a certified
+slice spectrum, the complete solver and filtering transcript, the reconstructed
+signature, and the original verifier transcript.  Only an instrumented run
+that records the omitted work could measure total work and memory.
 
 \section{Necessary dimension floors within the common-column model}
 \label{sec:upgrade-repair}
