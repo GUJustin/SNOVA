@@ -2634,45 +2634,26 @@ applies only if the redesign instead removes the square slice while preserving
 the common-column architecture and parameter coupling.
 
 \section{Conclusion}\label{sec:conclusion}
-After the public common-column relation, the $q=19$ Version~2.3 construction
-loses quadratic directions for every symmetric public key.  Ordered
-power-pair labels are not ordered scalar polynomials in the remaining column:
-swapping the labels leaves that restricted quadratic unchanged before the
-public outer map.  This does not assert the same cap for the unrestricted
-matrix-valued verifier, where label exchange also transposes the column
-indices.  Conditional on the exact public ranks, output splitting turns the
-restricted identity into square residual systems without discarding a
-verifier equation, and the block-symmetry rejection rule does not remove
-them.
+The common-column restriction exposes the central weakness of the $q=19$
+Version~2.3 construction.  Symmetry collapses its restricted quadratic
+coordinates to a symmetric-square quotient.  Conditional on the stated public
+ranks, an invertible output change separates this quotient from the affine and
+target-consistency constraints.  The result is a square quadratic system that
+preserves every verifier equation, the rejection rule, and final verification.
+This statement concerns the restricted verifier, not the unrestricted
+matrix-valued map.
 
-Every published parameter shape has the required dimensions; application to a
-supplied key remains conditional on the stated structural and spectrum
-preflights.  The finite-field homotopy adaptation gives a
-selected-degree-free, fixed-core-free recovery algorithm only under those
-hypotheses and $\mathsf H_{\rm hom}$, but its all-nine numerical comparison is a unit-leading
-break-even ledger with an explicit, unmeasured $\kappa_{\rm hom}$.  The
-sufficient adaptive thresholds, rounded downward, are
-$10.811927$, $23.205374$, and $38.156013$ bits of allowable overhead at Levels
-I, III, and V; the paper does not identify those values with complete
-classical-gate bounds.
+All nine published shapes meet the dimension requirements
+(\Cref{thm:sq-all-nine-simple}), but applying the recovery algorithms to a key
+also requires the stated public preflights.  The structural reduction is exact;
+the homotopy and Just Guess estimates require their stated hypotheses and
+unmeasured multipliers.  The artifact contains no production-size solve or
+forgery (\Cref{tab:evidence-hierarchy}).
 
-\Cref{sec:jg-finite-gate} records a separate Boolean-ledger sensitivity for the
-Level-I $\ell=2$ shape.  It remains conditional on an unmeasured Just Guess
-multiplier and does not give an unconditional complete-gate break.
-
-The release is therefore evidence for an exact structural reduction and
-conditional attack architecture, not an empirical demonstration of a
-production-size forgery.  Its machine checks establish only the statements
-listed as available in \Cref{tab:evidence-hierarchy}; they do not by
-themselves establish the official EUF-CMA security experiment.
-
-A redesign that insists on both restoring the pre-symmetrization
-common-column label cap and eliminating the fresh-slice dimension guarantee,
-while retaining the current coupling, requires $45.00\%$--$60.71\%$ more
-outputs.  Eliminating the zero-offset common-column dimension guarantee under
-the same coupling requires $101.5625\%$--$144.00\%$ more.  These are necessary
-dimension floors for those specific goals, not general lower bounds on every
-secure repair.
+The repair bounds apply only to designs that retain the common-column
+architecture and current parameter coupling.  They show that restoring the
+ordered-label count does not by itself remove the stronger zero-offset slice
+(\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).
 
 \clearpage
 \bibliographystyle{unsrtnat}

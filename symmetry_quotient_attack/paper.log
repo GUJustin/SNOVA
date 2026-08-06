@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 16:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -889,11 +889,11 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: 8278B6D882ED4EAC6045C1373ACD7912;13299.
  ) 
 Here is how much of TeX's memory you used:
- 18046 strings out of 473190
- 295660 string characters out of 5715801
+ 18044 strings out of 473190
+ 295640 string characters out of 5715801
  750409 words of memory out of 5000000
  40178 multiletter control sequences out of 15000+600000
- 734253 words of font info for 413 fonts, out of 8000000 for 9000
+ 734170 words of font info for 412 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,18n,79p,1002b,676s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.
@@ -928,10 +928,10 @@ live/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on paper.pdf (47 pages, 816133 bytes).
+Output written on paper.pdf (47 pages, 814994 bytes).
 PDF statistics:
- 1025 PDF objects out of 1200 (max. 8388607)
- 885 compressed objects within 9 object streams
+ 1027 PDF objects out of 1200 (max. 8388607)
+ 887 compressed objects within 9 object streams
  263 named destinations out of 1000 (max. 500000)
  98217 words of extra memory for PDF output out of 106986 (max. 10000000)
 
