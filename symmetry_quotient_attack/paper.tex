@@ -29,9 +29,9 @@
   linkcolor=deepblue,
   citecolor=deepblue,
   urlcolor=deepblue,
-  pdftitle={Symmetric Public Matrices Create Smaller Forgery Systems in Odd-Characteristic SNOVA},
+  pdftitle={A Symmetry Quotient Attack on Odd-Characteristic SNOVA},
   pdfauthor={Justin Thaler, Kai Zhang, Scott Kominers, Quang Dao},
-  pdfsubject={Cryptanalysis of SNOVA Version 2.3},
+  pdfsubject={Cryptanalysis of odd-characteristic SNOVA and its Version 2.3 parameters},
   pdfkeywords={SNOVA, multivariate signatures, symmetric public matrices, forgery, NIST PQC}
 }
 
@@ -51,8 +51,8 @@
 \newcommand{\transpose}{\mathsf T}
 \newcommand{\SNOVA}{\textsf{SNOVA}}
 \newcommand{\AXN}{\mathsf{AXN}}
-\newcommand{\attacktitle}{Symmetric Public Matrices Create Smaller Forgery
-  Systems in Odd-Characteristic \texorpdfstring{\SNOVA}{SNOVA}}
+\newcommand{\attacktitle}{A Symmetry Quotient Attack on Odd-Characteristic
+  \texorpdfstring{\SNOVA}{SNOVA}}
 
 \title{\attacktitle}
 \author{%
@@ -73,27 +73,27 @@ small matrices.  After wedge attacks weakened its characteristic-two design,
 \SNOVA{} adopted odd-prime fields and symmetric public matrices.  This paper
 shows that the symmetry creates a different weakness in the public verifier.
 
-In this paper, we analyze the common-column relation already used in
-affine-column forgery attacks.  If the public matrix algebra has dimension
-$d$, symmetry reduces the number of distinct restricted quadratic forms from
-$d^2$ to $d(d+1)/2$.  Thus sixteen forms become ten for the official
-$\ell=4$ parameters, and four become three for $\ell=2$.  We then give an
-invertible public change of output coordinates that separates these quadratics
-from the remaining affine constraints and target checks.  For every published
-$q=19$ parameter shape that passes the stated public rank checks, the attack
-reduces forgery to a quadratic system with the same number of equations and
-variables.  It preserves every verifier equation, rejection rule, and final
-verification check.
+We analyze the common-column relation already used in
+affine-column forgery attacks.  For a symmetric odd-characteristic \SNOVA{}
+instance whose public matrix algebra has dimension $d$, symmetry reduces the
+number of distinct restricted quadratic forms from $d^2$ to $d(d+1)/2$.
+Thus sixteen forms become ten when $\ell=4$, and four become three when
+$\ell=2$.  An invertible public change of output coordinates then separates
+these quadratics from the remaining affine constraints and target checks.
+For every published Version~2.3 parameter shape that passes the stated public
+rank checks, this gives a quadratic system with the same number of equations
+and variables.  The reduction preserves every verifier equation, rejection
+rule, and final verification check.
 
-The algebraic reduction is exact.  The estimates for solving the resulting
-systems are conditional.  Under an explicit unproved hypothesis inherited
-from symbolic homotopy, we obtain arithmetic exponents $132.188$, $183.795$,
-and $233.844$ before unmeasured implementation multipliers.  A separate
-Level-I analysis based on Just Guess gives a cost below
-$2^{135.425325}\kappa_{\rm JG}$ when its stated root-count condition holds.
-These are conditional estimates, not production-size forgeries.  The artifact
-checks the public reduction on one official test key and completes the attack
-only for toy parameters.
+The public reduction is exact, while the recovery estimates are conditional.
+Under a stated root condition and an unproved regularity hypothesis inherited
+from symbolic homotopy, the Version~2.3 analysis gives arithmetic exponents
+$132.188$, $183.795$, and $233.844$ before an unmeasured implementation
+multiplier.  The analysis uses complete systems and, where advantageous,
+certified smaller systems.  Any branch-averaged figure refers to an idealized
+distribution of public transcripts; public tests select one branch for a
+fixed key.  These are not wall-clock or low-memory bounds.  We do not claim a
+production-size solve or forgery.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -128,10 +128,10 @@ response to the wedge attack and did not regard \SNOVA{} as stable
 
 This change entered the specification in Version~2.1, not Version~2.3.
 Version~2.3 subsequently added rectangular signatures and revised parameter
-sets~\cite{SNOVA23}.  We use ``Version~2.3'' because it is the current
-specification and because our results cover its nine published $q=19$
-parameter shapes.  The algebraic design choice under study is the
-odd-characteristic symmetrization inherited from Version~2.1.
+sets~\cite{SNOVA23}.  Our quotient theorem concerns the symmetric
+odd-characteristic construction and is not specific to those nine parameter
+sets.  The concrete rank, root, and cost analysis covers the nine published
+$q=19$ Version~2.3 shapes.
 
 Prior attacks already cover odd characteristic.  Jin et al. give a UOV
 key-recovery attack in arbitrary characteristic~\cite{JinEtAl2026}.  Ran gives
@@ -142,13 +142,14 @@ estimates cover the even-characteristic Round~2 parameters
 ~\cite{DingLiTao2026}.  None combines the symmetric public matrices in the
 current $q=19$ construction with the affine-column forgery relation.
 
-The question is therefore what happens when an affine-column attacker imposes
-the same common-column relation on the new symmetric verifier.  We prove that
-symmetry makes pairs of restricted quadratic forms identical.  An invertible
-public change of output coordinates then separates these quadratics from the
-remaining affine constraints and target checks.  For every published $q=19$
-parameter shape that passes the stated public rank checks, this leaves a
-quadratic system with the same number of equations and variables.
+This brings us to the question addressed in this paper.  What happens when an
+affine-column attacker imposes the same common-column relation on the new
+symmetric verifier?  We prove that symmetry makes pairs of restricted
+quadratic forms identical.  An invertible public change of output coordinates
+then separates these quadratics from the remaining affine constraints and
+target checks.  For every published $q=19$ parameter shape that passes the
+stated public rank checks, this leaves a quadratic system with the same number
+of equations and variables.
 
 This statement concerns the restricted verifier, not the unrestricted
 matrix-valued map.  Let $A=\F_q[S]$ have dimension $d$, and let
@@ -170,83 +171,116 @@ restriction (\Cref{thm:symmetry-quotient}).
 
 \subsection{Our results}
 
-\paragraph{An exact reduction of the public verifier.}
+\paragraph{An exact symmetry quotient and public reduction.}
 After the common-column restriction, every symmetric public base form factors
 through $\Sym^2(A)$.  This loss occurs before the outer public mixing, so later
-linear combinations cannot restore the missing quadratic forms.  We then use
-public row reduction to separate the surviving quadratics from the linear
-conditions and target checks.  For every published parameter shape that
-passes the stated public rank checks, the remaining nonlinear problem has
-equally many equations and variables.  The attack retains reconstruction, the
-signature rejection rule, and the original verifier
-(\Cref{thm:symmetry-quotient,prop:exact-affine,thm:structural-preflight}).
+linear combinations cannot restore the missing forms.  Public row reduction
+then separates the surviving quadratics from the affine conditions and target
+checks.  For every published parameter shape that passes the stated public
+rank checks, this gives an exact square quadratic system.  Every recovered
+root is reconstructed and checked by the original verifier
+(\Cref{thm:symmetry-quotient,prop:exact-affine,cor:exact-square-restriction}).
 
-\paragraph{Conditional cost estimates.}
+\paragraph{Conditional recovery and branch-dependent costs.}
 Producing a square system does not prove that it contains an acceptable root
 or that a solver can find one efficiently.  We treat these as separate
-questions.  Under the stated root condition and the unproved homotopy
-hypothesis $\mathsf H_{\rm hom}$, a randomized algorithm covers all nine
-parameter shapes and never returns an invalid signature.  Exact public
-determinant tests can select smaller systems, with the complete square system
-as the fallback.  The resulting worst arithmetic exponents are $132.188$,
-$183.795$, and $233.844$ before the unmeasured multiplier
-$\kappa_{\rm hom}$ (\Cref{thm:sq-all-nine}).  The root condition comes from
-either an idealized transcript model or an exact certificate for one fixed
-key.  A separate Level-I analysis of Just Guess retains its own unmeasured
-multiplier $\kappa_{\rm JG}$ (\Cref{prop:jg-level1-gates}).  These are
-conditional cost estimates, not production forgeries.
+questions.  The root analysis uses either an idealized transcript model or an
+exact spectrum certificate for one fixed key.  The solver analysis assumes an
+unproved homotopy hypothesis $\mathsf H_{\rm hom}$.  Under these conditions,
+the Version~2.3 analysis gives arithmetic exponents $132.188$, $183.795$, and
+$233.844$ before the unmeasured multiplier $\kappa_{\rm hom}$
+(\Cref{thm:sq-all-nine}).  Exact determinant tests choose between smaller and
+complete systems.  For a fixed key this choice is deterministic.  Where both
+branches contribute, the reported exponent averages them over an idealized
+distribution of public transcripts.  None is a wall-clock or low-memory bound.
 
-\paragraph{Evidence and design implications.}
-The artifact checks the algebra and cost calculations, instantiates the public
-reduction on one official test key, and exercises the full attack
-only at an unofficial toy shape.  It contains no production-size solve or
-forgery (\Cref{tab:evidence-hierarchy}).  We also derive the minimum output
-increases required to remove the dimension guarantee while retaining the
-current common-column architecture.  The general condition requires increases
-between $45.00\%$ and $60.71\%$.  The stronger condition for a column relation
-with zero constants requires increases between $101.5625\%$ and $144.00\%$
-(\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).  These are
-necessary dimension conditions for the stated repair goals, not sufficient
-conditions for security.
+\paragraph{Design implications.}
+We derive necessary output-dimension conditions for redesigns that retain the
+common-column architecture.  These conditions are not sufficient for security
+(\Cref{thm:upgrade-combined-floor,thm:upgrade-zero-offset-floor}).
 
-\subsection{Technical overview}
+\subsection{How to read the result}
 
-Section~2 first defines the full signing and verification maps.  The attack
-then starts from the public column relation used by earlier forgery attacks:
-inside every matrix-valued signature block, all columns are written as public
-affine functions of one stacked column.  This is a restriction chosen by the
-attacker.  It is not an identity of the unrestricted verifier.
+The paper separates the public reduction, the existence of acceptable roots,
+and the behavior of the algebraic solver.  These statements have different
+logical status.  The following table records the distinction used throughout
+the paper.
+
+\begin{table}[H]
+\centering
+\caption{Logical status of the attack.  An exact statement is a deterministic
+claim about the supplied public key after its stated public checks pass.}
+\label{tab:logical-status}
+\small
+\renewcommand{\arraystretch}{1.11}
+\begin{tabularx}{0.98\textwidth}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}X@{}}
+\toprule
+Part & Status & Meaning\\
+\midrule
+Column restriction and symmetry quotient & Exact & Public substitution followed by an algebraic identity.\\
+Output split and affine elimination & Exact after public rank checks & Invertible row reduction preserves every verifier equation.\\
+Frequency of structural and spectrum events & Distributional, or certified for a fixed key & The paper uses an idealized XOF-transcript model; a fixed key instead requires the exact public checks and a spectrum certificate.\\
+Homotopy recovery and cost & Conditional & Completeness and arithmetic cost require $\mathsf H_{\rm hom}$ and the unmeasured multiplier $\kappa_{\rm hom}$.\\
+Candidate acceptance & Exact & Every candidate is reconstructed and checked by the original verifier.\\
+Practical time and memory & Not established & No production solve is given, and the analysis does not bound wall-clock time or peak memory.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Attack overview}
+
+In the hidden UOV coordinates, \SNOVA{} contains no product of two oil
+blocks.  The signer first chooses the vinegar blocks, after which the signing
+equations are linear in the oil entries.  A secret invertible change of
+variables hides this division, so the public verifier presents a structured
+quadratic map rather than the linear system used by the signer
+(\Cref{sec:scheme}).
+
+The attack seeks a direct public preimage, not the hidden oil space.  It starts
+from the common-column relation used in earlier forgery attacks.  Inside every
+matrix-valued signature block, the attacker writes all columns as public
+affine functions of one stacked column.  This selects a public subset of
+possible signatures; it is not an identity of the unrestricted verifier
+(\Cref{sec:public-symmetry}).
 
 After this restriction, every ordered pair of public matrix multipliers gives
-a scalar quadratic polynomial.  Symmetry of the public base matrices makes
-the polynomials for the two orders equal.  One group of sixteen ordered pairs
-therefore contributes at most ten distinct quadratics when the block height is
-four; one group of four contributes at most three when the block height is
-two.  This identification occurs before the public map combines the forms, so
-later linear combinations cannot restore the distinction
-(\Cref{thm:symmetry-quotient}).
+a scalar quadratic polynomial.  Symmetry makes the polynomials for the two
+orders equal.  One group of sixteen ordered pairs therefore contributes at
+most ten distinct quadratics when $\ell=4$, while one group of four
+contributes at most three when $\ell=2$.  The equality holds before the outer
+public map combines these forms, so later linear combinations cannot restore
+the missing quadratic directions (\Cref{thm:symmetry-quotient}).
 
 The attacker next computes an invertible public change of verifier outputs.
-Some new coordinates contain the surviving quadratic forms.  The others are
-linear conditions on the signature, together with any conditions required of
-the target.  No verifier equation is dropped.  Solving the linear conditions
-gives a public affine space, and restricting that space to as many variables
-as surviving quadratics gives a square system.  Two public rank tests certify
-this exact reduction for a fixed key (\Cref{prop:exact-affine,cor:exact-square-restriction}).
+Some new coordinates contain the surviving quadratic forms.  The remaining
+coordinates are affine conditions on the signature and, when necessary,
+consistency conditions on the target.  Solving the affine equations gives a
+public affine space.  Restricting this space to as many variables as surviving
+quadratics gives a square system without dropping any verifier equation
+(\Cref{prop:exact-affine,cor:exact-square-restriction}).
 
-The exact argument ends there.  It does not prove that the square system has
-an acceptable root or that such a root can be found within the claimed work.
-The later recovery analysis states separate hypotheses for root existence and
-for the solver.  Exact determinant tests may select smaller systems, while the
-complete square system remains the fallback.
+There are then two recovery choices.  The complete system solves every
+residual quadratic equation on a square slice.  A smaller system solves only
+selected equations on a lower-dimensional slice and checks every omitted
+equation afterward.  The smaller system has a much smaller algebraic state,
+but a random trial hits the full target less often.  An exact public
+determinant test permits the smaller system; if that test fails, the current
+algorithm uses the complete system (\Cref{sec:sq-adaptive}).
 
-Every recovered root is converted back into a candidate signature, checked
-against the public format rule, and passed to the original verifier.  A failed
-rank test, target check, solve, or final verification causes a restart.  The
-public restriction, output change, reconstruction, and verifier check are
-exact once the rank tests pass.  The root and cost estimates remain
-conditional, and the artifact contains no signature at a published parameter
-size.
+The root analysis bounds the chance that a trial contains an accepted root
+with a full-rank Jacobian.  The solver analysis is separate.  It starts from a
+polynomial system with known roots and symbolically deforms that system into
+the \SNOVA{} residual system.  The hypothesis $\mathsf H_{\rm hom}$ requires
+the deformation and its specialization to behave regularly enough for the
+solver to recover the nonsingular roots within the stated arithmetic cost.
+This hypothesis affects completeness and cost, but not the validity of a
+returned signature (\Cref{app:conditional-solver}).
+
+Finally, every recovered root is converted back into a candidate signature,
+checked against the public format rule, and passed to the original verifier.
+A failed rank test, target check, solve, or final verification causes a
+restart.  The final check makes the attack one-sided: it can fail to return a
+signature, but it never returns an invalid one.
 
 \section{The \SNOVA{} signature scheme}\label{sec:scheme}
 

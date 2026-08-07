@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 AUG 2026 18:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  7 AUG 2026 11:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -744,7 +744,7 @@ al/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/202
 fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/
 dvips/lm/lm-rm.enc}]
 LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
-188.
+189.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -779,8 +779,8 @@ cal/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
 [12]
 
 [13]
-LaTeX Font Info:    Trying to load font information for U+euf on input line 100
-1.
+LaTeX Font Info:    Trying to load font information for U+euf on input line 103
+5.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/ueuf.fd
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
@@ -883,16 +883,16 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 94138199628C63594075327A26AC1EAE;14391.
+(rerunfilecheck)             Checksum: 8B8DE3D1330DC57E8363875285370939;14556.
  ) 
 Here is how much of TeX's memory you used:
- 18090 strings out of 473190
- 296701 string characters out of 5715801
+ 18105 strings out of 473190
+ 296897 string characters out of 5715801
  750409 words of memory out of 5000000
- 40214 multiletter control sequences out of 15000+600000
- 730660 words of font info for 407 fonts, out of 8000000 for 9000
+ 40217 multiletter control sequences out of 15000+600000
+ 731127 words of font info for 412 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,16n,79p,1002b,731s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,16n,79p,1002b,723s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.
 pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/
 local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texl
@@ -900,31 +900,30 @@ ive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2025/texmf-dist/f
 onts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1
 /public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/
-lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/
-texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dis
-t/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/typ
-e1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm
-/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/te
-xlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2025
-/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2025/texmf-dist
-/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/typ
-e1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/
-lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10
-.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr
-/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texl
-ive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fo
-nts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
-public/lm/lmtt9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsf
-onts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/
-amsfonts/symbols/msbm10.pfb>
-Output written on paper.pdf (48 pages, 776049 bytes).
+lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi9.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2025/texmf-dis
+t/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type
+1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/
+lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr9.pfb></u
+sr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/t
+exlive/2025/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/texlive/2025
+/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dis
+t/fonts/type1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/ty
+pe1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/
+lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy1
+0.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr
+/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texl
+ive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2025/texmf-dist/f
+onts/type1/public/lm/lmtt9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
+public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/ty
+pe1/public/amsfonts/symbols/msbm10.pfb>
+Output written on paper.pdf (48 pages, 774220 bytes).
 PDF statistics:
- 1074 PDF objects out of 1200 (max. 8388607)
- 943 compressed objects within 10 object streams
- 280 named destinations out of 1000 (max. 500000)
- 96217 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 1076 PDF objects out of 1200 (max. 8388607)
+ 947 compressed objects within 10 object streams
+ 282 named destinations out of 1000 (max. 500000)
+ 96225 words of extra memory for PDF output out of 106986 (max. 10000000)
 
