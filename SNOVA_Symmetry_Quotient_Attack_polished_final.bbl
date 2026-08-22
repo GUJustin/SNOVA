@@ -1,0 +1,189 @@
+\begin{thebibliography}{23}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{National Institute of Standards and Technology}(2026)]{NISTRound3}
+{National Institute of Standards and Technology}.
+\newblock Nine candidates advance to the third round of the additional digital
+  signatures for the {PQC} standardization process.
+\newblock NIST news release, May 2026.
+\newblock URL
+  \url{https://csrc.nist.gov/News/2026/nist-advances-9-candidates-to-the-3rd-round-of-pqc}.
+
+\bibitem[Alagic et~al.(2026)Alagic, Bros, Ciadoux, Dang, Dang, Kelsey,
+  Lichtinger, Liu, Miller, Moody, Peralta, Perlner, Robinson, Silberg,
+  Smith-Tone, and Waller]{NISTIR8610}
+Gorjan Alagic, Maxime Bros, Pierre Ciadoux, Quynh Dang, Thinh~Hung Dang, John
+  Kelsey, Jacob Lichtinger, Yi-Kai Liu, Carl Miller, Dustin Moody, Rene
+  Peralta, Ray Perlner, Angela Robinson, Hamilton Silberg, Daniel Smith-Tone,
+  and Noah Waller.
+\newblock Status report on the second round of the additional digital signature
+  schemes for the {NIST} post-quantum cryptography standardization process.
+\newblock Technical Report NIST IR 8610, National Institute of Standards and
+  Technology, May 2026.
+
+\bibitem[Kipnis et~al.(1999)Kipnis, Patarin, and
+  Goubin]{KipnisPatarinGoubin1999}
+Aviad Kipnis, Jacques Patarin, and Louis Goubin.
+\newblock Unbalanced oil and vinegar signature schemes.
+\newblock In \emph{Advances in Cryptology -- EUROCRYPT '99}, volume 1592 of
+  \emph{Lecture Notes in Computer Science}, pages 206--222. Springer, 1999.
+\newblock \doi{10.1007/3-540-48910-X_15}.
+
+\bibitem[{SNOVA Team}(2026)]{SNOVA23}
+{SNOVA Team}.
+\newblock {SNOVA} version 2.3 reference implementation and documentation.
+\newblock Git commit 9da14981336ede257c41ef53cc069989051e8181, April 2026.
+\newblock URL
+  \url{https://github.com/PQCLAB-SNOVA/SNOVA/tree/9da14981336ede257c41ef53cc069989051e8181}.
+\newblock Pinned implementation commit; accessed 25 July 2026.
+
+\bibitem[Ikematsu and Akiyama(2024)]{IkematsuAkiyama2024}
+Yasuhiko Ikematsu and Rika Akiyama.
+\newblock Revisiting the security analysis of {SNOVA}.
+\newblock In \emph{Proceedings of the 11th ACM Asia Public-Key Cryptography
+  Workshop}, pages 54--61. ACM, 2024.
+\newblock \doi{10.1145/3659467.3659900}.
+
+\bibitem[Li and Ding(2024)]{LiDing2024}
+Peigen Li and Jintai Ding.
+\newblock Cryptanalysis of the {SNOVA} signature scheme.
+\newblock In \emph{Post-Quantum Cryptography -- PQCrypto 2024}, volume 14772 of
+  \emph{Lecture Notes in Computer Science}, pages 79--91. Springer, 2024.
+\newblock \doi{10.1007/978-3-031-62746-0_4}.
+
+\bibitem[Beullens(2025)]{Beullens2024SNOVA}
+Ward Beullens.
+\newblock Improved cryptanalysis of {SNOVA}.
+\newblock In \emph{Advances in Cryptology -- EUROCRYPT 2025}, volume 15606 of
+  \emph{Lecture Notes in Computer Science}, pages 277--293. Springer, 2025.
+\newblock \doi{10.1007/978-3-031-91095-1_10}.
+
+\bibitem[Cabarcas et~al.(2025)Cabarcas, Li, Verbel, and
+  Villanueva-Polanco]{Cabarcas2025SNOVA}
+Daniel Cabarcas, Peigen Li, Javier~A. Verbel, and Ricardo Villanueva-Polanco.
+\newblock Improved attacks for {SNOVA} by exploiting stability under a group
+  action.
+\newblock In \emph{Advances in Cryptology -- CRYPTO 2025}, volume 16005 of
+  \emph{Lecture Notes in Computer Science}, pages 358--389. Springer, 2025.
+\newblock \doi{10.1007/978-3-032-01887-8_12}.
+
+\bibitem[Furue et~al.(2025)Furue, Ikematsu, Nakamura, and
+  Akiyama]{FurueEtAl2025}
+Hiroki Furue, Yasuhiko Ikematsu, Shuhei Nakamura, and Rika Akiyama.
+\newblock Improved cryptanalysis of {SNOVA} by solving multi-homogeneous
+  systems via matrix transformations.
+\newblock In \emph{Advances in Cryptology -- ASIACRYPT 2025}, volume 16248 of
+  \emph{Lecture Notes in Computer Science}, pages 405--435. Springer, 2025.
+\newblock \doi{10.1007/978-981-95-5113-2_13}.
+
+\bibitem[Nakamura et~al.(2025)Nakamura, Tani, and Furue]{NakamuraEtAl2025}
+Shuhei Nakamura, Yusuke Tani, and Hiroki Furue.
+\newblock Lifting approach against the {SNOVA} scheme.
+\newblock \emph{IEICE Transactions on Fundamentals of Electronics,
+  Communications and Computer Sciences}, E108.A\penalty0 (10):\penalty0
+  1373--1381, 2025.
+\newblock \doi{10.1587/transfun.2024EAP1124}.
+
+\bibitem[Ran(2026)]{Ran2026}
+Lars Ran.
+\newblock Wedges, oil, and vinegar: An analysis of {UOV} in the exterior
+  algebra.
+\newblock In \emph{Advances in Cryptology -- EUROCRYPT 2026}, volume 16544 of
+  \emph{Lecture Notes in Computer Science}, pages 363--388. Springer, 2026.
+\newblock \doi{10.1007/978-3-032-25327-9_13}.
+
+\bibitem[Bros et~al.(2026)Bros, Le, Lichtinger, Minaud, Perlner, Smith-Tone,
+  and Valenzuela]{BrosEtAl2026SNOVAWedge}
+Maxime Bros, Thai~Hung Le, Jacob Lichtinger, Brice Minaud, Ray~A. Perlner,
+  Daniel Smith-Tone, and Cristian Valenzuela.
+\newblock Exploiting {SNOVA}'s structure in the wedge product attack.
+\newblock Cryptology ePrint Archive, Paper 2026/237, 2026.
+\newblock URL \url{https://eprint.iacr.org/2026/237}.
+
+\bibitem[Wang et~al.(2025)Wang, Chou, Ding, Kuan, Leegwater, Li, Tseng, Tseng,
+  and Wang]{WangEtAl2025Round2Security}
+Lih-Chung Wang, Chun-Yen Chou, Jintai Ding, Yen-Liang Kuan, Jan~Adriaan
+  Leegwater, Ming-Siou Li, Bo-Shu Tseng, Po-En Tseng, and Chia-Chun Wang.
+\newblock On the security of round 2 {SNOVA}.
+\newblock Sixth NIST Post-Quantum Cryptography Standardization Conference
+  presentation, September 2025.
+\newblock URL
+  \url{https://csrc.nist.gov/presentations/2025/on-the-security-of-round-2-snova}.
+
+\bibitem[Jin et~al.(2026)Jin, Pan, He, Gong, and Ding]{JinEtAl2026}
+Yi~Jin, Yuansheng Pan, Xiaoou He, Boru Gong, and Jintai Ding.
+\newblock Security analysis on {UOV} families with odd characteristics: Using
+  symmetric algebra.
+\newblock In \emph{Public-Key Cryptography -- PKC 2026}, volume 16551 of
+  \emph{Lecture Notes in Computer Science}, pages 428--454. Springer, 2026.
+\newblock \doi{10.1007/978-3-032-26731-3_14}.
+
+\bibitem[Ding et~al.(2026)Ding, Li, and Tao]{DingLiTao2026}
+Jintai Ding, Peigen Li, and Siyong Tao.
+\newblock Revisiting the wedge attack on the {UOV} problem.
+\newblock Cryptology ePrint Archive, Paper 2026/1548, 2026.
+\newblock URL \url{https://eprint.iacr.org/2026/1548}.
+
+\bibitem[Tseng et~al.(2026)Tseng, Wang, Li, and Kuan]{TsengEtAl2026Wedge}
+Po-En Tseng, Lih-Chung Wang, Peigen Li, and Yen-Liang Kuan.
+\newblock Investigating the wedge map on {SNOVA}.
+\newblock Cryptology ePrint Archive, Paper 2026/260, 2026.
+\newblock URL \url{https://eprint.iacr.org/2026/260}.
+
+\bibitem[Hashimoto(2023)]{Hashimoto2023}
+Yasufumi Hashimoto.
+\newblock An improvement of algorithms to solve under-defined systems of
+  multivariate quadratic equations.
+\newblock \emph{JSIAM Letters}, 15:\penalty0 53--56, 2023.
+\newblock \doi{10.14495/jsiaml.15.53}.
+
+\bibitem[May et~al.(2026)May, Ostuzzi, and Ressler]{MayOstuzziRessler2026}
+Alexander May, Massimo Ostuzzi, and Henrik Ressler.
+\newblock Just guess: Improved (quantum) algorithm for the underdetermined {MQ}
+  problem.
+\newblock In \emph{Advances in Cryptology -- EUROCRYPT 2026}, volume 16544 of
+  \emph{Lecture Notes in Computer Science}, pages 334--362. Springer, 2026.
+\newblock \doi{10.1007/978-3-032-25327-9_12}.
+
+\bibitem[Asanuma et~al.(2026)Asanuma, Chen, Furue, Sakata, and
+  Takagi]{AsanumaEtAl2026}
+Hideki Asanuma, Yilong Chen, Hiroki Furue, Kosuke Sakata, and Tsuyoshi Takagi.
+\newblock Improved complexity estimates for underdetermined {MQ} systems via
+  generalized variable partitioning.
+\newblock Cryptology ePrint Archive, Paper 2026/1054, 2026.
+\newblock URL \url{https://eprint.iacr.org/2026/1054}.
+
+\bibitem[Sakata and Takagi(2026)]{SakataTakagi2026}
+Kosuke Sakata and Tsuyoshi Takagi.
+\newblock An efficient variant of {F4} algorithm for solving {MQ} problem.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded
+  Systems}, 2026\penalty0 (3):\penalty0 1284--1309, 2026.
+\newblock \doi{10.46586/tches.v2026.i3.1284-1309}.
+
+\bibitem[Din and Schost(2018)]{SafeyElDinSchost2018}
+Mohab Safey~El Din and {\'E}ric Schost.
+\newblock Bit complexity for multi-homogeneous polynomial system solving:
+  Application to polynomial minimization.
+\newblock \emph{Journal of Symbolic Computation}, 87:\penalty0 176--206, 2018.
+\newblock \doi{10.1016/j.jsc.2017.08.001}.
+
+\bibitem[Faug\`ere et~al.(1993)Faug\`ere, Gianni, Lazard, and Mora]{FGLM1993}
+Jean-Charles Faug\`ere, Patrizia Gianni, Daniel Lazard, and Teo Mora.
+\newblock Efficient computation of zero-dimensional gr\"obner bases by change
+  of ordering.
+\newblock \emph{Journal of Symbolic Computation}, 16\penalty0 (4):\penalty0
+  329--344, 1993.
+\newblock \doi{10.1006/jsco.1993.1051}.
+
+\bibitem[Kehrein and Kreuzer(2005)]{KehreinKreuzer2005}
+Achim Kehrein and Martin Kreuzer.
+\newblock Characterizations of border bases.
+\newblock \emph{Journal of Pure and Applied Algebra}, 196\penalty0
+  (2--3):\penalty0 251--270, 2005.
+\newblock \doi{10.1016/j.jpaa.2004.08.028}.
+
+\end{thebibliography}
