@@ -1,0 +1,60 @@
+{
+  "abundance": {
+    "failure_upper_bound": 0.0110803324099723,
+    "mean_final_D_roots": "361^8 = 19^16",
+    "rank_certificate": "rank_A K_full(lambda) >= 17 for every nonzero lambda in A^16",
+    "success_lower_bound": 0.9889196675900277
+  },
+  "actual_component_sum": {
+    "headroom_to_143": 7.419781062172461,
+    "success_adjusted_exponent": 135.58021893782754,
+    "trial_exponent": 132.18534136295452
+  },
+  "clean_2^22_component_bound": {
+    "headroom_to_143": 7.159007075593763,
+    "success_adjusted_exponent": 135.84099292440624,
+    "trial_exponent": 132.44611534953322
+  },
+  "clean_bound_margin_AXN": 693570,
+  "clean_component_bound": "<2^22",
+  "combined_trial_success_lower_bound": 0.09506923918082019,
+  "component_total_AXN": 3500734,
+  "component_total_log2": 21.739226013421295,
+  "components_per_expected_A13_aggregate": {
+    "child_generation_reserve": 114688,
+    "completion_generation": 19400,
+    "control_reserve": 1000000,
+    "five_full_diagonal_checks": 523380,
+    "four_residual_affine_equations": 1089920,
+    "seven_quadratic_substitutions_and_root_calls": 356034,
+    "singular_safe_elimination_kernel_reserve": 397312
+  },
+  "cross_channel": {
+    "c": [
+      1,
+      4
+    ],
+    "rho_cond": [
+      49,
+      829
+    ],
+    "success_lower_bound": 0.09613444074026915
+  },
+  "gate_costs": {
+    "A_addition_AXN": 84,
+    "A_multiplication_AXN": 692,
+    "quadratic_root_AXN": 16886
+  },
+  "parameters": {
+    "A_size": 361,
+    "k": 4,
+    "linear_unknowns": 4,
+    "m_selected": 15,
+    "outer_A_exponent": 13,
+    "p": 7,
+    "q": 19,
+    "streamed_A_dimension": 9
+  },
+  "restart_bits_upper_bound": 3.3948775748730218,
+  "status": "fixed-key rank certificate + target-averaged aggregate Boolean ledger; key-distribution success is not claimed"
+}

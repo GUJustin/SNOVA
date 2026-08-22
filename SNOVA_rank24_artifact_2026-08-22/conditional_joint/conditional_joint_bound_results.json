@@ -1,0 +1,13 @@
+{
+  "q": 19,
+  "diag_conditional_atom": "49/829",
+  "offdiag_scalar_functional_atom": "169246/2971565",
+  "offdiag_joint_point_atom": "38416/11886083",
+  "rho_squared": "2401/687241",
+  "P47": "1333215458542005913610963096441245339012118076671440146115680",
+  "coefficient_rank": 126,
+  "log2_bad_joint_pencil_union_bound": -114.6841330822487,
+  "good_key_trial_success_lower_bound_exact": "23997878253756106444997335735942416102218125380085922630082241/47995756507512212889994671471884832204436250760171845260164481",
+  "clean_success_adjusted_log2": 132.44616000866705,
+  "literal_success_adjusted_log2": 132.33909826834437
+}

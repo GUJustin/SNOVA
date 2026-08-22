@@ -1,0 +1,70 @@
+{
+  "field": "F_361 = F_19[u]/(u^2+1)",
+  "kat_count": 0,
+  "claim": "rank_A K_full(lambda)=24 for every nonzero lambda in A^16",
+  "single_plus_pair_checks": 680,
+  "failures": 0,
+  "charts": {
+    "1": {
+      "checks": 105,
+      "bad": 0
+    },
+    "2": {
+      "checks": 91,
+      "bad": 0
+    },
+    "3": {
+      "checks": 78,
+      "bad": 0
+    },
+    "7": {
+      "checks": 36,
+      "bad": 0
+    },
+    "4": {
+      "checks": 66,
+      "bad": 0
+    },
+    "0": {
+      "checks": 120,
+      "bad": 0
+    },
+    "12": {
+      "checks": 6,
+      "bad": 0
+    },
+    "6": {
+      "checks": 45,
+      "bad": 0
+    },
+    "10": {
+      "checks": 15,
+      "bad": 0
+    },
+    "8": {
+      "checks": 28,
+      "bad": 0
+    },
+    "11": {
+      "checks": 10,
+      "bad": 0
+    },
+    "5": {
+      "checks": 55,
+      "bad": 0
+    },
+    "9": {
+      "checks": 21,
+      "bad": 0
+    },
+    "13": {
+      "checks": 3,
+      "bad": 0
+    },
+    "14": {
+      "checks": 1,
+      "bad": 0
+    }
+  },
+  "certificate_logic": "A0 rank 300, kernel dimension 1236; degree d=s-1 multiset-shadow Hall argument gives capacity-2 orientation; all C_i rank 300 and all distinct pair stacks rank 600"
+}

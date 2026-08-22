@@ -1,0 +1,11 @@
+30 True sec 1.41
+31 True sec 1.5
+32 True sec 1.286
+33 True sec 1.401
+34 True sec 1.332
+35 True sec 1.837
+36 True sec 1.722
+37 True sec 1.603
+38 True sec 1.475
+39 True sec 1.404
+SUMMARY 10 / 10 sec 14.97
