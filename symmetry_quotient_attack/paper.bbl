@@ -1,15 +1,16 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{22}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[{National Institute of Standards and Technology}(2026)]{NISTRound3}
+\bibitem[{National Institute of Standards and
+  Technology}(2026{\natexlab{a}})]{NISTRound3}
 {National Institute of Standards and Technology}.
 \newblock Nine candidates advance to the third round of the additional digital
   signatures for the {PQC} standardization process.
-\newblock NIST news release, May 2026.
+\newblock NIST news release, May 2026{\natexlab{a}}.
 \newblock URL
   \url{https://csrc.nist.gov/News/2026/nist-advances-9-candidates-to-the-3rd-round-of-pqc}.
 
@@ -128,6 +129,16 @@ Jintai Ding, Peigen Li, and Siyong Tao.
 \newblock Cryptology ePrint Archive, Paper 2026/1548, 2026.
 \newblock URL \url{https://eprint.iacr.org/2026/1548}.
 
+\bibitem[{National Institute of Standards and
+  Technology}(2026{\natexlab{b}})]{NISTSecurityCriteria2026}
+{National Institute of Standards and Technology}.
+\newblock Post-quantum cryptography: Security evaluation criteria.
+\newblock NIST PQC project page, June 2026{\natexlab{b}}.
+\newblock URL
+  \url{https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization/evaluation-criteria/security-(evaluation-criteria)}.
+\newblock Classical-gate reference exponents 143, 207, and 272; accessed 26
+  July 2026.
+
 \bibitem[Tseng et~al.(2026)Tseng, Wang, Li, and Kuan]{TsengEtAl2026Wedge}
 Po-En Tseng, Lih-Chung Wang, Peigen Li, and Yen-Liang Kuan.
 \newblock Investigating the wedge map on {SNOVA}.
@@ -164,26 +175,12 @@ Kosuke Sakata and Tsuyoshi Takagi.
   Systems}, 2026\penalty0 (3):\penalty0 1284--1309, 2026.
 \newblock \doi{10.46586/tches.v2026.i3.1284-1309}.
 
-\bibitem[Din and Schost(2018)]{SafeyElDinSchost2018}
-Mohab Safey~El Din and {\'E}ric Schost.
-\newblock Bit complexity for multi-homogeneous polynomial system solving:
-  Application to polynomial minimization.
-\newblock \emph{Journal of Symbolic Computation}, 87:\penalty0 176--206, 2018.
-\newblock \doi{10.1016/j.jsc.2017.08.001}.
-
-\bibitem[Faug\`ere et~al.(1993)Faug\`ere, Gianni, Lazard, and Mora]{FGLM1993}
-Jean-Charles Faug\`ere, Patrizia Gianni, Daniel Lazard, and Teo Mora.
-\newblock Efficient computation of zero-dimensional gr\"obner bases by change
-  of ordering.
-\newblock \emph{Journal of Symbolic Computation}, 16\penalty0 (4):\penalty0
-  329--344, 1993.
-\newblock \doi{10.1006/jsco.1993.1051}.
-
-\bibitem[Kehrein and Kreuzer(2005)]{KehreinKreuzer2005}
-Achim Kehrein and Martin Kreuzer.
-\newblock Characterizations of border bases.
-\newblock \emph{Journal of Pure and Applied Algebra}, 196\penalty0
-  (2--3):\penalty0 251--270, 2005.
-\newblock \doi{10.1016/j.jpaa.2004.08.028}.
+\bibitem[Furue and Kudo(2024)]{FurueKudo2024PXL}
+Hiroki Furue and Momonari Kudo.
+\newblock {Polynomial XL}: A variant of the {XL} algorithm using macaulay
+  matrices over polynomial rings.
+\newblock In \emph{Post-Quantum Cryptography -- PQCrypto 2024}, volume 14772 of
+  \emph{Lecture Notes in Computer Science}, pages 109--143. Springer, 2024.
+\newblock \doi{10.1007/978-3-031-62746-0_6}.
 
 \end{thebibliography}

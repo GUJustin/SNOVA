@@ -26,7 +26,9 @@ verify-reduced-stress:
 	$(PYTHON) artifact/reduced_attack/verify_reduced_parameter_stress.py
 
 regenerate:
+	$(PYTHON) artifact/pxl_final_ledger.py --write
 	$(PYTHON) artifact/generate_ledger.py
+	$(PYTHON) artifact/level1_homotopy_operation_counter.py
 	$(PYTHON) artifact/field_circuits.py
 	$(PYTHON) artifact/research/verify_l2_channel_conditional_atoms.py
 	$(PYTHON) artifact/research/jg_expected_ledger.py

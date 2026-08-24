@@ -543,39 +543,20 @@ def ledger_checks() -> dict[str, dict[str, float]]:
     return recomputed
 
 
-def paper_table_checks(recomputed: dict[str, dict[str, float]]) -> None:
-    paper_path = HERE.parent / "paper.tex"
-    paper_lines = [" ".join(line.split()) for line in paper_path.read_text().splitlines()]
-    for _level, params in ROWS:
-        values = recomputed[str(params)]
-        parameter_token = f"$({','.join(map(str, params))})$"
-        rounded_adaptive = f"& ${values['adaptive']:.3f}$ &"
-        exact = (
-            f"& ${values['direct']:.6f}$ & ${values['adaptive']:.6f}$ &"
-        )
-        assert any(
-            parameter_token in line and rounded_adaptive in line for line in paper_lines
-        )
-        assert any(parameter_token in line and exact in line for line in paper_lines)
-    paper = "\n".join(paper_lines)
-    assert r"\boxed{142.60696,\qquad185.45088,\qquad233.84399}" in paper
-    assert r"\boxed{132.18807,\qquad183.79463,\qquad233.84399}" in paper
-
-
 def main() -> None:
     assert RHO == Fraction(14, 256)
     circuit_checks()
     target_sampling_check()
     structural_coefficient_bound_check()
     dimension_and_repair_checks()
-    recomputed = ledger_checks()
-    paper_table_checks(recomputed)
-    print("Paper-artifact consistency checks passed")
+    ledger_checks()
+    print("Legacy ledger consistency checks passed")
     print("- direct/adaptive ledger rows recomputed without importing the generator")
     print("- no random structural-preflight probability appears in the ledger")
     print("- all 361 F19 multiplier pairs, payload SHA-256, field/tower identities, determinant")
     print("- target sampling, coefficient/spectrum bounds, dimensions, separators, repair floors")
-    print("- stored ledger rows and separately recomputed boxed levelwise maxima")
+    print("- stored ledger rows and separately recomputed levelwise maxima")
+    print("- manuscript-table checks intentionally omitted because the legacy tables were removed")
     print("- excluded by design: verifier correspondence, reduction theorem, XOF model, H_hom, kappa_hom")
 
 

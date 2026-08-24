@@ -19,9 +19,12 @@ make verify
 make
 ```
 
-`make verify` runs three separately identified classes of checks:
+`make verify` runs four separately identified classes of checks:
 
-- formula, ledger, target-sampling, dimension, and repair-floor consistency;
+- the final 30-row PXL ledger, including the six `ell2_supported`, twelve
+  `ell4_supported`, and twelve `ell4_H_struct` estimates across both matrix
+  exponents;
+- formula, target-sampling, dimension, and repair-floor consistency checks;
 - exhaustive `F_19` scalar-netlist and quadratic-root checks, plus tower
   identity/recurrence checks;
 - implementation-composition checks: an official Level-I KAT
@@ -53,10 +56,25 @@ make regenerate
 make verify
 ```
 
-The formula checkers are internal consistency tools. They do not establish the
-inherited homotopy hypothesis `H_hom`, the idealized XOF-transcript model,
-fixed-key spectrum events, or bounds on `kappa_hom`, `kappa_JG`, or
-`kappa_JG_cap`.
+The final PXL artifact is `artifact/pxl_final_ledger.py` with pinned output in
+`artifact/pxl_final_ledger.json`. Its checker recomputes all formulas, route
+premises, trial-probability bounds, five PXL components, target-charge
+convention, work estimates, and storage proxies. The `2^32` retained-target
+charge is a stipulated model convention, not a measured or circuit-level
+bound.
+
+The formula checkers are internal consistency tools. They do not establish
+the ordinary PXL regularity premise, the instancewise extraction premise, the
+structured `H_struct` premise, the official frequency of `H_off`, the
+idealized XOF-transcript model, or fixed-key spectrum events. The artifact
+contains no production-size nonlinear solve or forgery.
+
+Legacy homotopy and Just Guess files remain in `artifact/` as research
+records. They are not part of the manuscript's current recovery headline.
+
+The root `SHA256SUMS` file is the release manifest. It covers the files listed
+in that manifest. It is not an inventory of every archived research file in
+this directory. Verify the listed files with `sha256sum -c SHA256SUMS`.
 
 `REVISION_RESPONSE_2026-07-31.md` is a revision record, not independent
 evidence.

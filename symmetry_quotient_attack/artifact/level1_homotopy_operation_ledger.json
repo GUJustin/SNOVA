@@ -1,0 +1,836 @@
+{
+  "interpretation": {
+    "exceeds": "A profile above 143 is ruled out even before the omitted lifting, reconstruction, cleaning, and filtering costs.",
+    "fits": "A profile below 143 only survives this necessary-cost audit; it is not yet a proved attack bound."
+  },
+  "reference_log2_AXN": 143.0,
+  "routes": {
+    "ell2-level1-adaptive": {
+      "common_failure": 1.8771151081144934e-19,
+      "fallback_branch": "complete-two-block",
+      "fallback_probability": 0.0029996670780173392,
+      "fast_branch": "one-eigenblock",
+      "parameters": [
+        48,
+        16,
+        2,
+        2
+      ],
+      "profiles": {
+        "bilinear-polynomial-floor": {
+          "adaptive_log2_AXN": 137.86428604306457,
+          "fallback": {
+            "B": 55276229099520,
+            "Bplus": 2610266374144000,
+            "combined_factor": [
+              64646911297105389458050064979094883,
+              574112729107561430340096491520000
+            ],
+            "combined_overhead_bits": 6.8151035892144165,
+            "extension_field_realization": {
+              "base_additions": 132,
+              "base_multiplications": 144,
+              "explicit_AXN_gates": 112012,
+              "extension_degree": 12,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^12 + (1 + u)",
+              "overhead_bits": 2.815103589214437,
+              "overhead_factor": 7.037697914048756,
+              "special_linear_AXN_gates": 1276,
+              "unit_ledger_AXN_gates": 15916,
+              "unit_ledger_pointwise_products": 23
+            },
+            "lifting_precision_4Bplus": 10441065496576000,
+            "polynomial_operation_ratio": [
+              2308570913727293127809522728961,
+              144285682107957132530810880000
+            ]
+          },
+          "fast": {
+            "B": 65536,
+            "Bplus": 589824,
+            "combined_factor": [
+              3058336330552145,
+              60185376718848
+            ],
+            "combined_overhead_bits": 5.667190263888827,
+            "extension_field_realization": {
+              "base_additions": 20,
+              "base_multiplications": 25,
+              "explicit_AXN_gates": 19780,
+              "extension_degree": 5,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^5 + (2 + u)",
+              "overhead_bits": 1.6672015765674362,
+              "overhead_factor": 3.1759794476557484,
+              "special_linear_AXN_gates": 800,
+              "unit_ledger_AXN_gates": 6228,
+              "unit_ledger_pointwise_products": 9
+            },
+            "lifting_precision_4Bplus": 2359296,
+            "polynomial_operation_ratio": [
+              618470440961,
+              38654705664
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 35.15636382125537,
+          "maximum_additional_common_multiplier_bits": 5.135713956940875,
+          "meaning": "Feasibility lower bound; it omits all polynomial additions and all outer lifting work.",
+          "remaining_bits_below_143": 5.135713956935433
+        },
+        "explicit-extension-field-only": {
+          "adaptive_log2_AXN": 133.86429722728064,
+          "fallback": {
+            "B": 55276229099520,
+            "Bplus": 2610266374144000,
+            "combined_factor": [
+              28003,
+              3979
+            ],
+            "combined_overhead_bits": 2.815103589214436,
+            "extension_field_realization": {
+              "base_additions": 132,
+              "base_multiplications": 144,
+              "explicit_AXN_gates": 112012,
+              "extension_degree": 12,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^12 + (1 + u)",
+              "overhead_bits": 2.815103589214437,
+              "overhead_factor": 7.037697914048756,
+              "special_linear_AXN_gates": 1276,
+              "unit_ledger_AXN_gates": 15916,
+              "unit_ledger_pointwise_products": 23
+            },
+            "lifting_precision_4Bplus": 10441065496576000,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fast": {
+            "B": 65536,
+            "Bplus": 589824,
+            "combined_factor": [
+              4945,
+              1557
+            ],
+            "combined_overhead_bits": 1.667201576567436,
+            "extension_field_realization": {
+              "base_additions": 20,
+              "base_multiplications": 25,
+              "explicit_AXN_gates": 19780,
+              "extension_degree": 5,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^5 + (2 + u)",
+              "overhead_bits": 1.6672015765674362,
+              "overhead_factor": 3.1759794476557484,
+              "special_linear_AXN_gates": 800,
+              "unit_ledger_AXN_gates": 6228,
+              "unit_ledger_pointwise_products": 9
+            },
+            "lifting_precision_4Bplus": 2359296,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 562.4974605026657,
+          "maximum_additional_common_multiplier_bits": 9.135702772809323,
+          "meaning": "Constructive field realization; polynomial soft factors remain unit-leading.",
+          "remaining_bits_below_143": 9.135702772719355
+        },
+        "padded-karatsuba-multiplication-floor": {
+          "adaptive_log2_AXN": 189.0361989720567,
+          "fallback": {
+            "B": 55276229099520,
+            "Bplus": 2610266374144000,
+            "combined_factor": [
+              1603568523673168144779335668536299166608568548732667,
+              63790303234173492260010721280000
+            ],
+            "combined_overhead_bits": 64.44651076553117,
+            "extension_field_realization": {
+              "base_additions": 132,
+              "base_multiplications": 144,
+              "explicit_AXN_gates": 112012,
+              "extension_degree": 12,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^12 + (1 + u)",
+              "overhead_bits": 2.815103589214437,
+              "overhead_factor": 7.037697914048756,
+              "special_linear_AXN_gates": 1276,
+              "unit_ledger_AXN_gates": 15916,
+              "unit_ledger_pointwise_products": 23
+            },
+            "lifting_precision_4Bplus": 10441065496576000,
+            "polynomial_operation_ratio": [
+              57264168970223481226273458862846808078011946889,
+              16031742456439681392312320000
+            ]
+          },
+          "fast": {
+            "B": 65536,
+            "Bplus": 589824,
+            "combined_factor": [
+              82468663504851183705,
+              743029342208
+            ],
+            "combined_overhead_bits": 26.725851602529062,
+            "extension_field_realization": {
+              "base_additions": 20,
+              "base_multiplications": 25,
+              "explicit_AXN_gates": 19780,
+              "extension_degree": 5,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^5 + (2 + u)",
+              "overhead_bits": 1.6672015765674362,
+              "overhead_factor": 3.1759794476557484,
+              "special_linear_AXN_gates": 800,
+              "unit_ledger_AXN_gates": 6228,
+              "unit_ledger_pointwise_products": 9
+            },
+            "lifting_precision_4Bplus": 2359296,
+            "polynomial_operation_ratio": [
+              150094635296999121,
+              4294967296
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -46.036198972056695
+        },
+        "schoolbook-multiplication-floor": {
+          "adaptive_log2_AXN": 228.2696346903108,
+          "fallback": {
+            "B": 55276229099520,
+            "Bplus": 2610266374144000,
+            "combined_factor": [
+              64646911297105977316164753162240000,
+              3979
+            ],
+            "combined_overhead_bits": 103.67994648501332,
+            "extension_field_realization": {
+              "base_additions": 132,
+              "base_multiplications": 144,
+              "explicit_AXN_gates": 112012,
+              "extension_degree": 12,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^12 + (1 + u)",
+              "overhead_bits": 2.815103589214437,
+              "overhead_factor": 7.037697914048756,
+              "special_linear_AXN_gates": 1276,
+              "unit_ledger_AXN_gates": 15916,
+              "unit_ledger_pointwise_products": 23
+            },
+            "lifting_precision_4Bplus": 10441065496576000,
+            "polynomial_operation_ratio": [
+              2308570913727314120492974080000,
+              1
+            ]
+          },
+          "fast": {
+            "B": 65536,
+            "Bplus": 589824,
+            "combined_factor": [
+              339817812459520,
+              173
+            ],
+            "combined_overhead_bits": 40.83712657800975,
+            "extension_field_realization": {
+              "base_additions": 20,
+              "base_multiplications": 25,
+              "explicit_AXN_gates": 19780,
+              "extension_degree": 5,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^5 + (2 + u)",
+              "overhead_bits": 1.6672015765674362,
+              "overhead_factor": 3.1759794476557484,
+              "special_linear_AXN_gates": 800,
+              "unit_ledger_AXN_gates": 6228,
+              "unit_ledger_pointwise_products": 9
+            },
+            "lifting_precision_4Bplus": 2359296,
+            "polynomial_operation_ratio": [
+              618475290624,
+              1
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -85.2696346903108
+        }
+      },
+      "target_log2_AXN": 99.96684021509736,
+      "unit_leading_adaptive_log2_AXN": 132.18807210764757,
+      "unit_leading_headroom_bits": 10.81192789235243
+    },
+    "ell4-level1-adaptive-(28, 4, 4, 5)": {
+      "common_failure": 1.6213575966695184e-29,
+      "fallback_branch": "complete-ordinary-square",
+      "fallback_probability": 3.553495595421545e-05,
+      "fast_branch": "five-quadratic-five-degree-twenty-channel",
+      "parameters": [
+        28,
+        4,
+        4,
+        5
+      ],
+      "profiles": {
+        "bilinear-polynomial-floor": {
+          "adaptive_log2_AXN": 134.898540907216,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              17329006811625528317213260098605973597,
+              142547309995664396198304275444531200
+            ],
+            "combined_overhead_bits": 6.925604346050122,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              527342649694943194583648096485377,
+              32958915605933964438914283339776
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              4653789978961510407397,
+              120560025600000000000
+            ],
+            "combined_overhead_bits": 5.270582571274872,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              629145596723200001,
+              39321600000000000
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 274.6516393348044,
+          "maximum_additional_common_multiplier_bits": 8.101459092783996,
+          "meaning": "Feasibility lower bound; it omits all polynomial additions and all outer lifting work.",
+          "remaining_bits_below_143": 8.101459092784012
+        },
+        "explicit-extension-field-only": {
+          "adaptive_log2_AXN": 130.89854090794373,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              32861,
+              4325
+            ],
+            "combined_overhead_bits": 2.9256043460501253,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              7397,
+              3066
+            ],
+            "combined_overhead_bits": 1.270582578788897,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 4394.426227140197,
+          "maximum_additional_common_multiplier_bits": 12.10145909205626,
+          "meaning": "Constructive field realization; polynomial soft factors remain unit-leading.",
+          "remaining_bits_below_143": 12.101459092056274
+        },
+        "padded-karatsuba-multiplication-floor": {
+          "adaptive_log2_AXN": 195.6421249885287,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              37038639890090103451676669268093812364631270198398521007,
+              142547309995664396198304275444531200
+            ],
+            "combined_overhead_bits": 67.81615220507275,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              1127130637840908780976740490797413723399509150616187,
+              32958915605933964438914283339776
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              3871202441503385893768344720837,
+              13395558400000000000
+            ],
+            "combined_overhead_bits": 38.07223607613382,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              1570042899082081611640534563,
+              13107200000000000
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -52.64212498852871
+        },
+        "schoolbook-multiplication-floor": {
+          "adaptive_log2_AXN": 239.45201684710528,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              17329006811625536086834596237254066176,
+              4325
+            ],
+            "combined_overhead_bits": 111.62604406419122,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              527342649694943431022628533436416,
+              1
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              775631667200000000000,
+              511
+            ],
+            "combined_overhead_bits": 60.39675412327104,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              629145600000000000,
+              1
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -96.45201684710528
+        }
+      },
+      "target_log2_AXN": null,
+      "unit_leading_adaptive_log2_AXN": 128.24574744947026,
+      "unit_leading_headroom_bits": 14.754252550529742
+    },
+    "ell4-level1-adaptive-(28, 5, 4, 4)": {
+      "common_failure": 1.6213575966695184e-29,
+      "fallback_branch": "complete-ordinary-square",
+      "fallback_probability": 3.553495595421545e-05,
+      "fast_branch": "five-quadratic-five-degree-twenty-channel",
+      "parameters": [
+        28,
+        5,
+        4,
+        4
+      ],
+      "profiles": {
+        "bilinear-polynomial-floor": {
+          "adaptive_log2_AXN": 134.89910534659052,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              17329006811625528317213260098605973597,
+              142547309995664396198304275444531200
+            ],
+            "combined_overhead_bits": 6.925604346050122,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              527342649694943194583648096485377,
+              32958915605933964438914283339776
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              4653789978961510407397,
+              120560025600000000000
+            ],
+            "combined_overhead_bits": 5.270582571274872,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              629145596723200001,
+              39321600000000000
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 274.5442057654909,
+          "maximum_additional_common_multiplier_bits": 8.100894653409469,
+          "meaning": "Feasibility lower bound; it omits all polynomial additions and all outer lifting work.",
+          "remaining_bits_below_143": 8.100894653409483
+        },
+        "explicit-extension-field-only": {
+          "adaptive_log2_AXN": 130.89910534731817,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              32861,
+              4325
+            ],
+            "combined_overhead_bits": 2.9256043460501253,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              7397,
+              3066
+            ],
+            "combined_overhead_bits": 1.270582578788897,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              1,
+              1
+            ]
+          },
+          "fits_143": true,
+          "maximum_additional_common_multiplier": 4392.707290032304,
+          "maximum_additional_common_multiplier_bits": 12.100894652681816,
+          "meaning": "Constructive field realization; polynomial soft factors remain unit-leading.",
+          "remaining_bits_below_143": 12.10089465268183
+        },
+        "padded-karatsuba-multiplication-floor": {
+          "adaptive_log2_AXN": 195.64271074890303,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              37038639890090103451676669268093812364631270198398521007,
+              142547309995664396198304275444531200
+            ],
+            "combined_overhead_bits": 67.81615220507275,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              1127130637840908780976740490797413723399509150616187,
+              32958915605933964438914283339776
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              3871202441503385893768344720837,
+              13395558400000000000
+            ],
+            "combined_overhead_bits": 38.07223607613382,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              1570042899082081611640534563,
+              13107200000000000
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -52.64271074890303
+        },
+        "schoolbook-multiplication-floor": {
+          "adaptive_log2_AXN": 239.4526026074797,
+          "fallback": {
+            "B": 1125899906842624,
+            "Bplus": 29273397577908224,
+            "combined_factor": [
+              17329006811625536086834596237254066176,
+              4325
+            ],
+            "combined_overhead_bits": 111.62604406419122,
+            "extension_field_realization": {
+              "base_additions": 168,
+              "base_multiplications": 169,
+              "explicit_AXN_gates": 131444,
+              "extension_degree": 13,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^13 + z + 1",
+              "overhead_bits": 2.9256043460501258,
+              "overhead_factor": 7.5979190751445085,
+              "special_linear_AXN_gates": 384,
+              "unit_ledger_AXN_gates": 17300,
+              "unit_ledger_pointwise_products": 25
+            },
+            "lifting_precision_4Bplus": 117093590311632896,
+            "polynomial_operation_ratio": [
+              527342649694943431022628533436416,
+              1
+            ]
+          },
+          "fast": {
+            "B": 102400000,
+            "Bplus": 384000000,
+            "combined_factor": [
+              775631667200000000000,
+              511
+            ],
+            "combined_overhead_bits": 60.39675412327104,
+            "extension_field_realization": {
+              "base_additions": 12,
+              "base_multiplications": 16,
+              "explicit_AXN_gates": 44382,
+              "extension_degree": 4,
+              "method": "schoolbook convolution with sparse irreducible reduction",
+              "modulus": "z^4 + t",
+              "overhead_bits": 1.2705825787888967,
+              "overhead_factor": 2.4125896934116113,
+              "special_linear_AXN_gates": 318,
+              "unit_ledger_AXN_gates": 18396,
+              "unit_ledger_pointwise_products": 7
+            },
+            "lifting_precision_4Bplus": 1536000000,
+            "polynomial_operation_ratio": [
+              629145600000000000,
+              1
+            ]
+          },
+          "fits_143": false,
+          "maximum_additional_common_multiplier": 1.0,
+          "maximum_additional_common_multiplier_bits": 0.0,
+          "meaning": "Necessary multiplication count; omits additions, outer lifting, and later solver work.",
+          "remaining_bits_below_143": -96.45260260747969
+        }
+      },
+      "target_log2_AXN": null,
+      "unit_leading_adaptive_log2_AXN": 128.24627763226104,
+      "unit_leading_headroom_bits": 14.753722367738959
+    }
+  },
+  "scope": "Level-I route-specific necessary-cost audit. This is not a complete homotopy solver bound and does not assign a value to kappa_hom.",
+  "source_claims": {
+    "homotopy_bound": "Safey-El-Din--Schost Proposition 5",
+    "polynomial_kernel_shape": "Schost Theorem 2, one parameter: multiplication at B and at precision bounded by 4 Bplus",
+    "unit_leading_ledger": "all_nine_ledger.json"
+  },
+  "worst_level1_by_profile": {
+    "bilinear-polynomial-floor": {
+      "adaptive_log2_AXN": 137.86428604306457,
+      "fits_143": true,
+      "remaining_bits_below_143": 5.135713956935433,
+      "route": "ell2-level1-adaptive"
+    },
+    "explicit-extension-field-only": {
+      "adaptive_log2_AXN": 133.86429722728064,
+      "fits_143": true,
+      "remaining_bits_below_143": 9.135702772719355,
+      "route": "ell2-level1-adaptive"
+    },
+    "padded-karatsuba-multiplication-floor": {
+      "adaptive_log2_AXN": 195.64271074890303,
+      "fits_143": false,
+      "remaining_bits_below_143": -52.64271074890303,
+      "route": "ell4-level1-adaptive-(28, 5, 4, 4)"
+    },
+    "schoolbook-multiplication-floor": {
+      "adaptive_log2_AXN": 239.4526026074797,
+      "fits_143": false,
+      "remaining_bits_below_143": -96.45260260747969,
+      "route": "ell4-level1-adaptive-(28, 5, 4, 4)"
+    }
+  }
+}

@@ -21,6 +21,15 @@ P = 19
 # All-nine conditional-ledger checks.
 runpy.run_path(str(HERE / "verify_ledgers.py"), run_name="__main__")
 
+# Route-specific Level-I homotopy necessary-cost audit.
+runpy.run_path(
+    str(HERE / "verify_level1_homotopy_operation_counter.py"),
+    run_name="__main__",
+)
+
+# Final ell=2 and ell=4 five-component PXL route ledgers.
+runpy.run_path(str(HERE / "pxl_final_ledger.py"), run_name="__main__")
+
 # ``verify_ledgers.py`` evaluates the committed scalar netlist on all
 # 361 valid inputs and recomputes the tower identities and recurrence counts.
 # Regeneration is deliberately separate so that verification is nonmutating.
@@ -182,3 +191,4 @@ print("- exact ell=2 conditional atoms 49/829 and 169246/2971565")
 print("- 2^132.046522 expected-tree and 2^137.713503 capped-tree Just Guess ledgers")
 print("- cross success > 0.096134 and exponent 135.425325 + log2(kappa_JG)")
 print("- Level-I break-even log2(kappa_JG) < 7.574675")
+print("- final ell=2 and ell=4 five-component PXL route ledgers")

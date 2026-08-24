@@ -1,0 +1,757 @@
+% TEMPORARY DRAFT. DO NOT \input THIS FILE INTO paper.tex YET.
+% This fragment proposes replacement text for the Level-I conditional solver
+% analysis.  It leaves the exact quotient in paper.tex unchanged.
+% TODO(bibliography): add the final citation key for Furue and Kudo, PXL.
+% The ell=2 arithmetic rows below were independently checked on 12 August 2026.
+
+\section{A transverse Level-I slice}
+\label{sec:pxl-level1-slice}
+
+We now specialize the exact quotient to one Level-I parameter shape.  Its
+parameters are $(v,o,\ell,r)=(48,16,2,2)$.  This is the only published shape
+for which the solver estimate is close enough to the target that its constants
+affect the headline conclusion.  We therefore state its exact reduction and
+its conditional solver model separately.
+
+Put $A=\F_{19^2}$ and identify $A^{64}$ with $\F_{19}^{128}$.  Write
+$U=A^{64}=V_{\rm pub}\oplus O_{\rm pub}$, where
+$V_{\rm pub}\cong A^{48}$ is the public-vinegar summand, and let
+$\pi_v:U\to V_{\rm pub}$ be the projection.  Use the
+zero-offset column relation from \Cref{eq:sq-l2-zero}.  After the public rank
+test in \Cref{prop:sq-zero-split}, the verifier is equivalent to a target
+consistency test followed by a quadratic residual map
+\begin{equation}
+ W_Rt=0,
+ \qquad
+ g(u)=z,
+ \qquad
+ g:A^{64}\longrightarrow\F_{19}^{48}.
+ \label{eq:pxl-level1-residual}
+\end{equation}
+Here $z=G_Rt$ is uniform after conditioning on consistency.  The first test
+passes with probability $19^{-16}$ for a uniform official target.  It is
+performed before any nonlinear solve.
+
+An injective linear map
+\[
+ T:\F_{19}^{h}\longrightarrow A^{64}
+\]
+defines the slice direction $L=\im T$.  Fix an $\F_{19}$-basis
+$\ell_1,\ldots,\ell_h$ of $L$ and put
+\begin{equation}
+ L_A=\Span_A\{\pi_v(\ell_1),\ldots,\pi_v(\ell_h)\}
+ \subseteq V_{\rm pub}.
+ \label{eq:pxl-extension-span}
+\end{equation}
+The slice direction is \emph{$A$-independent} if
+$\dim_A L_A=h$.  This condition is stronger than injectivity of
+$\pi_v|_L$.  Its construction must also be independent of the fresh
+coefficient region used by \Cref{lem:sq-full-domain-spectrum}.  An affine
+coset $\mathcal A=a+L$ is \emph{$\ell=2$ transverse} if
+\begin{equation}
+ \pi_v(a)\notin L_A.
+ \label{eq:pxl-l2-transverse}
+\end{equation}
+This condition is independent of the chosen representative of the coset.
+The attack samples a uniform affine coset and solves all $48$ equations only
+when \eqref{eq:pxl-l2-transverse} holds.
+
+\begin{proposition}[Exact transverse affine restriction]
+\label{prop:pxl-level1-transverse}
+Assume that the supplied public key passes $\rank Q_R=48$ in
+\Cref{prop:sq-zero-split}, and let $T$ be any injection of dimension
+$h\le48$.  For every consistent target and every affine coset
+$\mathcal A=a+\im T$, the complete substituted verifier is equivalent on
+$\mathcal A$ to
+\begin{equation}
+ f_{a,z}(x):=g(a+Tx)-z=0,
+ \qquad x\in\F_{19}^{h}.
+ \label{eq:pxl-restricted-system}
+\end{equation}
+This is a system of $48$ affine quadratic equations in $h$ variables over
+$\F_{19}$.  Every accepted root of \eqref{eq:pxl-restricted-system}
+reconstructs a candidate that satisfies every equation in the original
+verifier.  No residual equation is omitted.
+\end{proposition}
+
+\begin{proof}
+The target split is an invertible public change of verifier outputs by
+\Cref{prop:sq-zero-split}.  The map $x\mapsto a+Tx$ is an affine injection, so
+substitution preserves the solution set inside $a+\im T$.  The reconstruction
+map is the zero-offset instance of \eqref{eq:column-relation}.  The final
+format check and the original verifier reject every invalid output.
+\end{proof}
+
+The PXL route uses $h=46=v-2$ and an $A$-independent direction.  It therefore
+keeps every residual equation and produces two more equations than variables.
+The expected root count of one uniform target and coset trial is $19^{-2}$.
+This statement is an exact first-moment calculation.  It does not assert that
+the restricted coefficients are uniform or that PXL terminates at the
+predicted degree.
+
+\subsection{Uniform target and coset sampling}
+
+The root calculation uses a random affine coset, not a fixed affine
+translate selected after inspecting the polynomial coefficients.  The next
+lemma records the exact sampling rule.
+
+\begin{lemma}[Uniform coset sampling]
+\label{lem:pxl-uniform-coset}
+Let $U$ be a finite-dimensional $\F_q$-space and let $L\subseteq U$ have
+dimension $h$.  If $a$ is uniform in $U$, then $a+L$ is uniform in $U/L$.
+Equivalently, choose any complement $U=L\oplus V$ and sample $a$ uniformly
+in $V$.  These two procedures give the same distribution on affine cosets.
+For every $x\in U$,
+\begin{equation}
+ \Pr[x\in a+L]=q^{h-\dim U}.
+ \label{eq:pxl-point-in-coset}
+\end{equation}
+If the residual target $z$ is sampled independently and uniformly in
+$\F_q^K$, then
+\begin{equation}
+ \Pr[x\in a+L\ \text{and}\ g(x)=z]
+ =q^{h-\dim U-K}.
+ \label{eq:pxl-point-root}
+\end{equation}
+Suppose in addition that $U=A^{v+o}$, that $L$ is $A$-independent in the
+sense of \eqref{eq:pxl-extension-span}, and that $a$ is uniform in $U$.
+Then
+\begin{equation}
+ \Pr[\pi_v(a)\notin L_A]=1-|A|^{h-v}.
+ \label{eq:pxl-transverse-probability}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Every coset has exactly $q^h$ representatives.  A uniform point of $U$
+therefore induces the uniform distribution on $U/L$.  A fixed point belongs
+to one of the $q^{\dim U-h}$ cosets, which proves
+\eqref{eq:pxl-point-in-coset}.  Independence and uniformity of $z$ contribute
+the factor $q^{-K}$ in \eqref{eq:pxl-point-root}.  The projection
+$\pi_v(a)$ is uniform in $A^v$.  Since $L_A$ has $|A|^h$ elements,
+\eqref{eq:pxl-transverse-probability} follows.
+\end{proof}
+
+The official target is made exactly uniform by
+\eqref{eq:target-rejection-sampling}.  The output split is invertible, so the
+consistency coordinates and the residual target are independent and uniform.
+The attack first retains a consistent target and then samples the affine
+coset independently.  Thus the experiment in \Cref{lem:pxl-uniform-coset}
+is exact for the residual system.  The attack does not sample directly from
+the transverse cosets.  It samples a uniform coset and discards a
+nontransverse one.  This preserves the sampling experiment used by the root
+theorem below.
+
+\begin{lemma}[Mixed block support]
+\label{lem:pxl-l2-mixed-block}
+Let $C:A\times A\to\F_{19}$ be an $\F_{19}$-bilinear form and put
+\[
+ C^{\rm sym}(\xi,\zeta)=C(\xi,\zeta)+C(\zeta,\xi).
+\]
+The map $C\mapsto C^{\rm sym}$ onto the symmetric bilinear forms on the
+two-dimensional $\F_{19}$-space $A$ is surjective.  Its kernel is the
+one-dimensional space of alternating forms on $A$.
+\end{lemma}
+
+\begin{proof}
+Since the characteristic is odd, a symmetric form $S$ has preimage $S/2$.
+The kernel consists of the forms with
+$C(\xi,\zeta)=-C(\zeta,\xi)$.  These are the alternating forms.  Their
+space has dimension $\binom{2}{2}=1$.
+\end{proof}
+
+\begin{proposition}[$\ell=2$ affine coefficient support]
+\label{prop:pxl-l2-affine-support}
+Let $h\le v-1$, let $L$ be $A$-independent, and let $a+L$ be $\ell=2$
+transverse.  For one fresh UOV base form, the restriction map from its fresh
+native symmetric coefficients to the three descended $\ell=2$ channel
+polynomials on $a+L$ is surjective onto
+\begin{equation}
+ \F_{19}[x_1,\ldots,x_h]_{\le2}^{\,3}.
+ \label{eq:pxl-l2-affine-surjection}
+\end{equation}
+Across the $m$ independent base forms, the corresponding map is surjective
+onto the coefficient space of $K=3m$ ordinary affine quadratic equations in
+$h$ variables.  In particular, $h=v-2$ leaves transversality failure
+probability $|A|^{-2}=19^{-4}$.
+\end{proposition}
+
+\begin{proof}
+Put $b=\pi_v(a)$ and $e_i=\pi_v(\ell_i)$.  The two transversality conditions
+give the direct sum
+\[
+ Ab\oplus Ae_1\oplus\cdots\oplus Ae_h\subseteq V_{\rm pub}.
+\]
+Let $B$ be one fresh native symmetric $\F_{19}$-bilinear form on this sum.
+The diagonal block on $Ae_i$ is an arbitrary symmetric form on the
+two-dimensional $\F_{19}$-space $A$.  It supplies the three channel
+coefficients of $x_i^2$.  The block between $Ae_i$ and $Ae_j$ is an
+arbitrary bilinear form on $A\times A$.  Its contribution to $x_ix_j$ is its
+symmetrization.  By \Cref{lem:pxl-l2-mixed-block}, this contribution supplies
+all three channel coefficients.  The only unused direction in the block is
+its one-dimensional alternating kernel.
+
+The block between $Ab$ and $Ae_i$ uses the same mixed block map and supplies
+all three coefficients of $x_i$.  The diagonal block on $Ab$ supplies the
+three constant coefficients.  The blocks are independent because the sum of
+$A$-lines is direct.  Set every unused block to zero and extend $B$
+arbitrarily to the rest of $V_{\rm pub}$.  This constructs a native preimage
+for every triple of affine quadratic polynomials.
+
+The block map is defined over $\F_{19}$.  One may verify surjectivity after
+extending scalars to a splitting field.  If $C$ is the cokernel, scalar
+extension gives $C\otimes_{\F_{19}}\Omega=0$.  Faithful flatness then gives
+$C=0$.  Hence the split calculation descends to the official
+$\F_{19}$ coefficient space.  Finally, the native coefficient blocks for
+the $m$ base forms are independent parameters, so taking their direct sum
+gives the stated map for $K=3m$ equations.  The incidence probability is
+\eqref{eq:pxl-transverse-probability} with $h=v-2$.
+\end{proof}
+
+Surjectivity is a support statement.  It says that every ordinary affine MQ
+coefficient tuple has a preimage.  If the fresh native symbols were uniform
+over $\F_{19}$, the induced tuple would also be uniform because the map is
+linear and surjective.  In the idealized XOF transcript used by the spectrum
+theorem, the native symbols are independent byte reductions and are not
+uniform over $\F_{19}$.  Full support therefore does not imply uniform output
+coefficients, semi-regularity, or the PXL rank predictions.
+
+\section{Accepted roots on a transverse slice}
+\label{sec:pxl-root-probability}
+
+This section keeps the collision argument independent of the solver.  It
+applies to square and overdetermined slices and requires only $h\le K$ for
+the full column rank conclusion.
+
+\begin{theorem}[Root-collision identity]
+\label{thm:collision-identity}
+Let $U$ be an $\F_q$-space, let $L\subseteq U$ have dimension $h$, and let
+$g:U\to\F_q^K$ have degree at most two.  Sample a uniform affine coset
+$\mathcal A$ of $L$ in $U$ and an independent uniform target
+$z\in\F_q^K$.  Put
+\[
+ Z=|\{x\in\mathcal A:g(x)=z\}|,
+ \qquad \mu=q^{h-K}.
+\]
+For $0\ne y\in L$, define
+\[
+ T_y(x)=g(x+y)-g(x)-g(y)+g(0),
+\]
+and let $\kappa(y)$ be one if
+$-(g(y)-g(0))\in\im T_y$ and zero otherwise.  Then
+\begin{align}
+ \mathbb EZ&=\mu,                                      \label{eq:pxl-moment-first}\\
+ \mathbb E[Z(Z-1)]
+ &=\mu\sum_{0\ne y\in L}\kappa(y)q^{-\rank T_y}
+ \le\mu\sum_{0\ne y\in L}q^{-\rank T_y}.             \label{eq:pxl-moment-second}
+\end{align}
+The derivative $T_y$ has domain $U$ because the experiment averages over the
+affine coset.
+\end{theorem}
+
+\begin{proof}
+The proof is the counting argument already given in the current manuscript.
+By \Cref{lem:pxl-uniform-coset}, every point of $U$ lies in the sampled coset
+with probability $q^{h-\dim U}$ and matches the independent target with
+probability $q^{-K}$.  This proves \eqref{eq:pxl-moment-first}.  For a pair of
+distinct roots, write the second point as $x+y$ with $0\ne y\in L$.  The
+collision condition is
+\[
+ T_y(x)=-(g(y)-g(0)).
+\]
+It has $\kappa(y)q^{\dim U-\rank T_y}$ solutions in $x$.  Dividing by the
+number of target and coset pairs proves \eqref{eq:pxl-moment-second}.
+\end{proof}
+
+Let $X\subseteq U$ be the assignments accepted by the original signature
+format rule and put $\alpha=|X|/|U|$.  Define the full-domain spectrum
+\begin{equation}
+ \bar\eta_L^U=\sum_{0\ne y\in L}q^{-\rank T_y}.
+ \label{eq:pxl-eta}
+\end{equation}
+For a root $x$, let $D_Lg(x):L\to\F_q^K$ be the Jacobian restricted to the
+slice directions.
+
+\begin{theorem}[Accepted root with full column rank]
+\label{thm:sq-accepted-root}
+Assume $h\le K$, $\bar\eta_L^U\le\eta$, and
+$\alpha>\eta/(q-1)$.  A uniform target and affine-coset trial contains an
+accepted root $x$ satisfying
+\[
+ \rank D_Lg(x)=h
+\]
+with probability at least
+\begin{equation}
+ p_{\rm reg}(h,K,\alpha,\eta)
+ =q^{h-K}\frac{a^2}{a+\eta},
+ \qquad
+ a=\alpha-\frac{\eta}{q-1}.
+ \label{eq:pxl-preg}
+\end{equation}
+This bound does not assume independence between acceptance and Jacobian rank.
+It also does not assume independence from the target or the quadratic map.
+\end{theorem}
+
+\begin{proof}
+For each projective direction $[y]\in\mathbb P(L)(\F_q)$, consider the
+condition
+\[
+ D_Lg(x)[y]=0.
+\]
+This is an affine system in $x$ with linear part $T_y$.  A union
+bound over projective directions shows that the fraction of points where
+$D_Lg(x)$ lacks full column rank is at most $\eta/(q-1)$.  If $Y$ counts the
+accepted roots with full column rank in the sampled trial, then
+\[
+ \mathbb EY\ge q^{h-K}a.
+\]
+By \Cref{thm:collision-identity},
+$\mathbb E[Y(Y-1)]\le q^{h-K}\eta$.  Applying the Cauchy Schwarz inequality
+to $Y$ gives
+\eqref{eq:pxl-preg}.
+\end{proof}
+
+For the Level-I zero-offset relation, a block is symmetric exactly when its
+second free coordinate is zero.  The exact accepted density on $A^{64}$ is
+therefore
+\begin{equation}
+ \alpha_{64}=19^{-64}\sum_{j=0}^{16}\binom{64}{j}18^{64-j}.
+ \label{eq:pxl-alpha64}
+\end{equation}
+For a $46$-dimensional $A$-independent slice, set
+\begin{equation}
+ \eta_{\rm L1}=\eta_{128}(46,48)
+ =(19^{46}-1)19^{-48}+2^{-128}.
+ \label{eq:pxl-eta-level1}
+\end{equation}
+On the event $\bar\eta_L^U\le\eta_{\rm L1}$, the exact lower bound used in
+the retry calculation is
+\begin{equation}
+ p_{\rm reg}^{\rm L1}
+ =19^{-2}\frac{a_{\rm L1}^2}{a_{\rm L1}+\eta_{\rm L1}},
+ \qquad
+ a_{\rm L1}=\alpha_{64}-\frac{\eta_{\rm L1}}{18}.
+ \label{eq:pxl-preg-level1}
+\end{equation}
+The attack also requires a transverse coset.  Since a uniform coset is
+nontransverse with probability $19^{-4}$, a union bound gives the certified
+lower bound
+\begin{equation}
+ p_{\rm dir}^{\rm L1}
+ =\max\{p_{\rm reg}^{\rm L1}-19^{-4},0\}.
+ \label{eq:pxl-pdir-level1}
+\end{equation}
+This subtraction does not assume independence between transversality and root
+existence.  Thus $p_{\rm dir}^{\rm L1}$ is not claimed to equal the usable
+trial probability.  It is a lower bound for the joint event consisting of
+root existence, transversality, acceptance, and full column rank.  It makes no
+claim about the behavior of PXL.
+
+\section{Conditional PXL recovery}
+\label{sec:pxl-conditional-recovery}
+
+PXL first eliminates part of a Macaulay matrix over a polynomial ring in the
+variables that will later be guessed.  It then evaluates those variables and
+performs the remaining linear algebra over the base field.  Its published
+cost analysis uses assumptions about the Hilbert series and the ranks of the
+Macaulay matrices~\cite{FurueKudo2024PXL}.  We state those published model
+assumptions first.  We then state a separate premise for applying the model
+and the manuscript's root extraction step to each actual quotient instance.
+
+\begin{definition}[Ordinary MQ regularity hypothesis $\mathsf H_{\rm PXL}$]
+\label{def:pxl-regularity}
+Let $K$ affine quadratic equations in $h$ variables be given.  Choose $k$
+variables for the polynomial preprocessing step and let the remaining $h-k$
+variables be the main variables.  For a degree bound $D$, the hypothesis
+$\mathsf H_{\rm PXL}(K,h,k,D)$ consists of the following statements.
+\begin{enumerate}[label=(\roman*)]
+\item For every assignment to the $k$ guessed variables, the specialized
+      system has at most one root over the algebraic closure, counted with
+      multiplicity, and its highest-degree parts are semi-regular.
+\item The homogeneous quadratic parts in the $h-k$ main variables are
+      semi-regular, so their Hilbert series gives the stated residual matrix
+      size.
+\item The rows selected in each Macaulay degree have the predicted rank, and
+      the matrix left after polynomial preprocessing has the predicted square
+      size.
+\item Degree $D$ suffices for the second linearization step to produce the
+      elimination data predicted by the PXL analysis.
+\end{enumerate}
+These are ordinary MQ heuristics.  They are the affine semi-regularity,
+projected semi-regularity, and Macaulay rank premises used in the published
+PXL analysis.  They are not implied by coefficient support, and they are not
+proved for the quotient systems in this paper.
+\end{definition}
+
+\begin{definition}[Instancewise route premise $\mathsf H_{\rm route}$]
+\label{def:pxl-route}
+Fix a public key, a retained target, and a transverse affine slice.  Let
+$f_{a,z}$ be the resulting system in \eqref{eq:pxl-restricted-system}.  The
+premise $\mathsf H_{\rm route}(f_{a,z};k,D)$ states the following facts about
+this particular system.
+\begin{enumerate}[label=(\roman*)]
+\item Its PXL matrices have the degrees, dimensions, and ranks specified by
+      $\mathsf H_{\rm PXL}(K,h,k,D)$.
+\item If $f_{a,z}$ has an accepted base-field root with full column rank, the
+      manuscript's specialization and root extraction procedure returns at
+      least one such root from the PXL elimination data.
+\end{enumerate}
+The second item is an added solver completeness premise.  It is not part of
+the published PXL assumptions.  The five PXL terms below account for the
+published algebraic model.  The separate term $C_{\rm aux}$ retains the cost
+of root extraction and every other operation not present in those five terms.
+This premise is instancewise.  It makes no claim that the quotient systems
+have the uniform MQ distribution, and it introduces no mixing probability.
+\end{definition}
+
+For fixed $(K,h,k,D)$, define the predicted residual matrix size by
+\begin{equation}
+ A=A(K,h,k,D)
+ =\sum_{d=0}^{D}
+   \max\left\{
+     [t^d](1-t)^{K-h+k}(1+t)^K,
+     0
+   \right\}.
+ \label{eq:pxl-A}
+\end{equation}
+The standard degree prediction chooses the least $D\ge2$ such that
+\begin{equation}
+ [t^D](1-t)^{K-h+k-1}(1+t)^K\le1.
+ \label{eq:pxl-degree}
+\end{equation}
+Equation \eqref{eq:pxl-degree} is part of the conditional model.  It does not
+prove a solving degree guarantee for the structured quotient system.
+
+The PXL field-operation expression has five charged terms.  Put
+$B=\binom{h-k+D}{D}$.  The two scalar preprocessing terms are
+\begin{align}
+ C_1
+ &=B^\omega,                                           \label{eq:pxl-C1}\\
+ C_2
+ &=k^2(h-k)B^2.                                        \label{eq:pxl-C2}
+\end{align}
+The polynomial preprocessing term that clears the later Macaulay columns is
+\begin{equation}
+ C_3
+ =k^2AB\binom{h+D}{D}.                                 \label{eq:pxl-C3}
+\end{equation}
+After preprocessing, evaluation and the second linearization cost
+\begin{align}
+ C_{\rm fix}
+ &=19^kA^2\binom{k+D}{D},                             \label{eq:pxl-Cfix}\\
+ C_{\rm lin}
+ &=19^kA^\omega.                                      \label{eq:pxl-Clin}
+\end{align}
+The first three terms are paid once.  The last two include all $19^k$
+assignments to the guessed variables.  Keeping only the rough dominant-term
+formula would omit valid work from the published PXL model.
+
+\begin{theorem}[Conditional Level-I PXL model]
+\label{thm:pxl-level1-recovery}
+Consider the Level-I shape $(48,16,2,2)$.  Assume the exact public rank check
+of \Cref{prop:sq-zero-split}.  Assume the spectrum condition
+$\bar\eta_L^U\le\eta_{\rm L1}$ for every invoked slice.  Finally, assume
+that $\mathsf H_{\rm route}(f_{a,z};k,D)$ holds for every invoked restricted
+system.  In this premise, the actual matrices satisfy the predictions of
+$\mathsf H_{\rm PXL}(48,46,k,D)$ for the chosen parameters.  Charge every
+$\F_{19}$ operation at $150$ Boolean gates.  This factor is a constructive
+bound for one field operation.  It does not turn the PXL model into a bound
+for the whole computation.
+Put
+\begin{equation}
+ C_{\rm PXL}=C_1+C_2+C_3+C_{\rm fix}+C_{\rm lin},
+ \qquad
+ C_{\rm target}=2^{32}19^{16}.
+ \label{eq:pxl-kernel-cost}
+\end{equation}
+The target term follows the manuscript convention of charging $2^{32}$ gates
+for each retained uniform target and an expected $19^{16}$ targets for the
+consistency test.  The target cost is paid anew in every root-theorem trial.
+The unit-leading asymptotic estimate is
+\begin{equation}
+ W_{\rm est}^{\rm L1}
+ =\frac{150C_{\rm PXL}+C_{\rm target}}
+        {p_{\rm dir}^{\rm L1}}.
+ \label{eq:pxl-estimated-gates}
+\end{equation}
+This formula does not charge setup, root extraction, control, storage traffic,
+or final verification.  If $C_{\rm aux}$ accounts for these costs for one
+trial, the corresponding augmented expression is
+\begin{equation}
+ W_{\rm aug}^{\rm L1}
+ =\frac{150C_{\rm PXL}+C_{\rm target}+C_{\rm aux}}
+        {p_{\rm dir}^{\rm L1}}.
+ \label{eq:pxl-total-gates}
+\end{equation}
+These expressions account only for the named terms.  They leave the auxiliary
+operations above unmeasured.
+
+For the independently checked minimizing parameters, the Level-I model gives
+the following two rows.  The parameter search is performed separately for
+each value of $\omega$.
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}c r r r r r r@{}}
+\toprule
+$\omega$ & $k$ & $D$ & $A$ & $\log_2 W_{\rm est}$
+& $\log_2 M_{\rm sym}^{\rm proxy}$ & status\\
+\midrule
+$2.81$ & 9 & 12 & $99{,}219{,}059$ & 128.833 & 93.337
+& unit-leading estimate\\
+$3$    & 9 & 12 & $99{,}219{,}059$ & 133.667 & 93.337
+& unit-leading estimate\\
+\bottomrule
+\end{tabular}
+\end{center}
+Here the unit-leading dense proxy for symbolic preprocessing storage is
+\begin{equation}
+ M_{\rm sym}^{\rm proxy}=5B^2\binom{k+D}{D}\quad\text{bits}.
+ \label{eq:pxl-symbolic-storage}
+\end{equation}
+This proxy assigns five bits to every stored base-field entry in the dense
+symbolic array counted by the model.  It omits representation overhead,
+temporary arrays, and storage traffic.  It is not the dense state of the
+whole algorithm or a peak-memory bound.
+
+The five charged Level-I terms have the following base-two logarithms.  The
+terms depending on $\omega$ are recomputed in each row.
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}c r r r r r@{}}
+\toprule
+$\omega$ & $\log_2 C_1$ & $\log_2 C_2$ & $\log_2 C_3$
+& $\log_2 C_{\rm fix}$ & $\log_2 C_{\rm lin}$\\
+\midrule
+$2.81$ & 102.354 & 84.399 & 109.027 & 109.525 & 112.877\\
+$3$    & 109.275 & 84.399 & 109.027 & 109.525 & 117.924\\
+\bottomrule
+\end{tabular}
+\end{center}
+The work exponent uses the certified lower bound $p_{\rm dir}^{\rm L1}$ from
+\eqref{eq:pxl-pdir-level1}, including the $19^{-4}$ transversality loss.
+The augmented expression remains below the Level-I reference exponent $143$
+whenever
+\begin{equation}
+ C_{\rm aux}
+ <p_{\rm dir}^{\rm L1}2^{143}
+  -150C_{\rm PXL}-C_{\rm target}.
+ \label{eq:pxl-aux-threshold}
+\end{equation}
+Every returned candidate is checked against the complete residual system,
+the signature format rule, and the original verifier.  The algorithm
+therefore never returns an invalid signature.  Its completeness and displayed
+cost estimate remain conditional on $\mathsf H_{\rm route}$ and hence on the
+instancewise PXL rank predictions.  The affine support statement in
+\Cref{prop:pxl-l2-affine-support} is exact and is not a solver premise.
+\end{theorem}
+
+\begin{proof}
+Each trial samples a fresh retained target and an independent uniform affine
+coset.
+The exact target test is performed before solving.  By
+\Cref{thm:sq-accepted-root}, one affine-coset trial contains an accepted root
+with full column rank with probability at least
+$p_{\rm reg}^{\rm L1}$.  Subtracting the exact nontransverse probability gives
+$p_{\rm dir}^{\rm L1}$ as a certified lower bound.  Under
+$\mathsf H_{\rm route}$, the actual matrices satisfy the published PXL model
+and the added root extraction step recovers the required base-field root.  The
+published algebraic work is the sum of the five costs in
+\Cref{eq:pxl-C1,eq:pxl-C2,eq:pxl-C3,eq:pxl-Cfix,eq:pxl-Clin}.  The factor
+$19^k$ already charges all assignments to the guessed variables, so no further
+guessing multiplier is introduced.  Independent target and slice trials
+contribute at most the reciprocal of $p_{\rm dir}^{\rm L1}$ in the modeled
+expectation.  The target and setup
+costs therefore belong inside the retry numerator.  The published-model
+estimate charges the target term,
+which is numerically smaller than the nonlinear solve, but leaves the other
+costs, including the added root extraction work, in $C_{\rm aux}$.  Charging
+each field operation at $150$ gates gives
+the conditional expressions
+\Cref{eq:pxl-estimated-gates,eq:pxl-total-gates}.  The final exact checks give
+one-sided validity.
+\end{proof}
+
+The same direct $\ell=2$ model has more room at Levels III and V.  The
+arithmetically checked estimates for $\omega=2.81$ are as follows.
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}c r r r r r r r@{}}
+\toprule
+Level & $K$ & $h$ & $k$ & $D$ & $A$
+& $\log_2 W_{\rm est}$ & $\log_2 M_{\rm sym}^{\rm proxy}$\\
+\midrule
+I   & 48 & 46 & 9  & 12 & $99{,}219{,}059$
+    & 128.833 & 93.337\\
+III & 72 & 70 & 13 & 17 & $2{,}710{,}186{,}080{,}528$
+    & 187.030 & 137.856\\
+V   & 96 & 94 & 15 & 23 & $547{,}365{,}920{,}911{,}569{,}552$
+    & 245.042 & 186.447\\
+\bottomrule
+\end{tabular}
+\end{center}
+For the dense linear algebra model with $\omega=3$, the minimizing parameters
+differ at Levels III and V.  They are therefore reported in a separate table
+of estimates.
+\begin{center}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}c r r r r r r r@{}}
+\toprule
+Level & $K$ & $h$ & $k$ & $D$ & $A$
+& $\log_2 W_{\rm est}$ & $\log_2 M_{\rm sym}^{\rm proxy}$\\
+\midrule
+I   & 48 & 46 & 9  & 12 & $99{,}219{,}059$
+    & 133.667 & 93.337\\
+III & 72 & 70 & 14 & 16 & $962{,}082{,}316{,}942$
+    & 194.626 & 133.178\\
+V   & 96 & 94 & 19 & 20 & $9{,}230{,}629{,}773{,}094{,}340$
+    & 255.550 & 172.754\\
+\bottomrule
+\end{tabular}
+\end{center}
+Both storage columns report the unit-leading dense proxy
+$M_{\rm sym}^{\rm proxy}$ from \eqref{eq:pxl-symbolic-storage}.  They do not
+report total state or peak implementation memory.
+The Level-III and Level-V rows use the same exact quotient, accepted-root
+theorem, and conditional PXL model with their official dimensions.  They do
+not supply evidence for the corresponding instancewise
+$\mathsf H_{\rm route}$ premises beyond the Level-I analysis.
+
+\subsection{Logical status}
+
+The PXL estimate does not change the logical status of the public reduction.
+The statements used by the Level-I route have the following status.
+
+\begin{center}
+\scriptsize
+\begin{tabularx}{0.98\textwidth}{@{}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}X@{}}
+\toprule
+Part & Status & Meaning\\
+\midrule
+Zero-offset quotient and output split
+& Exact after a public rank check
+& Invertible public row reduction preserves every verifier equation.\\
+Target consistency probability
+& Exact
+& A uniform target passes with probability $19^{-16}$, and the residual target is uniform after conditioning.\\
+Affine-coset distribution
+& Exact
+& \Cref{lem:pxl-uniform-coset} samples every coset with the same probability.\\
+Transversality incidence
+& Exact
+& An $A$-independent $h=v-2$ direction has nontransverse coset probability $19^{-4}$.\\
+$\ell=2$ affine coefficient support
+& Exact algebraic statement
+& \Cref{prop:pxl-l2-affine-support} proves surjectivity, not uniformity.\\
+Accepted full column rank root bound
+& Exact under the stated spectrum inequality
+& \Cref{thm:sq-accepted-root} and the transversality subtraction give the lower bound $p_{\rm dir}^{\rm L1}$ without an independence assumption.\\
+Spectrum inequality
+& Ideal transcript distribution or fixed-key certificate
+& The byte-reduction transcript model gives a tail bound.  A fixed key can instead supply the projective rank certificate.\\
+PXL solving degree and matrix ranks
+& Ordinary MQ heuristic
+& $\mathsf H_{\rm PXL}$ is the same kind of semi-regularity and rank model used in the PXL literature.\\
+Application to each quotient instance
+& Instancewise route premise
+& $\mathsf H_{\rm route}$ states that the actual matrices follow the PXL model and that the added extraction step recovers an accepted root when one exists.\\
+$\ell=4$ fixed-map support criterion
+& Exact over the splitting field
+& \Cref{thm:pxl-fixed-map-surjectivity} gives surjectivity exactly when every oil-quotient map is injective.  Descent requires base-field data.\\
+$\ell=4$ coefficient family
+& Structured-family heuristic, pending
+& Ordinary MQ support does not cover the four Frobenius eigenblocks.  No $\ell=4$ row is released in this fragment.\\
+PXL operation formula
+& Unit-leading asymptotic estimate
+& The expression charges all five PXL terms, target generation, and retries using the certified lower bound $p_{\rm dir}^{\rm L1}$.  Auxiliary costs remain explicit and symbolic.\\
+Symbolic storage
+& Unit-leading dense proxy
+& $M_{\rm sym}^{\rm proxy}$ counts one dense symbolic array at five bits per base-field entry.  It is not a peak-memory bound.\\
+Candidate validity
+& Exact
+& The complete residual system and original verifier check every output.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Pending $\ell=4$ structured-family result}
+
+% TODO(constrained-ledger): Replace this subsection only after the
+% structured-family proof and the constrained ledger are complete.
+% Do not infer an ell=4 result from the ordinary-MQ ell=2 calculation.
+The following fixed-map statement isolates the exact injectivity condition
+behind the split coefficient calculation.  It does not supply a numerical
+$\ell=4$ row.
+
+\begin{theorem}[Fixed-map channel surjectivity]
+\label{thm:pxl-fixed-map-surjectivity}
+Let $\Omega$ be a splitting field of odd characteristic.  Write
+\[
+ V=\bigoplus_{a=0}^{3}V_a,
+ \qquad
+ O=\bigoplus_{a=0}^{3}O_a,
+\]
+and fix linear maps $T_a:X\to V_a$.  Let
+\[
+ \overline T_a:X\longrightarrow V_a/O_a
+\]
+be the induced maps.  For each diagonal block, allow every symmetric form on
+$V_a$ that vanishes on $O_a\times O_a$.  For each pair $a<b$, allow every
+bilinear form on $V_a\times V_b$ that vanishes on
+$O_a\times O_b$.  Pullback along the maps $T_a$ gives a linear map
+$\Phi_T$ to the four diagonal and six cross quadratic forms on $X$.
+Then
+\[
+ \Phi_T:\mathcal U_O\longrightarrow
+ \operatorname{Sym}^2(X^*)^{10}
+\]
+is surjective if and only if every $\overline T_a$ is injective.  Here
+$\mathcal U_O$ denotes the direct sum of the allowed diagonal and cross
+coefficient blocks.
+\end{theorem}
+
+\begin{proof}
+Suppose first that every $\overline T_a$ is injective.  Then $T_a(X)$ meets
+$O_a$ only at zero.  On the direct sum $T_a(X)\oplus O_a$, prescribe any
+symmetric form on $T_a(X)$ and prescribe zero on $O_a\times O_a$.  The
+remaining mixed block can be chosen arbitrarily.  Extending this form to
+$V_a$ realizes any diagonal quadratic form on $X$.
+
+For a pair $a<b$, prescribe a bilinear form on
+$T_a(X)\times T_b(X)$ whose value on $(T_a x,T_b x)$ is any chosen quadratic
+form in $x$.  Such a bilinear lift exists because two is invertible.  Extend
+it to
+$(T_a(X)\oplus O_a)\times(T_b(X)\oplus O_b)$ while setting its block on
+$O_a\times O_b$ to zero, and then extend it to $V_a\times V_b$.  The ten
+blocks are independent, so these choices prove surjectivity.
+
+Conversely, suppose that $\overline T_a$ has a nonzero kernel vector $x$.
+Then $T_a x\in O_a$.  Every allowed diagonal form has zero value at
+$(T_a x,T_a x)$.  The corresponding diagonal output therefore cannot equal
+a quadratic form on $X$ that is nonzero at $x$.  Thus $\Phi_T$ is not
+surjective.
+\end{proof}
+
+If all spaces, maps, and coefficient conditions in
+\Cref{thm:pxl-fixed-map-surjectivity} arise by scalar extension from
+$\F_{19}$, surjectivity over $\Omega$ descends.  Indeed, the cokernel becomes
+zero after tensoring with $\Omega$, and faithful flatness shows that it was
+already zero over $\F_{19}$.  This conclusion does not apply merely because
+an eigenblock decomposition exists over $\Omega$.  The data and the map
+$\Phi_T$ must themselves arise by scalar extension from the base field.
+
+The $\ell=4$ shapes require a separate coefficient-family statement.  Their
+affine reduction and spectrum theorem remain exact, but the source used to
+justify the PXL parameters must respect the four Frobenius eigenblocks.  The
+fixed-map theorem gives an exact support criterion after splitting.  It does
+not show that the constrained official source meets that criterion after
+variable fixing, or that the resulting systems have the selected degree and
+Macaulay ranks.
+
+No $\ell=4$ numerical row is part of this temporary replacement.  The final
+text must wait for the constrained ledger for both official shapes.  Any
+later row must use separate minimizing
+parameters for each value of $\omega$ and must label its storage quantity as
+a unit-leading dense proxy for symbolic preprocessing storage rather than
+peak memory.
